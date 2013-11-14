@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{38cdb636-2187-496b-b9bd-7cb6bca798e3}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Socket Options">
+      <UniqueIdentifier>{960c7dfb-b63e-4152-a409-64dcb482f53b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Datagram.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ICMPMessageCodec.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InetAddress.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RawDatagramSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TcpSocket.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AbstractSocketOption.cpp">
+      <Filter>Socket Options</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SocketOptions.cpp">
+      <Filter>Socket Options</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TcpNoDelay.cpp">
+      <Filter>Socket Options</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Datagram.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ICMPMessageCodec.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDatagramSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InetAddress.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ISocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ITcpSocketObserver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RawDatagramSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SocketSet.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SocketSetP.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpNonblockingSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpObservedSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpServerSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpSocket.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AbstractSocketOption.h">
+      <Filter>Socket Options</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SocketOptions.h">
+      <Filter>Socket Options</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpNoDelay.h">
+      <Filter>Socket Options</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

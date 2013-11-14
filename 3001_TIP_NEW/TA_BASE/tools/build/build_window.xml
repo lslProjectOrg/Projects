@@ -1,0 +1,589 @@
+<project name="CODE_TA_BASE_3001" default="build" basedir="C:\955_TIPNEW\Base_3001\Base">
+    <taskdef name="BuildFile" classname="buildsystem.tasks.BuildFileTask"/>
+    <taskdef name="version" classname="buildsystem.tasks.VersionTask"/>
+    <taskdef name="LeveledEcho" classname="buildsystem.tasks.LeveledEcho"/>
+    <taskdef name="Installer" classname="buildsystem.tasks.Installer"/>
+    <taskdef name="FileSetExecute" classname="buildsystem.tasks.FileSetExecute"/>
+    <taskdef name="TestResultXSLT" classname="buildsystem.tasks.TestResultXSLT"/>
+
+    <!-- Initialise the build process -->
+    <target name="init">
+		<loadproperties srcFile="${basedir}\..\config.ini"/>
+    </target>
+
+    <!-- copy some files prepare for alarm components compiling -->
+    <target name="prepare_alarm"
+			description="--> copy some files prepare for alarm components compiling">
+
+		<!-- bin/win32_nd -->
+		<copy toDir="${basedir}/bin/win32_nd" flatten = "true" overwrite="true">
+			<fileset dir="${basedir}/code/cots/IATSAlarmEvent/bin" casesensitive="false" >
+				<include name="RelatedIP_API.dll" />
+				<include name="RelatedSchematic_API.dll" />
+			</fileset>
+		</copy>
+    </target>
+
+    <!-- Goes through the various subdirs specified and then -->
+    <!-- generates the various XML files needed for the build-->
+    <!--   Specifies what to include and what to exclude -->
+    <target name="generateTargets"
+            depends="init"
+            description="--> Creates the Build files that will build all the targets.">
+        <BuildFile
+            basedir="${basedir}"
+            buildFileName="BuildCots.xml"
+            buildConfiguration="${Build.Configuration}">
+			<fileset dir=".">
+				<include name="code/tools/build/tools.build.Build_Base_Cots.dsw"/>
+            </fileset>
+            <exclude>
+            </exclude>
+		</BuildFile>
+
+        <BuildFile
+            basedir="${basedir}"
+            buildFileName="BuildCore.xml"
+            buildConfiguration="${Build.Configuration}">
+            <fileset dir=".">
+				<include name="code/tools/build/tools.build.Build_Base_Core.dsw"/>
+            </fileset>
+            <exclude>
+            </exclude>
+		</BuildFile>
+
+        <BuildFile
+            basedir="${basedir}"
+            buildFileName="BuildBus.xml"
+            buildConfiguration="${Build.Configuration}">
+            <fileset dir=".">
+                <include name="code/tools/build/tools.build.Build_Base_Bus.dsw"/>
+            </fileset>
+            <exclude>
+            </exclude>
+		</BuildFile>
+
+        <BuildFile
+			basedir="${basedir}"
+			buildFileName="BuildApp.xml"
+			buildConfiguration="${Build.Configuration}">
+			<fileset dir=".">
+				<include name="code/tools/build/tools.build.Build_Base_App.dsw"/>
+			</fileset>
+    	</BuildFile>
+
+        <BuildFile
+            basedir="${basedir}"
+            buildFileName="BuildAlarmGenerator.xml"
+            buildConfiguration="${Build.Configuration}">
+            <fileset dir=".">
+                <include name="code/tools/integration/AlarmGenerator/AlarmGenerator.dsw"/>
+            </fileset>
+            <exclude>
+            </exclude>
+		</BuildFile>
+    </target>
+
+    <!-- This does the actual build i.e.compile and link     -->
+    <!-- It uses the ParallelBuild*.xml (created above) to   -->
+    <!-- fire off all the other .xml build files created in  -->
+    <!-- the generateTargets target (This is a Debug build)  -->
+   <target name="build"
+			depends="init,generateTargets"
+			description=" Does the actual compilation and linking of the code.">
+		<ant antfile="${basedir}/BuildCots.xml" inheritAll="false"/>
+		<ant antfile="${basedir}/BuildCots.xml" inheritAll="false" target="ACE DLL">
+            <property name="Configuration" value="${ACE.Build.Configuration}"/>
+		</ant>
+		<ant antfile="${basedir}/BuildCore.xml" inheritAll="false"/>
+		<ant antfile="${basedir}/BuildBus.xml" inheritAll="false"/>
+		<ant antfile="${basedir}/BuildApp.xml" inheritAll="false"/>
+    </target>
+
+	<target name="deleteZipArchieveLib"
+		depends="init">
+			<delete dir="${basedir}/code/cots/ZipArchive/Debug" includeEmptyDirs="true" quiet="true"/>
+     </target>
+      
+	<target name="build_Net2008"
+		depends="init, deleteZipArchieveLib"
+			description=" Does the actual compilation and linking of the code for .NET 2008.">
+		<exec dir="${basedir}" executable="cmd.exe">
+		    <arg line="/c devenv /build ${Build.Configuration}
+				${Base.Dir}\code\tools\build\tools.build.Build_Base_Cots.sln /projectconfig ${Build.Configuration} /out ${Base.Dir}\Build_Base_Cots.txt"/>
+		</exec>
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}
+				${Base.Dir}\code\tools\build\tools.build.Build_Base_Core.sln /projectconfig ${Build.Configuration} /out ${Base.Dir}\Build_Base_Core.txt"/>
+		</exec>
+
+
+			<!-- just build tvssmanager the lib file -->
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}		${basedir}\code\transactive\bus\cctv\tvss_agent\TVSSManager\IDL\bus.cctv.tvss_agent.TVSSManagerCorbaDef.IDL\bus.cctv.tvss_agent.TVSSManagerCorbaDef.IDL.vcproj /projectconfig ${Build.Configuration} /out ${basedir}\Build_TVManager1.txt"/>
+		</exec>
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}	${basedir}\code\transactive\bus\cctv\tvss_agent\TVSSManager\IDL\bus.cctv.tvss_agent.TVSSManagerCorbaDef.Src\bus.cctv.video_switch_agent.TVSS_Agent.Src.vcproj /projectconfig ${Build.Configuration} /out ${basedir}\Build_TVManager2.txt"/>
+		</exec>
+
+
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}
+				${Base.Dir}\code\tools\build\tools.build.Build_Base_Bus.sln /projectconfig ${Build.Configuration} /out ${Base.Dir}\Build_Base_Bus.txt"/>
+		</exec>
+
+       
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}
+				${Base.Dir}\code\tools\build\tools.build.Build_Base_App.sln /projectconfig ${Build.Configuration} /out ${Base.Dir}\Build_Base_App.txt"/>
+		</exec>
+
+		<!-- gaoxiang add to build trend_view by huirong's request -->
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c devenv /build ${Build.Configuration}
+				${Base.Dir}\code\transactive\app\trending\new_trend_viewer\TrendViewer.sln /projectconfig ${Build.Configuration} /out ${Base.Dir}\Build_Base_New_Trend_Viewer.txt"/>
+		</exec>
+	</target>
+
+    <!-- Cleans only the intermediate files -->
+    <target name="clean_inter" depends="init">
+        <delete dir="${basedir}/build" includeEmptyDirs="true" quiet="true"/>
+    </target>
+
+    <!-- Cleans the files generated by the build but not the code -->
+    <target name="clean" depends="clean_inter">
+        <delete dir="${basedir}/bin" includeEmptyDirs="true" quiet="true"/>
+        <delete dir="${basedir}/sdk" includeEmptyDirs="true" quiet="true"/>
+        <delete dir="${basedir}/staging" includeEmptyDirs="true" quiet="true"/>
+    </target>
+
+    <!-- Cleans everything - all of the above plus the codebase as well -->
+    <target name="clean_all" depends="clean">
+        <delete dir="${basedir}/code/tools" includeEmptyDirs="true" quiet="true"/>
+        <delete dir="${basedir}/code/transactive" includeEmptyDirs="true" quiet="true"/>
+    </target>
+
+    <!-- The staging task - puts all the stuff needed for sdk, lib and  -->
+    <!-- bin into an area called staging - it can be tarred and zipped  -->
+    <!-- from there                                                     -->
+    <target name="stage"
+            depends="init"
+			description="--> Copies all the appropriate files to the staging area.">
+
+		<!-- staging/bin -->
+		<copy toDir="${Base.Dir.Staging}/bin" flatten = "true" overwrite="true">
+			<fileset dir="bin" casesensitive="false" >
+				<include name="win32*/*.exe" />
+				<include name="win32*/TransactScreensaver.scr" />
+				<include name="win32*/*.pdb" />
+				<exclude name="win32*/*Dll.pdb" />
+				<exclude name="win32*/TA_*.pdb" />
+			</fileset>
+
+			<fileset dir="bin" casesensitive="false" >
+				<include name="win32*/TA_AlarmStoreService.pdb" />
+				<include name="win32*/TA_OpcBridgeService.pdb" />
+				<include name="win32*/TA_OpcBridgeService.pdb" />
+				<include name="win32*/TA_RightsService.pdb" />
+				<include name="win32*/TA_SoundManager.pdb" />
+			</fileset>
+
+			<!-- copy the *.csv files (ref TD #13995) -->
+			<!-- copy the scripts for autostartup Control station -->
+			<fileset dir="code/tools/deployment_scripts/startup" >
+				<include name="*.*" />
+			</fileset>
+
+			<!-- copy the omni_notification.cfg-->
+			<fileset dir="code/transactive/app/notification_service" >
+				<include name="omni_notification.cfg" />
+			</fileset>
+		</copy>
+
+		<!-- staging/lib -->
+		<copy toDir="${Base.Dir.Staging}/lib" flatten = "true" overwrite="true">            
+            <fileset dir="code/cots/omniORB/omniORB_4.1.6/bin/x86_win32" casesensitive="false" >
+                <include name="*.dll" />
+                <exclude name="CVS" />
+            </fileset>
+
+            <fileset dir="code/cots/ACE/6_0_4/ACE_wrappers/bin/" casesensitive="false" >
+                <include name="*.dll" />
+                <exclude name="CVS" />
+            </fileset>
+            
+			<fileset dir="code/cots/ACE/6_0_4/ACE_wrappers/ace" casesensitive="false" >
+				<include name="*d.pdb" />
+			</fileset>
+
+			<fileset dir="${basedir}/sdk" casesensitive="false" >
+                <include name="**/*.tlb" />
+            </fileset>
+
+			<fileset dir="${basedir}/bin" casesensitive="false" >
+                <include name="**/*.dll" />
+            </fileset>
+			
+		    <fileset dir="code/tools/deployment_scripts" casesensitive="false" >
+                <include name="**/MailBee.dll" />
+            </fileset>
+
+            <!-- collect libcurl.lib for sftp support -->
+		    <fileset dir="code/cots/curl/curl-7.21.7/lib/Debug" casesensitive="false" >
+                <include name="libcurl.lib" />
+            </fileset>
+        </copy>
+
+		<!-- staging/sdk/omniORB -->
+		<copy toDir="${Base.Dir.Staging}/sdk" flatten="false" overwrite="true">
+            <fileset dir="code/cots" casesensitive="false" >
+				<include name="omniORB/omniORB_4.1.6/bin/x86_win32/*" />
+				<include name="omniORB/omniORB_4.1.6/lib/**/*" />
+				<include name="omniORB/omniORB_4.1.6/include/**/*.h" />
+				<include name="omniORB/omniORB_4.1.6/include/**/*.hh" />
+                <exclude name="CVS" />
+            </fileset>
+        </copy>
+
+		<!-- staging/sdk/lib -->
+		<copy toDir="${Base.Dir.Staging}/sdk/lib" flatten="true" overwrite="true">            
+            <fileset dir="code/cots/ACE/6_0_4/ACE_wrappers/lib/" casesensitive="false" >
+                <include name="*.lib" />
+                <exclude name="CVS" />
+			</fileset>
+			<fileset dir="code/cots/WinStackTrace/build/${Build.Configuration}" casesensitive="false" >
+				<include name="stracelib.lib" />
+			</fileset>
+
+            <fileset dir="code/cots/oracle/" casesensitive="false" >
+				<include name="**/*.lib" />
+                <exclude name="CVS" />
+			</fileset>
+	   
+            <fileset dir="code/cots/HTMLHelp/lib/" casesensitive="false" >
+                <include name="*.lib" />
+                <exclude name="CVS" />
+			</fileset>
+
+			<fileset dir="code/cots/boost/boost_1_39_0/stage/lib/" casesensitive="false" >
+				<include name="libboost_date_time-vc80-mt-1_39.lib" />
+				<include name="libboost_date_time-vc80-mt-gd-1_39.lib" />
+				<include name="libboost_filesystem-vc80-mt-1_39.lib" />
+				<include name="libboost_filesystem-vc80-mt-gd-1_39.lib" />
+				<include name="libboost_regex-vc80-mt-1_39.lib" />
+				<include name="libboost_regex-vc80-mt-gd-1_39.lib" />
+				<include name="libboost_system-vc80-mt-1_39.lib" />
+				<include name="libboost_system-vc80-mt-gd-1_39.lib" />
+				<include name="libboost_date_time-vc80-mt-gd-1_39.lib" />
+				<include name="libboost_date_time-vc80-mt-gd.lib" />
+				<include name="libboost_date_time-vc80-mt.lib" />
+ 				<include name="libboost_date_time-vc90-mt-1_39.lib" />
+ 				<include name="libboost_date_time-vc90-mt-gd-1_39.lib" />
+ 				<include name="libboost_date_time-vc90-mt-gd.lib" />
+ 				<include name="libboost_date_time-vc90-mt.lib" />
+  				<include name="libboost_filesystem-vc90-mt-1_39.lib" />
+ 				<include name="libboost_filesystem-vc90-mt-gd-1_39.lib" />
+ 				<include name="libboost_filesystem-vc90-mt-gd.lib" />
+ 				<include name="libboost_filesystem-vc90-mt.lib" />
+ 				<include name="libboost_regex-vc90-mt-1_39.lib" />
+ 				<include name="libboost_regex-vc90-mt-gd-1_39.lib" />
+				<include name="libboost_regex-vc90-mt-gd.lib" />
+				<include name="libboost_regex-vc90-mt.lib" />
+				<include name="libboost_system-vc90-mt-1_39.lib" />
+				<include name="libboost_system-vc90-mt-gd-1_39.lib" />
+ 				<include name="libboost_system-vc90-mt-gd.lib" />
+ 				<include name="libboost_system-vc90-mt.lib" />
+				
+			</fileset>
+
+            <!--  stage mcl lib -->
+			<fileset dir="code/cots/mcl/1.1.0/lib/winnt/" casesensitive="false" >
+				<include name="TA_mcl_d.dll" />
+				<include name="TA_mcl_d.lib" />
+				<include name="ta_mcl_d.pdb" />
+			</fileset>
+
+            <!--  stage mysql lib -->
+			<fileset dir="code/cots/mysql/5.5.15/winnt/lib/" casesensitive="false" >
+				<include name="libmysql.lib" />
+				<include name="libmysql.dll" />
+			</fileset>
+
+            <!-- IATSAlarmEvent BAT with zhihong requests-->
+            <fileset casesensitive="false" dir="${Base.Dir}\code\tools\deployment_scripts\startup">
+                <include name="ATSBridgeUtil_install.bat" />
+                <include name="ATSBridgeUtil_uninstall.bat" />
+            </fileset>
+
+            <!-- IATSAlarmEvent with zhihong requests-->
+            <fileset casesensitive="false" dir="${Base.Dir}\bin\win32_nd">
+                <include name="ATSBridgeUtil.dll" />
+			    <include name="ShareMemoryDLL.dll" />
+            </fileset>
+
+            <fileset dir="code/cots/ACE/6_0_4/ACE_wrappers/bin/" casesensitive="false" >
+                <include name="*.dll" />
+                <exclude name="CVS" />
+			</fileset>
+
+			<fileset dir="${basedir}/sdk" casesensitive="false" >
+                <include name="**/*.tlb" />
+            </fileset>
+
+            
+			<fileset dir="${basedir}/bin" casesensitive="false" >
+                <include name="**/*.dll" />
+                <exclude name="**/*ConfigPlugin.dll" />
+            </fileset>
+
+			<fileset dir="build/win32_nd" casesensitive="false" >
+                <include name="TA_SharedAlarm_d.lib" />
+				<include name="TA_SFTP_d.lib" />
+                <exclude name="CVS" />
+            </fileset>
+        </copy>
+
+        <copy toDir="${Base.Dir.Staging}/sdk" overwrite="true">
+            <fileset dir="sdk" casesensitive="false" >
+                <include name="win32*/*" />
+				<exclude name="**/*.tlb" />
+            </fileset>
+            <fileset dir="bin" casesensitive="false" >
+                <include name="win32*/*.lib" />
+            </fileset>
+        </copy>
+
+        <!--  staging/sdk/include/transactive -->
+        <copy toDir="${Base.Dir.Staging}/sdk/include/transactive" overwrite="true">
+            <fileset dir="code/transactive" casesensitive="false" >
+                <include name="app/configuration/config_plugins/config_plugin_helper/src/*.h" />
+                <include name="app/configuration/configuration_editor/src/*.h" />
+                <include name="app/system_control/control_station/src/*.h" />
+                <include name="core/**/*.h" />
+                <include name="bus/**/*.h" />
+				<include name="bus/**/*.bas" />
+                <exclude name="**/test/**"/>
+            </fileset>
+
+            <fileset dir="build/win32_n/transactive" casesensitive="false" >
+                <include name="**/*.h" />
+                <include name="**/*.hh" />
+            </fileset>
+
+            <fileset dir="code/transactive" casesensitive="false" >
+                <include name="**/*.inl" />
+			</fileset>
+
+			<fileset dir="code/transactive" casesensitive="false" >
+				<include name="**/*.rc" />
+				<include name="**/*.rc2" />
+				<include name="**/*.bmp" />
+				<include name="**/*.ico" />
+            </fileset>
+        </copy>
+
+        <!--  staging/sdk/include/idl/transactive -->
+        <copy toDir="${Base.Dir.Staging}/sdk/idl/transactive" overwrite="true">
+            <fileset dir="code/transactive" casesensitive="false" >
+                <include name="**/*.idl" />
+            </fileset>
+        </copy>
+
+		 <!--  staging/sdk/win32_nd/TA_TVSSManagerCorbaDef_d.lib -->
+        <copy toDir="${Base.Dir.Staging}/sdk/win32_nd" overwrite="true">
+            <fileset dir="sdk\win32_nd" casesensitive="false" >
+                <include name="TA_TVSSManagerCorbaDef_d.lib" />
+            </fileset>
+        </copy>
+
+        <!-- staging/include/cots  -->
+        <copy toDir="${Base.Dir.Staging}/sdk/include/cots" overwrite="true">
+			<fileset dir="code/cots" casesensitive="false" >
+				<include name="**/ACE/6_0_4/ACE_wrappers/**/*.h" />
+				<include name="**/ACE/6_0_4/ACE_wrappers/ace/*.inl" />
+				<include name="**/ACE/6_0_4/ACE_wrappers/ace/*.i" />
+				<include name="**/ACE/6_0_4/ACE_wrappers/ace/*.cpp" />
+				<include name="**/boost/boost_1_39_0/boost/*.hpp" />
+				<include name="**/boost/boost_1_39_0/boost/**/*.hpp" />
+				<include name="**/boost/boost_1_39_0/boost/**/*.ipp" />
+				<include name="**/curl/curl-7.21.7/include/curl/*.h" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="version" depends="init,changeAttributes4VersionGen,changeAttributes4RcFiles">
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c perl ${Root.Dir}\Versioning.pl ${basedir}/code/transactive ${Version} ${Version.ProjectName}"/>
+		</exec>
+		<exec dir="${basedir}" executable="cmd.exe">
+			<arg line="/c perl ${Root.Dir}\VersioningDll.pl ${basedir}/code/transactive ${Version.Mode} ${Version.Phase} ${Version.Major} ${Version.Minor}"/>
+		</exec>
+    </target>
+
+    <!-- checkout from Perforce -->	
+    <!-- Checkout the code base, ${Base.Code.CheckoutTag} -->
+    <target name="p4checkoutCode" 
+		depends="p4checkoutTools, 
+				 p4checkoutTransactive">
+		<!-- Does nothing but invoke its dependencies -->
+    </target>
+
+    <target name="p4checkoutCots" 
+		depends="p4checkoutACE, 
+				 p4checkoutBoost,
+				 p4checkoutCrystalReports, 
+				 p4checkoutDirectSound, 
+				 p4checkoutHTMLHelp, 
+				 p4checkoutNero, 
+				 p4checkoutIATSAlarmEvent,
+				 p4checkoutomniOrbWindows,  
+				 p4checkoutOracle,  
+				 p4checkoutTeeChart,
+				 p4checkoutVisualCpp, 
+				 p4checkoutWinTech,
+				 p4checkoutWinStackTrace,
+				 p4checkoutZipArchive,
+				 p4checkoutCurl,
+				 p4checkoutOpenssl,
+				 p4checkoutMcl,
+				 p4checkoutMysql">
+		<!-- Does nothing but invoke its dependencies -->
+    </target>
+
+    <!-- checkout tools from Perforce -->
+    <target name="p4checkoutTools" depends="init">
+		<p4sync view="${P4.View.CODE_TA_BASE_3001}/tools/..." force="yes"/>
+    </target>
+
+    <!-- checkout transactive from Perforce -->
+    <target name="p4checkoutTransactive" depends="init">
+		<p4sync view="${P4.View.CODE_TA_BASE_3001}/transactive/..." force="yes"/>
+    </target>
+
+    <target name="changeAttributes4VersionGen" depends="init">
+		<attrib readonly="false">
+		  <fileset dir="${basedir}\code\transactive" includes="**/VersionGen.cpp"/>
+		</attrib>
+    </target>
+
+    <target name="changeAttributes4RcFiles" depends="init">
+		<attrib readonly="false">
+		  <fileset dir="${basedir}\code\transactive" includes="**/*.rc"/>
+		</attrib>
+    </target>
+
+    <!-- checkout ACE file -->
+    <target name="p4checkoutACE" depends="init">
+		<p4sync view="${P4.View.COTS}/ACE/..." force="yes"/>
+    </target>
+
+<target name="p4checkoutIATSAlarmEvent" depends="init">
+		<p4sync view="${P4.View.COTS}/IATSAlarmEvent/..." force="yes"/>
+    </target>
+
+    <!-- checkout boost header -->
+    <target name="p4checkoutBoostHeaders" depends="init">
+		<p4sync view="${P4.View.COTS}/boost/boost_1_39_0/boost/..." force="yes"/>
+    </target>
+
+	<!-- checkout boost libraries -->
+    <target name="p4checkoutBoost" depends="init">
+		<p4sync view="${P4.View.COTS}/boost/..." force="yes"/>
+    </target>
+
+	<!-- checkout crystall reports -->
+    <target name="p4checkoutCrystalReports" depends="init">
+		<p4sync view="${P4.View.COTS}/CrystalReports/..." force="yes"/>
+    </target>
+
+	<!-- checkout Direct Sound -->
+    <target name="p4checkoutDirectSound" depends="init">
+		<p4sync view="${P4.View.COTS}/DirectSound/..." force="yes"/>	
+    </target>
+
+	<!-- checkout HTML Help -->
+    <target name="p4checkoutHTMLHelp" depends="init">
+		<p4sync view="${P4.View.COTS}/HTMLHelp/..." force="yes"/>
+    </target>
+
+	<!-- checkout Nero -->
+    <target name="p4checkoutNero" depends="init">
+		<p4sync view="${P4.View.COTS}/Nero/..." force="yes"/>
+    </target>
+
+	<!-- checkout omniORB -->
+    <target name="p4checkoutomniOrbWindows" 
+			depends="p4checkoutomniORBBin, 
+			p4checkoutomniORBLib, 
+			p4checkoutomniORBInclude, 
+			p4checkoutomniORBSrc, 
+			p4checkoutomniORBIDLCOS, 
+			p4checkoutomniNotifyIDL">
+		<!-- Does nothing but invoke its dependencies -->
+    </target>
+
+    <target name="p4checkoutomniORBBin" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/bin/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutomniORBLib" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/lib/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutomniORBInclude" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/include/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutomniORBSrc" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/src/services/include/omniNotify/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutomniORBIDLCOS" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/idl/COS/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutomniNotifyIDL" depends="init">
+		<p4sync view="${P4.View.COTS}/omniORB/omniORB_4.1.6/src/services/omniNotify/idl/..." force="yes"/>
+    </target>
+
+
+    <target name="p4checkoutOracle" depends="init">
+		<p4sync view="${P4.View.COTS}/oracle/10.2.0/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutTeeChart" depends="init">
+		<p4sync view="${P4.View.COTS}/TeeChart/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutVisualCpp" depends="init">
+		<p4sync view="${P4.View.COTS}/VisualCpp/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutWinTech" depends="init">
+		<p4sync view="${P4.View.COTS}/WinTech/..." force="yes"/>
+    </target>
+    
+    <target name="p4checkoutWinStackTrace" depends="init">
+		<p4sync view="${P4.View.COTS}/WinStackTrace/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutZipArchive" depends="init">
+		<p4sync view="${P4.View.COTS}/ZipArchive/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutCurl" depends="init">
+	<p4sync view="${P4.View.COTS}/curl/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutOpenssl" depends="init">
+	<p4sync view="${P4.View.COTS}/openssl/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutMcl" depends="init">
+	<p4sync view="${P4.View.COTS}/Mcl/..." force="yes"/>
+    </target>
+
+    <target name="p4checkoutMysql" depends="init">
+	<p4sync view="${P4.View.COTS}/mysql/..." force="yes"/>
+    </target>
+</project>

@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AssertException.cpp" />
+    <ClCompile Include="src\CorbaException.cpp" />
+    <ClCompile Include="src\DatabaseException.cpp" />
+    <ClCompile Include="src\DataException.cpp" />
+    <ClCompile Include="src\DbConnectionFailed.cpp" />
+    <ClCompile Include="src\DbConnectionNoFile.cpp" />
+    <ClCompile Include="src\DbUniqueConstraintViolated.cpp" />
+    <ClCompile Include="src\ObjectResolutionException.cpp" />
+    <ClCompile Include="src\SocketException.cpp" />
+    <ClCompile Include="src\TcpSocketException.cpp" />
+    <ClCompile Include="src\ThreadException.cpp" />
+    <ClCompile Include="src\TransactiveException.cpp" />
+    <ClCompile Include="src\TrendViewerException.cpp" />
+    <ClCompile Include="src\UserCancelException.cpp" />
+    <ClCompile Include="src\UserSettingsException.cpp" />
+    <ClCompile Include="src\UtilitiesException.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AssertException.h" />
+    <ClInclude Include="src\CorbaException.h" />
+    <ClInclude Include="src\DatabaseException.h" />
+    <ClInclude Include="src\DataException.h" />
+    <ClInclude Include="src\DbConnectionFailed.h" />
+    <ClInclude Include="src\DbConnectionNoFile.h" />
+    <ClInclude Include="src\DbSyncException.h" />
+    <ClInclude Include="src\DbUniqueConstraintViolated.h" />
+    <ClInclude Include="src\DebugEmptyArgsException.h" />
+    <ClInclude Include="src\DebugMsgConstructionException.h" />
+    <ClInclude Include="src\ObjectResolutionException.h" />
+    <ClInclude Include="src\SocketException.h" />
+    <ClInclude Include="src\SQLException.h" />
+    <ClInclude Include="src\TcpSocketException.h" />
+    <ClInclude Include="src\ThreadException.h" />
+    <ClInclude Include="src\TransactiveException.h" />
+    <ClInclude Include="src\TrendViewerException.h" />
+    <ClInclude Include="src\UserCancelException.h" />
+    <ClInclude Include="src\UserSettingsException.h" />
+    <ClInclude Include="src\UtilitiesException.h" />
+    <ClInclude Include="src\ValueNotSetException.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>core.exceptions</ProjectName>
+    <ProjectGuid>{BD905322-B027-4F3B-BC83-B6ABB98EE9C9}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\..\..\..\..\build\win32_nd\</OutDir>
+    <IntDir>.\..\..\..\..\build\win32_nd\transactive\core\exceptions\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\..\..\..\..\build\win32_nr\</OutDir>
+    <IntDir>.\..\..\..\..\build\win32_nr\transactive\core\exceptions\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../../build/win32_n/transactive/;../../;..\..\..\cots\omniORB\omniORB_4.1.6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__WIN32__;__x86__;__NT__;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_LIB;_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\..\..\..\..\build\win32_nd\transactive\core\exceptions/core.exceptions.TA_Exceptions.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\..\..\build\win32_nd\transactive\core\exceptions/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\..\..\build\win32_nd\transactive\core\exceptions/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\..\..\build\win32_nd\transactive\core\exceptions/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\build\win32_nd\TA_Exceptions_d.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\..\..\..\..\build\win32_nd/core.exceptions.TA_Exceptions.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../../../build/win32_n/transactive/;../../;..\..\..\cots\omniORB\omniORB_4.1.6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;__WIN32__;__x86__;__NT__;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\..\..\..\..\build\win32_nr\transactive\core\exceptions/core.exceptions.TA_Exceptions.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\..\..\build\win32_nr\transactive\core\exceptions/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\..\..\build\win32_nr\transactive\core\exceptions/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\..\..\build\win32_nr\transactive\core\exceptions/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\..\..\..\build\win32_nr\TA_Exceptions.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\..\..\..\..\build\win32_nr/core.exceptions.TA_Exceptions.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

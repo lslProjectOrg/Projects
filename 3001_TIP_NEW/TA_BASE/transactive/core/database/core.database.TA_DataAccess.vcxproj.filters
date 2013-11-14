@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{84c12b77-b9ba-4e31-b80b-decee4566452}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CommonType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DBException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbServerLocator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDbConnection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IQueryAdapter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MysqlConnection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MysqlQueryAdapter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleDb.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDatabase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleDbData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleDbDatabase.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sql.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLCode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sqldef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLFileHelper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sqlmacrodef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLTypeAdapter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLUtilityFun.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLVarParms.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DatabaseFactory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataTypeEnums.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbStatus.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbConnection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbConnectionStrings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataTypesLookup.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLiteConnection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLiteQueryAdapter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DBException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbServerLocator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MysqlConnection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MysqlQueryAdapter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleDb.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleDbData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleDbDatabase.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLCode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLFileHelper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLTypeAdapter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLUtilityFun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLVarParms.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DatabaseFactory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbStatus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbConnection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbConnectionStrings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLiteConnection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SQLiteQueryAdapter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\sqlcode.txt">
+      <Filter>src</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

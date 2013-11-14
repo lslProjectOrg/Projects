@@ -1,0 +1,31 @@
+MCL(MySQL Connector Library) Solaris Compile instruction
+Description -- when build the MySQL thrid-part database connector on Solaris platform.
+                  follow the below steps.
+		  1: download the latest MCL library from MySQL website and unzip it
+		  2: make sure that the MySQL C API files and libs are available
+		  3: If you plan to use GCC on Solaris to compile MCL,
+                     insert:
+                     SET(MYSQL_CXXFLAGS "")
+                     at the end of the file FindMySQL.cm.
+		  4: declare some dependent libraries envirnoment variables below:
+		    4.1 # export BOOST_ROOT= (put the boost library root directory here)
+		        # export MYSQL_INCLUDE_DIR = (put the MySQL C API include directory here)
+			# export MYSQL_LIB_DIR = (put the MySQL libs directory here)
+			# export MYSQL_DIR = (put the MySQL root directory here)
+		  5: use cmake to generate the Makefile.
+		    5.1: cmake should be installed, first download the source file and 
+		         build it as following:
+			 # gunzip -c cmake-2.8.3.tar.gz | tar -xvf -
+                         # cd cmake-2.8.3
+                         # export CC=gcc
+                         # export CXX=g++
+                         # ./bootstrap prefix=/export/expts/CMake (the cmake file path put here)
+                         # make
+                         # export PATH=/export/expts/CMake/bin(the cmake file path put here):$PATH
+		  6: at the root of the MCL, type the following commands to build the MCL
+		         # cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DMYSQLCPPCONN_BUILD_EXAMPLES:BOOL=0 -DCMAKE_INSTALL_PREFIX=./lib/solaris(generate the makefile)
+			 # cmake -LA (check the options)
+			 # make DEBUG=1
+
+		   
+

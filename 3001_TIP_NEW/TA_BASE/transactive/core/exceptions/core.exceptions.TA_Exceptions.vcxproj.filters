@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{5ba63b6c-480e-4025-af7a-f3d3ea05551f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AssertException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CorbaException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DatabaseException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbConnectionFailed.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbConnectionNoFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DbUniqueConstraintViolated.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectResolutionException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SocketException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TcpSocketException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ThreadException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TransactiveException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TrendViewerException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UserCancelException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UserSettingsException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UtilitiesException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AssertException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CorbaException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DatabaseException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbConnectionFailed.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbConnectionNoFile.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbSyncException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DbUniqueConstraintViolated.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugEmptyArgsException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugMsgConstructionException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectResolutionException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SocketException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SQLException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TcpSocketException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ThreadException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TransactiveException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TrendViewerException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UserCancelException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UserSettingsException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UtilitiesException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ValueNotSetException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

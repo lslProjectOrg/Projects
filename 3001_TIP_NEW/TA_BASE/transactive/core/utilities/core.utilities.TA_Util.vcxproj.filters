@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{19e5d378-2deb-43a5-bb49-945e2a6cafad}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="DebugUtil">
+      <UniqueIdentifier>{18935ff7-307b-443e-b1a8-ce55b2e5f56b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugUtil\Log Helpers">
+      <UniqueIdentifier>{3aab572b-1354-4478-8b02-35e0baab0365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RunParams">
+      <UniqueIdentifier>{8f84f0d0-d55c-465d-bd8a-5d820ffed613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{95948462-7eee-4df0-a338-559397e3b266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{670656f3-a98f-4128-97b2-f63aecef22cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CodeConverter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataConversion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DateFormat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DllHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hostname.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StdPubUtility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TA_String.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TAAssert.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ThreasdafeScreenOutput.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugSETranslator.cpp">
+      <Filter>DebugUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugUtil.cpp">
+      <Filter>DebugUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugUtilInit.cpp">
+      <Filter>DebugUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FunctionEntry.cpp">
+      <Filter>DebugUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GenericLogType.cpp">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ILogType.cpp">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PreformattedLogType.cpp">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RunParams.cpp">
+      <Filter>RunParams</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MatrixException.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CodeConverter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataConversion.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DateFormat.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DllHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hostname.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDllHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StdPubUtility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TA_String.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TAAssert.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ThreasdafeScreenOutput.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugSETranslator.h">
+      <Filter>DebugUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugUtil.h">
+      <Filter>DebugUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugUtilInit.h">
+      <Filter>DebugUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugUtilMacros.h">
+      <Filter>DebugUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FunctionEntry.h">
+      <Filter>DebugUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GenericLogType.h">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ILogType.h">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Logger.h">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PreformattedLogType.h">
+      <Filter>DebugUtil\Log Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RunParams.h">
+      <Filter>RunParams</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Matrix.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MatrixException.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IAlarmClockHelper.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timer.h">
+      <Filter>time</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Matrix.inl">
+      <Filter>Containers</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>core.mcl</ProjectName>
+    <ProjectGuid>{7A22973C-98C8-49C0-A1A0-987F0FB02897}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\../../../../build/win32_nd\</OutDir>
+    <IntDir>.\../../../../build/win32_nd/transactive/core/mcl\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>./Release_vc90\</OutDir>
+    <IntDir>./Release_vc90\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DBUG_OFF;DYNLOAD_MYSQL_LIB="MYSQL_LIB";CPPCONN_TRACE_ENABLED;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CPPCONN_SO_BUILD="";CMAKE_INTDIR="Debug";mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <DllDataFileName />
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\..\cots\boost\boost_1_39_0;..\..\..\cots\mysql\5.5.15\winnt\inc;./;./cppconn;./driver/;./driver/nativeapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AssemblerListingLocation>.\../../../../build/win32_nd/transactive/core/mcl/</AssemblerListingLocation>
+      <ObjectFileName>.\../../../../build/win32_nd/transactive/core/mcl/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../../build/win32_nd/transactive/core/mcl/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <PrecompiledHeaderOutputFile>.\../../../../build/win32_nd/transactive/core/mcl/core.mcl.TA_mcl.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DBUG_OFF;DYNLOAD_MYSQL_LIB="MYSQL_LIB";CPPCONN_TRACE_ENABLED;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CPPCONN_SO_BUILD="";CMAKE_INTDIR="Debug";mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\boost\boost_1_39_0;..\mysql\5.5.15\winnt\inc./;./cppconn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalOptions> /STACK:10000000 /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;libmysql.lib;ws2_32.lib</AdditionalDependencies>
+      <OutputFile>../../../../build/win32_nd/TA_mcl_d.dll</OutputFile>
+      <Version>5.1</Version>
+      <AdditionalLibraryDirectories>..\..\..\cots\mysql\5.5.15\winnt\lib;..\..\..\cots\boost\boost_1_39_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\../../../../build/win32_nd/transactive/core/mcl/TA_mcl_d.pdb</ProgramDatabaseFile>
+      <ImportLibrary>../../../../build/win32_nd/TA_mcl_d.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;DBUG_OFF;DYNLOAD_MYSQL_LIB="MYSQL_LIB";CPPCONN_TRACE_ENABLED;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CPPCONN_SO_BUILD="";CMAKE_INTDIR="Release";mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <DllDataFileName />
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\boost\boost_1_39_0;..\..\mysql\5.5.15\winnt\inc;./;.\cppconn;.\driver\nativeapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;DBUG_OFF;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AssemblerListingLocation>Release</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/TA_mcl.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;DBUG_OFF;DYNLOAD_MYSQL_LIB="MYSQL_LIB";CPPCONN_TRACE_ENABLED;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;CPPCONN_SO_BUILD="";CMAKE_INTDIR="Release";mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\boost\boost_1_39_0;..\mysql\5.5.15\winnt\inc;./;.\cppconn;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalOptions> /STACK:10000000 /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;libmysql.lib;ws2_32.lib</AdditionalDependencies>
+      <OutputFile>.\Release_vc90\TA_mcl.dll</OutputFile>
+      <Version>5.1</Version>
+      <AdditionalLibraryDirectories>..\..\mysql\5.5.15\winnt\lib;..\..\boost\boost_1_39_0\stage\lib\$(OutDir);..\..\boost\boost_1_39_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Release_vc90\TA_mcl.pdb</ProgramDatabaseFile>
+      <ImportLibrary>.\Release_vc90\TA_mcl.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy  /Y  .\Release_vc90\TA_mcl.lib    .\lib\winnt
+xcopy  /Y  .\Release_vc90\TA_mcl.pdb  .\lib\winnt
+xcopy /Y   .\Release_vc90\TA_mcl.dll     .\lib\winnt
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="driver\mysql_art_resultset.cpp" />
+    <ClCompile Include="driver\mysql_art_rset_metadata.cpp" />
+    <ClCompile Include="driver\mysql_connection.cpp" />
+    <ClCompile Include="driver\mysql_debug.cpp" />
+    <ClCompile Include="driver\mysql_driver.cpp" />
+    <ClCompile Include="driver\mysql_metadata.cpp" />
+    <ClCompile Include="driver\mysql_parameter_metadata.cpp" />
+    <ClCompile Include="driver\mysql_prepared_statement.cpp" />
+    <ClCompile Include="driver\mysql_ps_resultset.cpp" />
+    <ClCompile Include="driver\mysql_ps_resultset_metadata.cpp" />
+    <ClCompile Include="driver\mysql_resultbind.cpp" />
+    <ClCompile Include="driver\mysql_resultset.cpp" />
+    <ClCompile Include="driver\mysql_resultset_metadata.cpp" />
+    <ClCompile Include="driver\mysql_statement.cpp" />
+    <ClCompile Include="driver\mysql_util.cpp" />
+    <ClCompile Include="driver\mysql_warning.cpp" />
+    <ClCompile Include="driver\nativeapi\library_loader.cpp" />
+    <ClCompile Include="driver\nativeapi\mysql_client_api.cpp" />
+    <ClCompile Include="driver\nativeapi\mysql_native_connection_wrapper.cpp" />
+    <ClCompile Include="driver\nativeapi\mysql_native_driver_wrapper.cpp" />
+    <ClCompile Include="driver\nativeapi\mysql_native_resultset_wrapper.cpp" />
+    <ClCompile Include="driver\nativeapi\mysql_native_statement_wrapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="driver\mysql_art_resultset.h" />
+    <ClInclude Include="driver\mysql_art_rset_metadata.h" />
+    <ClInclude Include="driver\mysql_connection.h" />
+    <ClInclude Include="driver\mysql_debug.h" />
+    <ClInclude Include="driver\mysql_driver.h" />
+    <ClInclude Include="driver\mysql_metadata.h" />
+    <ClInclude Include="driver\mysql_parameter_metadata.h" />
+    <ClInclude Include="driver\mysql_prepared_statement.h" />
+    <ClInclude Include="driver\mysql_ps_resultset.h" />
+    <ClInclude Include="driver\mysql_ps_resultset_metadata.h" />
+    <ClInclude Include="driver\mysql_resultbind.h" />
+    <ClInclude Include="driver\mysql_resultset.h" />
+    <ClInclude Include="driver\mysql_resultset_metadata.h" />
+    <ClInclude Include="driver\mysql_statement.h" />
+    <ClInclude Include="driver\mysql_util.h" />
+    <ClInclude Include="driver\mysql_warning.h" />
+    <ClInclude Include="driver\nativeapi\mysql_client_api.h" />
+    <ClInclude Include="driver\nativeapi\mysql_native_connection_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\mysql_native_driver_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\mysql_native_resultset_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\mysql_native_statement_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\native_connection_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\native_driver_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\native_resultset_wrapper.h" />
+    <ClInclude Include="driver\nativeapi\native_statement_wrapper.h" />
+    <ClInclude Include="cppconn\build_config.h" />
+    <ClInclude Include="cppconn\config.h" />
+    <ClInclude Include="cppconn\connection.h" />
+    <ClInclude Include="cppconn\datatype.h" />
+    <ClInclude Include="cppconn\driver.h" />
+    <ClInclude Include="cppconn\exception.h" />
+    <ClInclude Include="cppconn\metadata.h" />
+    <ClInclude Include="cppconn\parameter_metadata.h" />
+    <ClInclude Include="cppconn\prepared_statement.h" />
+    <ClInclude Include="cppconn\resultset.h" />
+    <ClInclude Include="cppconn\resultset_metadata.h" />
+    <ClInclude Include="cppconn\sqlstring.h" />
+    <ClInclude Include="cppconn\statement.h" />
+    <ClInclude Include="cppconn\warning.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
