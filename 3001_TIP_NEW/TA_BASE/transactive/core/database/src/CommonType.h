@@ -24,6 +24,7 @@ namespace TA_Base_Core
 
 	enum DB_ERR_CODE
 	{
+		ER_MYSQL_READ_ONLY			 = 1290, // MySQL server is read-only
 		ER_MYSQL_CANNT_CONNECT		 = 2003, // Can't connect to MySQL server 
 		ER_MYSQL_GONE_AWAY			 = 2006, // MySQL server has gone away
 
@@ -37,12 +38,14 @@ namespace TA_Base_Core
 	{
 		int nSQLID;                                // the SQL ID map in the sqlcode.txt
 		std::string strSQLID;                      // the SQL ID map in the sqlcode.txt
-		std::string strCommon;                     // the common SQL which can run at all supported db
-		//std::string strSqlite;                     // the oracle SQL statement
-		std::string strMySQL;                      // the mysql SQL statement
-		std::string strSqlite;                     // the SQLite SQL statement
+		std::string strCommonSQL;                     // the common SQL which can run at all supported db
+		std::string strOracleSQL;                     // the oracle SQL statement
+		std::string strMySQLSQL;                      // the mysql SQL statement
+		std::string strSQLiteSQL;                     // the SQLite SQL statement
 
 	}SQLStatement, *PSQLStatement;
+
+
 }
 
 
@@ -55,7 +58,7 @@ namespace TA_Base_Core
 enum DbServerType
 {
 	enumBeginDbType = 0,    // the begin of the supported database type.
-
+	
 	enumOracleDb = 1,   // Oracle database  (Support) //defOracleDBName
 	enumMysqlDb  = 2,   // Mysql database   (Support) //defMysqlDBName
 	enumSqliteDb = 3,   // SQLiet database  (support) //defSqliteDBName
@@ -69,9 +72,9 @@ enum DbServerType
 
 
 //define dbType sting
-#define  defOracleDBName          "Oracle"
-#define  defMysqlDBName           "Mysql"
-#define  defSqliteDBName          "Sqlite"
+#define  defOracleDBName          "oracle"
+#define  defMysqlDBName           "mysql"
+#define  defSqliteDBName          "sqlite"
 
 
 

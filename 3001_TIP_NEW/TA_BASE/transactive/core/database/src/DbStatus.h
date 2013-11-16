@@ -20,8 +20,8 @@
 #include <string>
 #include <map>
 
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
-//#include "core/synchronisation/src/WriteReadThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
+#include "core/synchronisation/src/WriteReadThreadLockable.h"
 #include "core/utilities/src/RunParams.h"
 
 namespace TA_Base_Core
@@ -90,9 +90,9 @@ namespace TA_Base_Core
     private:
         typedef std::map<std::string, EDbState> DbList;
         DbList m_dbList;
-        ReEntrantThreadLockable m_listLock;
+        WriteReadThreadLockable m_listLock;
         static DbStatus* m_instance;
-        static ReEntrantThreadLockable m_instanceLock;
+        static NonReEntrantThreadLockable m_instanceLock;
 
     };
 } //namespace

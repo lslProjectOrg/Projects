@@ -102,7 +102,7 @@ int CSQLType::getDataNum()
 	return m_LstSQLInfo.size();
 }
 
-int CSQLType::checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTMysqlSqlLine)
+int CSQLType::checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTSqlLine)
 {
 	int nFunRes = 0;
 	std::list<CSQLItem*>::iterator itemLst;	
@@ -111,7 +111,7 @@ int CSQLType::checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTMy
 	
 	//set not finded	
 	nFunRes = -1;
-	strOUTMysqlSqlLine.clear();
+	strOUTSqlLine.clear();
 	
 	itemLst = m_LstSQLInfo.begin();
 	while (itemLst != m_LstSQLInfo.end())
@@ -123,7 +123,7 @@ int CSQLType::checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTMy
 		if (0 == strSqlIDGet.compare(strSqlID))
 		{
 			//find same sqlID
-			strOUTMysqlSqlLine =  pSQLItemGet->getSqlLine();
+			strOUTSqlLine =  pSQLItemGet->getSqlLine();
 			nFunRes = 0;
 			break;
 		}
@@ -182,22 +182,26 @@ int CSQLType::analyzeDataTypeCommon(const std::string& strIndexTableName)
 		std::string strSQLID;
 		std::string strCommonSQL;  
 		std::string strOracleSQL; 
-		std::string strMySqlSQL;   
+		std::string strMySqlSQL;  
+		std::string strSqliteSQL;   
+
 		/*sqlmadef.h*/
 		strDefineID.clear();
 		strSQLID.clear();
 		strCommonSQL.clear();
 		strOracleSQL.clear();
 		strMySqlSQL.clear();
+		strSqliteSQL.clear();
 		
-		pSQLInfoCommon->getDataForFileTypeCommon(strDefineID, strSQLID, strCommonSQL, strOracleSQL, strMySqlSQL);
+		pSQLInfoCommon->getDataForFileTypeCommon(strDefineID, strSQLID, strCommonSQL, strOracleSQL, strMySqlSQL, strSqliteSQL);
 		
 		CSQLDataProcessor::getInstance().addDataToFileSQLMACRODEFH(strDefineID);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strSQLID); 
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strCommonSQL);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strOracleSQL);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strMySqlSQL);
-		
+		CSQLDataProcessor::getInstance().addDataToFileSQLH(strSqliteSQL);
+
 		itemLst++;
 		
 	}//while
@@ -206,8 +210,7 @@ int CSQLType::analyzeDataTypeCommon(const std::string& strIndexTableName)
 }
 
 
-
-int CSQLType::analyzeDataTypeOracleMysql(const std::string& strIndexTableName, CSQLType* pDBInfoMysql)
+int CSQLType::analyzeDataTypeOracleMysqlSqlite(const std::string& strIndexTableName, CSQLType* pDBInfoMysql, CSQLType* pDBInfoSQLite)	
 {  		
 	int				nFunRes = 0;
 	std::string		strTableTypeOracleMySql;
@@ -215,6 +218,7 @@ int CSQLType::analyzeDataTypeOracleMysql(const std::string& strIndexTableName, C
 	CSQLItem*       pSQLInfoOracle = NULL;
 	std::string     strSqlID;
 	std::string     strMysqlSqlLine;
+	std::string     strSQLiteSqlLine;
 
 	//add to file 
 	CSQLDataProcessor::getInstance().addDataToFileSQLH(strIndexTableName);
@@ -253,26 +257,43 @@ int CSQLType::analyzeDataTypeOracleMysql(const std::string& strIndexTableName, C
 			return nFunRes;
 		}
 
+		/*
+		check Oracle and SQLite SqlId match
+		*/
+		strSQLiteSqlLine.clear();
+		strSqlID.clear();
+		strSqlID = pSQLInfoOracle->getSqlID();
+		nFunRes = pDBInfoSQLite->checkSqlIDMatch(strSqlID, strSQLiteSqlLine);
+		if (0 != nFunRes)
+		{
+			nFunRes = -1;
+			return nFunRes;
+		}
+
 		std::string strDefineID;
 		std::string strSQLID;
 		std::string strCommonSQL;  
 		std::string strOracleSQL; 
-		std::string strMySqlSQL;   
+		std::string strMySqlSQL;  
+		std::string strSQLiteSQL;   
+
 		/*sqlmadef.h*/
 		strDefineID.clear();
 		strSQLID.clear();
 		strCommonSQL.clear();
 		strOracleSQL.clear();
 		strMySqlSQL.clear();
-		
-		pSQLInfoOracle->getDataForFileTypeOracleMySql(strMysqlSqlLine, strDefineID, strSQLID, strCommonSQL, strOracleSQL, strMySqlSQL);
+		strSQLiteSQL.clear();
+
+		pSQLInfoOracle->getDataForFileTypeOracleMySqlSQLite(strMysqlSqlLine, strSQLiteSqlLine, strDefineID, strSQLID, strCommonSQL, strOracleSQL, strMySqlSQL, strSQLiteSQL);
 		
 		CSQLDataProcessor::getInstance().addDataToFileSQLMACRODEFH(strDefineID);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strSQLID);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strCommonSQL);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strOracleSQL);
 		CSQLDataProcessor::getInstance().addDataToFileSQLH(strMySqlSQL);
-		
+		CSQLDataProcessor::getInstance().addDataToFileSQLH(strSQLiteSQL);
+
 		itemLst++;
 		
 	}//while
@@ -280,18 +301,19 @@ int CSQLType::analyzeDataTypeOracleMysql(const std::string& strIndexTableName, C
 	return	nFunRes; 
 }
 
-int CSQLType::analyzeDataTypeCommonOracleMysql(const std::string& strIndexTableName, CSQLType* pDBInfoOracle, CSQLType* pDBInfoMysql)
+
+int CSQLType::analyzeDataTypeCommonOracleMysqlSqlite(const std::string& strIndexTableName, CSQLType* pDBInfoOracle, CSQLType* pDBInfoMysql, CSQLType* pDBInfoSQLite)
 {
 	int		nFunRes = 0;
-	
+
 	nFunRes = analyzeDataTypeCommon(strIndexTableName);
 	if (0 != nFunRes)
 	{
 		nFunRes = -1;
 		return nFunRes;
 	}
-	
-	nFunRes = pDBInfoOracle->analyzeDataTypeOracleMysql(strIndexTableName, pDBInfoMysql);
+
+	nFunRes = pDBInfoOracle->analyzeDataTypeOracleMysqlSqlite(strIndexTableName, pDBInfoMysql, pDBInfoSQLite);
 	if (0 != nFunRes)
 	{
 		nFunRes = -1;

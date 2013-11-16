@@ -44,10 +44,11 @@
 #define  LINE_COMMONT				  ';'
 #define  LINE_END				      '\r'
 
-#define  DB_NUM						  3
+#define  DB_NUM						  4
 #define	 DB_COMMON					  "[[common]]"
 #define	 DB_ORACLE			          "[[oracle]]"
 #define	 DB_MYSQL			          "[[mysql]]"
+#define	 DB_SQLite			          "[[sqlite]]"
 
 
 //==================================================================================
@@ -77,6 +78,7 @@ struct st_sql_data	\n\
 	const CharT*    pCommonSQL;\n\
 	const CharT*    pOracleSQL;\n\
 	const CharT*    pMySQLSQL;\n\
+	const CharT*    pSQLiteSQL;\n\
 };\n\n\n\n\
 static const st_sql_data  s_SQLArray[]=	\n\
 {   \n"

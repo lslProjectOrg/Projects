@@ -44,13 +44,13 @@ public:
 	int getDataNum();
 	
 	int analyzeDataTypeCommon(const std::string& strIndexTableName);
-	int analyzeDataTypeOracleMysql(const std::string& strIndexTableName, CSQLType* pDBInfoMysql);
-	int analyzeDataTypeCommonOracleMysql(const std::string& strIndexTableName, CSQLType* pDBInfoOracle, CSQLType* pDBInfoMysql);
-	
+	int analyzeDataTypeOracleMysqlSqlite(const std::string& strIndexTableName, CSQLType* pDBInfoMysql, CSQLType* pDBInfoSQLite);
+	int analyzeDataTypeCommonOracleMysqlSqlite(const std::string& strIndexTableName, CSQLType* pDBInfoOracle, CSQLType* pDBInfoMysql, CSQLType* pDBInfoSQLite);
+
 	/*
 		check Oracle and Mysql SqlId match
 	*/
-	int checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTMysqlSqlLine);
+	int checkSqlIDMatch(const std::string& strSqlID, std::string& strOUTSqlLine);
 private:
 	void _FreeData();
 private:

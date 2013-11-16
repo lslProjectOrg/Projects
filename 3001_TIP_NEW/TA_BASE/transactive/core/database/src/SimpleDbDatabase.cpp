@@ -530,10 +530,12 @@ namespace TA_Base_Core
 		{
 			LOG_GENERIC( SourceInfo, DebugUtil::DebugSQL, "Begin prepare SQL statement...");
 
-			rSqlStatement.strCommon.clear();
-			rSqlStatement.strMySQL.clear();
-			rSqlStatement.strSqlite.clear();
-			rSqlStatement.strSqlite.clear();
+			rSqlStatement.nSQLID = 0;
+			rSqlStatement.strCommonSQL.clear();
+			rSqlStatement.strSQLID.clear();
+			rSqlStatement.strOracleSQL.clear();
+			rSqlStatement.strMySQLSQL.clear();
+			rSqlStatement.strSQLiteSQL.clear();
 
 			SQLCode::getInstance().buildSQLStatement(varParms, rSqlStatement);
 

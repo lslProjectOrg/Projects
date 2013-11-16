@@ -36,13 +36,13 @@
 #include <set>
 #include <vector>
 
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 
 
 namespace TA_Base_Core
 {
     template <typename RowId, typename ColumnId, typename ElementType> 
-    class Matrix : virtual public ReEntrantThreadLockable
+    class Matrix : virtual public NonReEntrantThreadLockable
     {
     // Operations
     public:

@@ -1,0 +1,8 @@
+﻿Build started 11/15/2013 2:16:29 PM.
+     1>Project "C:\LSL\SVNWork\MT\3001_TIP_NEW\TA_BASE\tools\build\Apps\tools.build.apps.Build_Base_Apps.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.MakeFile.Targets(37,5): warning MSB8005: The property 'NMakeBuildCommandLine' doesn't exist.  Skipping...
+     1>Done Building Project "C:\LSL\SVNWork\MT\3001_TIP_NEW\TA_BASE\tools\build\Apps\tools.build.apps.Build_Base_Apps.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.02

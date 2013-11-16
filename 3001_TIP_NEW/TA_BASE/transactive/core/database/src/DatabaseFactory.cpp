@@ -35,7 +35,7 @@ namespace TA_Base_Core
 {
 
     DatabaseFactory* DatabaseFactory::m_instance = 0;
-    ReEntrantThreadLockable DatabaseFactory::m_instanceLock;
+    NonReEntrantThreadLockable DatabaseFactory::m_instanceLock;
 
     DatabaseFactory::~DatabaseFactory()
     {

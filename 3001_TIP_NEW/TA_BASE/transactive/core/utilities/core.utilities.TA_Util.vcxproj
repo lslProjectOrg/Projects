@@ -114,6 +114,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AlarmClock.cpp" />
     <ClCompile Include="src\CodeConverter.cpp" />
     <ClCompile Include="src\DataConversion.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -190,6 +191,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AlarmClock.h" />
     <ClInclude Include="src\CodeConverter.h" />
     <ClInclude Include="src\DataConversion.h" />
     <ClInclude Include="src\DateFormat.h" />

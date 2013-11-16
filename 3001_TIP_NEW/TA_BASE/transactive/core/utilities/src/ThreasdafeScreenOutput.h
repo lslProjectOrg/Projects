@@ -19,7 +19,7 @@
 #ifndef ThreasdafeScreenOutput_H
 #define ThreasdafeScreenOutput_H
 
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 
 #include <string>
 #include <sstream>
@@ -55,9 +55,9 @@ namespace TA_Base_Core
 
     private:
 
-        static ReEntrantThreadLockable m_coutLock;
+        static NonReEntrantThreadLockable m_coutLock;
 
-        static ReEntrantThreadLockable m_cerrLock;
+        static NonReEntrantThreadLockable m_cerrLock;
 
     };
 

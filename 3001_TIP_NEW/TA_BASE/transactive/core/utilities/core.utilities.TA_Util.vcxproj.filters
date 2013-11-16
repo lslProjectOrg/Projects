@@ -82,6 +82,9 @@
     <ClCompile Include="src\Timer.cpp">
       <Filter>time</Filter>
     </ClCompile>
+    <ClCompile Include="src\AlarmClock.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CodeConverter.h">
@@ -154,6 +157,9 @@
       <Filter>time</Filter>
     </ClInclude>
     <ClInclude Include="src\Timer.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AlarmClock.h">
       <Filter>time</Filter>
     </ClInclude>
   </ItemGroup>

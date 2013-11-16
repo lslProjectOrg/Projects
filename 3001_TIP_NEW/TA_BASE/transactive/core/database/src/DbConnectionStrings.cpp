@@ -34,7 +34,7 @@ namespace fs = boost::filesystem;
 
 namespace TA_Base_Core
 {
-	ReEntrantThreadLockable DbConnectionStrings::m_singletonLock;
+	NonReEntrantThreadLockable DbConnectionStrings::m_singletonLock;
 	DbConnectionStrings* DbConnectionStrings::m_sDbConnStrObj = NULL;
 
     DbConnectionStrings::DbConnectionStrings(std::string filename)

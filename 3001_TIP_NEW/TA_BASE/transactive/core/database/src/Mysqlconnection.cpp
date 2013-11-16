@@ -670,13 +670,13 @@ void MysqlConnection::cleanQuery( IQueryAdapter*& pQuery )
 
 void  MysqlConnection::_GetSQL(std::string& strSql, const SQLStatement& rSqlObj)
 {
-	if (!rSqlObj.strCommon.empty())
+	if (!rSqlObj.strCommonSQL.empty())
 	{
-		strSql = rSqlObj.strCommon;
+		strSql = rSqlObj.strCommonSQL;
 	}
-	else if (!rSqlObj.strMySQL.empty())
+	else if (!rSqlObj.strMySQLSQL.empty())
 	{
-		strSql = rSqlObj.strMySQL;
+		strSql = rSqlObj.strMySQLSQL;
 	}
 	else
 	{

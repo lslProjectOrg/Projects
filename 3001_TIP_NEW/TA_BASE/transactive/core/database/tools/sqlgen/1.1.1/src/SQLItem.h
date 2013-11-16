@@ -45,8 +45,8 @@ public:
 	int analyzeData(const std::string& strLine);
 	int checkDuplicateSqlID();
 
-	int getDataForFileTypeCommon(std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL);
-	int getDataForFileTypeOracleMySql( const std::string& strINMySqlLine, std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL );
+	int getDataForFileTypeCommon(std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL, std::string& strOUTSQLiteSQL);
+	int getDataForFileTypeOracleMySqlSQLite( const std::string& strINMySqlLine, const std::string& strINSQLiteLine, std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL, std::string& strOUTSQLiteSQL );
 
 
 	std::string getSqlID();

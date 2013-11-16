@@ -457,6 +457,8 @@ void SQLiteConnection::fetchBLOB(const std::string &strSQL,
 								DataClobArray& data )
 {
 	CppSQLite3Query* pQuery = NULL;
+	unsigned char* pBinData = NULL;
+	unsigned char ucharValue = 0;
 
 	FUNCTION_ENTRY("fetchBLOB");
 
@@ -486,10 +488,9 @@ void SQLiteConnection::fetchBLOB(const std::string &strSQL,
 			if (nBinaryLength > 0)  // have data 
 			{
 				DataClob dataclob;
-				const unsigned char* pBinData = blob.getBinary();
-				unsigned char ucharValue = 0;
-				int nDIdx = 0;
-				for (nDIdx = 0; nDIdx < nBinaryLength; nDIdx++)
+				pBinData = (unsigned char*)blob.getBinary();
+				ucharValue = 0;
+				for (int nDIdx = 0; nDIdx < nBinaryLength; nDIdx++)
 				{
 					ucharValue = pBinData[nDIdx];
 					dataclob.push_back(ucharValue);
@@ -532,6 +533,12 @@ void SQLiteConnection::updateBLOB(
 {
 	FUNCTION_ENTRY("updateBLOB");
 	std::stringstream SqlStatement;
+	CppSQLite3Buffer bufSQL;
+	CppSQLite3Binary blob;
+	unsigned char uCharValue = 0;
+	int nBinDataSize = 0;
+	unsigned char* pBinData = NULL;
+
 	try
 	{
 		TA_ASSERT(strTableName.length() > 0, "MysqlConnection::updateBLOB::Invalid table name.");
@@ -542,17 +549,15 @@ void SQLiteConnection::updateBLOB(
 			open();
 		}
 
-		CppSQLite3Buffer bufSQL;
-		CppSQLite3Binary blob;
-		
+
 		if (data.size() > 0)  // have data to insert
 		{
-			int nBinDataSize = data.size();
+			nBinDataSize = data.size();
 			nBinDataSize += 1;
-			unsigned char* pBinData = new unsigned char[nBinDataSize];
+			pBinData = new unsigned char[nBinDataSize];
 			memset(pBinData, 0, nBinDataSize);
 
-			unsigned char uCharValue = 0;
+			uCharValue = 0;
 			nBinDataSize = data.size();
 			for (int nDIdx = 0; nDIdx < nBinDataSize; nDIdx++)
 			{
@@ -707,13 +712,13 @@ void SQLiteConnection::cleanQuery( IQueryAdapter*& pQuery )
 
 void  SQLiteConnection::_GetSQL(std::string& strSql, const SQLStatement& rSqlObj)
 {
-	if (!rSqlObj.strCommon.empty())
+	if (!rSqlObj.strCommonSQL.empty())
 	{
-		strSql = rSqlObj.strCommon;
+		strSql = rSqlObj.strCommonSQL;
 	}
-	else if (!rSqlObj.strSqlite.empty())
+	else if (!rSqlObj.strSQLiteSQL.empty())
 	{
-		strSql = rSqlObj.strSqlite;
+		strSql = rSqlObj.strSQLiteSQL;
 	}
 	else
 	{

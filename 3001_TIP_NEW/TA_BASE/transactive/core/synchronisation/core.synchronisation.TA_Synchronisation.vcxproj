@@ -111,22 +111,39 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\AbstractSingleThreadBarrier.h" />
+    <ClInclude Include="src\Condition.h" />
+    <ClInclude Include="src\IProcessLockable.h" />
     <ClInclude Include="src\IThreadLockable.h" />
+    <ClInclude Include="src\NonReEntrantProcessLockable.h" />
+    <ClInclude Include="src\NonReEntrantThreadLockable.h" />
+    <ClInclude Include="src\ProcessGuard.h" />
+    <ClInclude Include="src\ReadWriteThreadLockable.h" />
     <ClInclude Include="src\ReEntrantThreadLockable.h" />
+    <ClInclude Include="src\ReEntrantThreadLockableWithMutex.h" />
+    <ClInclude Include="src\SingleThreadBarrier.h" />
     <ClInclude Include="src\TASemaphore.h" />
     <ClInclude Include="src\ThreadGuard.h" />
     <ClInclude Include="src\ThreadLockableHolderVerifier.h" />
     <ClInclude Include="src\ThreadReadGuard.h" />
+    <ClInclude Include="src\WriteReadThreadLockable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Condition.cpp" />
     <ClCompile Include="src\IThreadLockable.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\NonReEntrantProcessLockable.cpp" />
+    <ClCompile Include="src\NonReEntrantThreadLockable.cpp" />
+    <ClCompile Include="src\ProcessGuard.cpp" />
+    <ClCompile Include="src\ReadWriteThreadLockable.cpp" />
     <ClCompile Include="src\ReEntrantThreadLockable.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\ReEntrantThreadLockableWithMutex.cpp" />
+    <ClCompile Include="src\SingleThreadBarrier.cpp" />
     <ClCompile Include="src\TASemaphore.cpp" />
     <ClCompile Include="src\ThreadGuard.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -136,6 +153,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="src\WriteReadThreadLockable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

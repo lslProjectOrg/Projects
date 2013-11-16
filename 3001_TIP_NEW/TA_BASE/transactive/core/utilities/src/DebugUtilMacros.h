@@ -32,6 +32,16 @@
   */
 #define LOG          TA_Base_Core::DebugUtil::getInstance().log
 
+/**
+  * LOG_GENERIC
+  *
+  * This macro is used to make generic log messages (ie a message not fitting
+  * one of the preformatted message types).
+  *
+  * Usage:
+  *      LOG_GENERIC(SourceInfo, <Debug level>, <format string>, ...)
+  */
+#define LOG_GENERIC  TA_Base_Core::DebugUtil::getInstance().logGeneric
 
 
 // Macros that are equivalent to LOG_GENERIC, but avoid evaluating arguments if
@@ -98,34 +108,7 @@
   */
 #define LOGMORE     TA_Base_Core::DebugUtil::getInstance().logMore
 
-
-
-#define LOG_EXCEPTION_DETAILS    TA_Base_Core::gLogExceptionDetails
-#define LOG_EXCEPTION_CATCH      TA_Base_Core::gLogExceptionCatch
-
-
-namespace TA_Base_Core
-{
-	// Necessary to support LOG_XXX_XXX macros above.
-	inline void gLogExceptionDetails(const std::string& file, int line, const std::string& name, const std::string& details)
-	{
-		TA_Base_Core::DebugUtil::getInstance().log(file, line, DebugUtil::ExceptionDetails, name.c_str(), details.c_str());
-	}
-
-	inline void gLogExceptionCatch(const std::string& file, int line, const std::string& name, const std::string& description)
-	{
-		TA_Base_Core::DebugUtil::getInstance().log(file, line, DebugUtil::ExceptionCatch, name.c_str(), description.c_str());
-	}
-
-}   // namespace TA_Base_Core
-
-// DEPRECATED.  Use FUNCTION_ENTRY and FUNCTION_EXIT macros instead.       
-#define LOG_FUNCTION_ENTRY(sourceInfo, name)    FUNCTION_ENTRY(name)
-#define LOG_FUNCTION_EXIT(sourceInfo, name)     FUNCTION_EXIT
-
-
-
-//////////////////////////////////////////////////////////////////////////
+#define LOGLARGESTRING TA_Base_Core::DebugUtil::getInstance().logLargeString
 
 /** 
   * Source Info. 
@@ -137,22 +120,28 @@ namespace TA_Base_Core
 #define SourceInfo  __FILE__,__LINE__
 
 
-#define LOGLARGESTRING TA_Base_Core::DebugUtil::getInstance().logLargeString
+#define LOG_EXCEPTION_DETAILS    TA_Base_Core::gLogExceptionDetails
+#define LOG_EXCEPTION_CATCH      TA_Base_Core::gLogExceptionCatch
 
-  
-/**
-  * LOG_GENERIC
-  *
-  * This macro is used to make generic log messages (ie a message not fitting
-  * one of the preformatted message types).
-  *
-  * Usage:
-  *      LOG_GENERIC(SourceInfo, <Debug level>, <format string>, ...)
-  */
-#define LOG_GENERIC  TA_Base_Core::DebugUtil::getInstance().logGeneric
 
-//////////////////////////////////////////////////////////////////////////
+namespace TA_Base_Core
+{
+    // Necessary to support LOG_XXX_XXX macros above.
+    inline void gLogExceptionDetails(const std::string& file, int line, const std::string& name, const std::string& details)
+    {
+        TA_Base_Core::DebugUtil::getInstance().log(file, line, DebugUtil::ExceptionDetails, name.c_str(), details.c_str());
+    }
 
+    inline void gLogExceptionCatch(const std::string& file, int line, const std::string& name, const std::string& description)
+    {
+        TA_Base_Core::DebugUtil::getInstance().log(file, line, DebugUtil::ExceptionCatch, name.c_str(), description.c_str());
+    }
+
+}   // namespace TA_Base_Core
+
+// DEPRECATED.  Use FUNCTION_ENTRY and FUNCTION_EXIT macros instead.       
+#define LOG_FUNCTION_ENTRY(sourceInfo, name)    FUNCTION_ENTRY(name)
+#define LOG_FUNCTION_EXIT(sourceInfo, name)     FUNCTION_EXIT
 
 
 #endif // DEBUGUTILMACROS_H_INCLUDED

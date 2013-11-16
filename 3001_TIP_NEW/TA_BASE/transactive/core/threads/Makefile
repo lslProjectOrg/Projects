@@ -6,7 +6,7 @@
 # Author:  Ripple
 # Version: $Revision: #2 $
 #
-# Last modification: $DateTime: 2012/02/06 16:15:14 $
+# Last modification: $DateTime: 2013/05/20 09:25:31 $
 # Last modified by:  $Author: haijun.li $
 #
 PROJ_ROOT_DIR	= ../../../..
@@ -16,7 +16,10 @@ PROJ_SOURCE	= Thread.cpp \
 		ThreadedWorker.cpp \
 		ThreadPoolManager.cpp \
 		ThreadPoolSingletonManager.cpp \
-		WorkItemQueueProcessor.cpp
+		WorkItemQueueProcessor.cpp \
+		IThreadPoolBase.cpp \
+		LFThreadPoolWorker.cpp \
+		LFThreadPoolManager.cpp
 
 PROJ_TYPE	= lib
 PROJ_INC_DIR	= ./src $(PROJ_ROOT_DIR)/code/transactive

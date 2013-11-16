@@ -44,14 +44,14 @@ public:
 
 	static void activeDB1() //MYSQL
 	{	 		 
-		TA_Base_Core::RunParams.getInstance().set("DataBase_tra_occ@192.168.123.43",RPARAM_DBONLINE); 	 
-		TA_Base_Core::RunParams.getInstance().set("DataBase_TRANSACT",RPARAM_DBOFFLINE); 	 
+		TA_Base_Core::RunParams::getInstance().set("DataBase_tra_occ@192.168.123.43",RPARAM_DBONLINE); 	 
+		TA_Base_Core::RunParams::getInstance().set("DataBase_TRANSACT",RPARAM_DBOFFLINE); 	 
 	}
 
 	static void activeDB2() //ORACLE
 	{			
-		TA_Base_Core::RunParams.getInstance().set("DataBase_tra_occ@192.168.123.43",RPARAM_DBOFFLINE); 	 
-		TA_Base_Core::RunParams.getInstance().set("DataBase_TRANSACT",RPARAM_DBONLINE); 	 
+		TA_Base_Core::RunParams::getInstance().set("DataBase_tra_occ@192.168.123.43",RPARAM_DBOFFLINE); 	 
+		TA_Base_Core::RunParams::getInstance().set("DataBase_TRANSACT",RPARAM_DBONLINE); 	 
 	}
 	virtual ~TestInitialization();
 private:

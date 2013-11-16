@@ -28,7 +28,7 @@
 namespace TA_Base_Core
 {
     DbStatus* DbStatus::m_instance = 0;
-    ReEntrantThreadLockable DbStatus::m_instanceLock;
+    NonReEntrantThreadLockable DbStatus::m_instanceLock;
 
     DbStatus::DbStatus()
     {

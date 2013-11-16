@@ -273,10 +273,10 @@ int CGenerateSQLFile::_GeneralSQLFiles()
 	}
 	
 	//check Oracle and Mysql sql Num
-	nFunRes = m_pSQLCodeInfo->checkOracleAndMysqlSqlNum();
+	nFunRes = m_pSQLCodeInfo->checkSupportDBSqlNum();
 	if (0 != nFunRes)
 	{
-		_SysLog(SourceFLInfo, DebugError, "error! checkOracleAndMysqlSqlNum()");
+		_SysLog(SourceFLInfo, DebugError, "error! checkSupportDBSqlNum()");
 		nFunRes = -1;
 		return nFunRes;
 	}

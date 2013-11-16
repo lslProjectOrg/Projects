@@ -23,7 +23,7 @@
 #include "core/database/src/DbStatus.h"
 #include "core/database/src/DataTypeEnums.h"
 #include "core/synchronisation/src/ReEntrantThreadLockable.h"
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 
 namespace TA_Base_Core
 {
@@ -68,7 +68,7 @@ namespace TA_Base_Core
 		DataConnections getConnectionListStatic(const std::string& strFileName,const EDataTypes, const EDataActions);
 		DbConnStrMap  m_sMapDbConnStrs;
 
-		static ReEntrantThreadLockable m_singletonLock;
+		static NonReEntrantThreadLockable m_singletonLock;
 		static DbConnectionStrings* m_sDbConnStrObj;
 		ReEntrantThreadLockable m_getDbNameLock;
 

@@ -132,7 +132,8 @@ std::string& strOUTDefineID,
 std::string& strOUTSQLID, 
 std::string& strOUTCommonSQL, 
 std::string& strOUTOracleSQL, 
-std::string& strOUTMySQLSQL)
+std::string& strOUTMySQLSQL,
+std::string& strOUTSQLiteSQL)
 {
 	int         nFunRes = 0;
 	std::string strIndex;
@@ -143,6 +144,8 @@ std::string& strOUTMySQLSQL)
 	std::string strTmpCommonSQL = "\t\t/*CommonSQL*/";
 	std::string strTmpOracleSQL = "\t\t/*OracleSQL*/";
 	std::string strTmpMySQLSQL = "\t\t/*MySQLSQL*/";
+	std::string strTmpSqliteSQL = "\t\t/*SQLiteSQL*/";
+
 	std::string strQuotationMarks = "\"";
 	std::string strBeginQuotationMarks = "(\"";
 	std::string strEndQuotationMarks = "\"),\n";
@@ -162,6 +165,7 @@ std::string& strOUTMySQLSQL)
 	//--	/*CommonSQL*/("SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState"), 
 	//--	/*OracleSQL*/(""), 
 	//--	/*MySQLSQL*/(""), 
+	//--	/*SQLiteSQL*/(""), 
 
 	//			  \t{\t					/*SQLID*/	  ("					   ALARMSTATE_SELECT_71001	   "),\n
 	strOUTSQLID = strBeginParentheses + strTmpSQLID + strBeginQuotationMarks + strINSqlID  + strEndQuotationMarks;
@@ -172,23 +176,28 @@ std::string& strOUTMySQLSQL)
 	//					/*OracleSQL*/	  ("					   "),\n
 	strOUTOracleSQL =   strTmpOracleSQL + strBeginQuotationMarks + strEndQuotationMarks;
 
-	//					/*MySQLSQL*/	  ("					 ")                       \t},
-	strOUTMySQLSQL =   strTmpMySQLSQL + strBeginQuotationMarks + strEndQuotationMarksLast + strEndParentheses;
+	//					/*MySQLSQL*/	  ("					 "),\n                      
+	strOUTMySQLSQL =   strTmpMySQLSQL + strBeginQuotationMarks + strEndQuotationMarks ;
+
+	//					/*SQLiteSQL*/	  ("					 ")                       \t},
+	strOUTSQLiteSQL =   strTmpSqliteSQL + strBeginQuotationMarks + strEndQuotationMarksLast + strEndParentheses;
 
 	m_nDefineIDIndex += DB_NUM;	 
 
 	return nFunRes;	 
 }
 
-int CSQLDataProcessor::getDataForFileTypeOracleMySql(
+int CSQLDataProcessor::getDataForFileTypeOracleMySqlSQLite(
 const std::string& strINSqlID, 
 const std::string& strINOracleSQLLine, 
 const std::string& strINMySqlSQLLine,
+const std::string& strINSqliteSQLLine,
 std::string& strOUTDefineID, 
 std::string& strOUTSQLID, 
 std::string& strOUTCommonSQL, 
 std::string& strOUTOracleSQL, 
-std::string& strOUTMySQLSQL)
+std::string& strOUTMySQLSQL,
+std::string& strOUTSQLiteSQL)
 {
 	int         nFunRes = 0;
 	std::string strIndex;
@@ -199,6 +208,8 @@ std::string& strOUTMySQLSQL)
 	std::string strTmpCommonSQL = "\t\t/*CommonSQL*/";
 	std::string strTmpOracleSQL = "\t\t/*OracleSQL*/";
 	std::string strTmpMySQLSQL = "\t\t/*MySQLSQL*/";
+	std::string strTmpSQLiteSQL = "\t\t/*SQLiteSQL*/";
+
 	std::string strQuotationMarks = "\"";
 	std::string strBeginQuotationMarks = "(\"";
 	std::string strEndQuotationMarks = "\"),\n";
@@ -217,7 +228,8 @@ std::string& strOUTMySQLSQL)
 	//--	/*CommonSQL*/(""), 
 	//--	/*OracleSQL*/("SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState"), 
 	//--	/*MySQLSQL*/("SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState")	},
-	
+	//--	/*SQLiteSQL*/("SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState")	},
+
 	//			  \t{\t					/*SQLID*/	  ("					   ALARMSTATE_SELECT_71001	   "),\n
 	strOUTSQLID = strBeginParentheses + strTmpSQLID + strBeginQuotationMarks + strINSqlID  + strEndQuotationMarks;
 	
@@ -227,9 +239,12 @@ std::string& strOUTMySQLSQL)
 	//					/*OracleSQL*/	  ("					   SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState     "),\n
 	strOUTOracleSQL =   strTmpOracleSQL + strBeginQuotationMarks + strINOracleSQLLine + strEndQuotationMarks;
 
-	//					/*MySQLSQL*/	  ("					   SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState     ") \t},
-	strOUTMySQLSQL =   strTmpMySQLSQL + strBeginQuotationMarks + strINMySqlSQLLine + strEndQuotationMarksLast + strEndParentheses;
-		
+	//					/*MySQLSQL*/	  ("					   SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState     "),\n
+	strOUTMySQLSQL =   strTmpMySQLSQL + strBeginQuotationMarks + strINMySqlSQLLine + strEndQuotationMarks;
+	
+	//					/*SQLiteSQL*/	  ("					   SELECT Pkey,Name, DisplayName, TypeKey FROM AlarmState     ") \t},
+	strOUTSQLiteSQL =   strTmpSQLiteSQL + strBeginQuotationMarks + strINSqliteSQLLine + strEndQuotationMarksLast + strEndParentheses;
+
 	m_nDefineIDIndex += DB_NUM;	 
 	
 	return nFunRes;

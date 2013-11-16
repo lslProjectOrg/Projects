@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include "core/synchronisation/src/WriteReadThreadLockable.h"
 #include "core/synchronisation/src/ReEntrantThreadLockable.h"
 
 
@@ -409,7 +410,7 @@ namespace TA_Base_Core
 		 *			(ie: Some apps will receive a onRunParamChange() and then
 		 *			call getParam() within the same thread of execution!
 		 */
-		TA_Base_Core::ReEntrantThreadLockable m_paramDetailsLock;
+		TA_Base_Core::WriteReadThreadLockable m_paramDetailsLock;
 
 		/**
 		  * notify

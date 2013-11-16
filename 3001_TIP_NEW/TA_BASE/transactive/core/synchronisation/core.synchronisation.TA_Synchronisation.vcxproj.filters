@@ -25,6 +25,36 @@
     <ClInclude Include="src\TASemaphore.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Condition.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonReEntrantThreadLockable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReadWriteThreadLockable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WriteReadThreadLockable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AbstractSingleThreadBarrier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IProcessLockable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonReEntrantProcessLockable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcessGuard.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReEntrantThreadLockableWithMutex.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SingleThreadBarrier.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\IThreadLockable.cpp">
@@ -40,6 +70,30 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\TASemaphore.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Condition.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonReEntrantThreadLockable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReadWriteThreadLockable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WriteReadThreadLockable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonReEntrantProcessLockable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcessGuard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReEntrantThreadLockableWithMutex.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SingleThreadBarrier.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

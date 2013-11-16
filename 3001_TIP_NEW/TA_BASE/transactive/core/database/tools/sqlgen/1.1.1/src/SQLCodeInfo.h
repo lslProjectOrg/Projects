@@ -42,7 +42,7 @@ public:
 	/*
 	check eachTable's Oracle sql num is the same as Mysql sql num
 	*/
-	int checkOracleAndMysqlSqlNum();
+	int checkSupportDBSqlNum();
 	int analyzeDataToFiles();
 	int setFileName(const std::string& strFileName);
 

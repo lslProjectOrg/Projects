@@ -12,6 +12,7 @@
 
 #include "sqldef.h"
 #include "SQLVarParms.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 #include "core/synchronisation/src/ReEntrantThreadLockable.h"
 #include "core/database/src/CommonType.h"
 
@@ -50,6 +51,8 @@ private:
 		enumCommon_SQL         = 0,
 		enumOracle_SQL,
 		enumMySQL_SQL,
+		enumSQLLite_SQL,
+
 		enumEnd_SQL
 	};
 
@@ -75,7 +78,7 @@ private:
 	static SQLCode* m_pInstance;	           // the only one instance of the class
 	SQLFileHelper*  m_pSqlFileHelper;          // the SQL file helper
 
-	static ReEntrantThreadLockable m_instanceLock;
+	static NonReEntrantThreadLockable m_instanceLock;
 	ReEntrantThreadLockable  m_threadLock;
 
 };

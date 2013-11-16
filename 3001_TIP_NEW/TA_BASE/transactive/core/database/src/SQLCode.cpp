@@ -20,7 +20,7 @@ NS_BEGIN(TA_Base_Core)
 
 
 SQLCode* SQLCode::m_pInstance = 0;
-ReEntrantThreadLockable SQLCode::m_instanceLock;
+NonReEntrantThreadLockable SQLCode::m_instanceLock;
 
 SQLCode& SQLCode::getInstance()
 {
@@ -77,7 +77,7 @@ void SQLCode::buildSQLStatement(SQLVarParms& varParms, SQLStatement& rSqlStateme
 		if (uVarCount < defMINPARAMSIZE)
 			TA_THROW(BadParamCount("the PrepareStatement parameter count error"));
 
-		_GetDbTypeAndSQLKey(varParms, strSQLKey);
+		_GetDbTypeAndSQLKey(varParms, strSQLKey);//strSQLID=strSQLKey=varParms[0]
 		_GetSQLFormat(strSQLKey, SQLFormats);
 		//_GetSQLID(strSQLKey, rSqlStatement);
 
@@ -139,11 +139,19 @@ void  SQLCode::_BuildSQL(const SQLVarParms& varParms, const std::string& strSQLF
 	}
 	else
 	{
-		char szSQL[MAX_SQLSTRING_LEN+1] = {0};
+		/*
+		uVarCount=2  varParms[1]=param 1
+		uVarCount=3 varParms[2]=param 2
+		*/
+		int nSQLLen = MAX_SQLSTRING_LEN+1;
+		char* szSQL = new char[nSQLLen];
+		memset(szSQL, 0, nSQLLen);
 
 		DEF_CONSTRUCT_SQLCODE(MAX_SQLSTRING_LEN, nSQLType);		
 
 		strSQL = szSQL;
+		delete[] szSQL;
+		szSQL = NULL;
 	}
 }
 
@@ -156,6 +164,10 @@ void  SQLCode::_BuildLargeSQL(const SQLVarParms& varParms, size_t uSQLSize, cons
 	}
 	else
 	{
+		/*
+		uVarCount=2  varParms[1]=param 1
+		uVarCount=3 varParms[2]=param 2
+		*/
 		char *szSQL = new char[uSQLSize + 1];		
 		memset(szSQL, 0, uSQLSize + 1);
 
@@ -175,7 +187,7 @@ void  SQLCode::_GetSQLFormat(const std::string& strSQLKey, SQLStatement& strSQLF
 	TA_ASSERT(NULL != m_pSqlFileHelper, "sql file helper handler is null.");
 	m_pSqlFileHelper->getSQLString(strSQLKey, strSQLFormats);
 
-	if (strSQLFormats.strCommon.empty() && strSQLFormats.strMySQL.empty() && strSQLFormats.strSqlite.empty())
+	if (strSQLFormats.strCommonSQL.empty() && strSQLFormats.strOracleSQL.empty() && strSQLFormats.strMySQLSQL.empty() && strSQLFormats.strSQLiteSQL.empty())
 	{
 		TA_THROW(BadParamCount("Cannot find the SQL statement in the hash-table"));	
 	}
@@ -190,43 +202,43 @@ void  SQLCode::_GetSQLID(const std::string& strSQLKey, SQLStatement& rSqlStateme
 
 void  SQLCode::_PrintSQL(const std::string& strSQLKey, SQLStatement& rSqlStatement)
 {
-	if (!rSqlStatement.strCommon.empty())
+	if (!rSqlStatement.strCommonSQL.empty())
 	{
-		if ( rSqlStatement.strCommon.size() > MAXLOGMESGSIZE)
+		if ( rSqlStatement.strCommonSQL.size() > MAXLOGMESGSIZE)
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,"SQLID: %s, LargeSQL: ", strSQLKey.c_str());
-			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strCommon.c_str());
+			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strCommonSQL.c_str());
 		}
 		else
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,
-				"SQLID: %s, SQL: %s", strSQLKey.c_str(), rSqlStatement.strCommon.c_str());
+				"SQLID: %s, SQL: %s", strSQLKey.c_str(), rSqlStatement.strCommonSQL.c_str());
 		}
 	}
-	if (!rSqlStatement.strMySQL.empty())
+	if (!rSqlStatement.strMySQLSQL.empty())
 	{
-		if ( rSqlStatement.strMySQL.size() > MAXLOGMESGSIZE)
+		if ( rSqlStatement.strMySQLSQL.size() > MAXLOGMESGSIZE)
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,"SQLID: %s, MySQL LargeSQL: ", strSQLKey.c_str());
-			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strMySQL.c_str());
+			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strMySQLSQL.c_str());
 		}
 		else
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,
-				"SQLID: %s, MySQL SQL: %s", strSQLKey.c_str(), rSqlStatement.strMySQL.c_str());
+				"SQLID: %s, MySQL SQL: %s", strSQLKey.c_str(), rSqlStatement.strMySQLSQL.c_str());
 		}
 	}
-	if (!rSqlStatement.strSqlite.empty())
+	if (!rSqlStatement.strSQLiteSQL.empty())
 	{
-		if ( rSqlStatement.strSqlite.size() > MAXLOGMESGSIZE)
+		if ( rSqlStatement.strSQLiteSQL.size() > MAXLOGMESGSIZE)
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,"SQLID: %s, Oracle LargeSQL: ", strSQLKey.c_str());
-			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strSqlite.c_str());
+			LOGLARGESTRING(SourceInfo, DebugUtil::DebugSQL, rSqlStatement.strSQLiteSQL.c_str());
 		}
 		else
 		{
 			LOG_GENERIC(SourceInfo, DebugUtil::DebugSQL,
-				"SQLID: %s, Oracle SQL: %s", strSQLKey.c_str(), rSqlStatement.strSqlite.c_str());
+				"SQLID: %s, Oracle SQL: %s", strSQLKey.c_str(), rSqlStatement.strSQLiteSQL.c_str());
 		}
 	}
 }
@@ -235,44 +247,56 @@ void  SQLCode::_PrintSQL(const std::string& strSQLKey, SQLStatement& rSqlStateme
 
 void  SQLCode::_BuildNormalSQL(const SQLVarParms& varParms, SQLStatement& rSQLFormats, SQLStatement& rSqlStatement)
 {
-	if (!rSQLFormats.strCommon.empty())
+	if (!rSQLFormats.strCommonSQL.empty())
 	{
-		size_t uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strCommon);
+		size_t uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strCommonSQL);
 		if ( uiTotalSQLSize > MAX_SQLSTRING_LEN )
 		{
-			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strCommon, rSqlStatement.strCommon);
+			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strCommonSQL, rSqlStatement.strCommonSQL);
 		}
 		else
 		{
-			_BuildSQL(varParms, rSQLFormats.strCommon, rSqlStatement.strCommon);
+			_BuildSQL(varParms, rSQLFormats.strCommonSQL, rSqlStatement.strCommonSQL);
 		}
 	}
 	else
 	{
-		if (rSQLFormats.strMySQL.empty() || rSQLFormats.strSqlite.empty())
-			TA_THROW(BadParamCount("The MySQL or Oracle SQL Format is empty"));
+		if (rSQLFormats.strOracleSQL.empty() || rSQLFormats.strMySQLSQL.empty() || rSQLFormats.strSQLiteSQL.empty())
+			TA_THROW(BadParamCount("The MySQL or Oracle SQL or SQLite Format is empty"));
 
 		// build MySQL SQL statement
-		size_t uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strMySQL, enumMySQL_SQL);
+		size_t uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strMySQLSQL, enumMySQL_SQL);
 		if ( uiTotalSQLSize > MAX_SQLSTRING_LEN )
 		{
-			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strMySQL, rSqlStatement.strMySQL, enumMySQL_SQL);
+			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strMySQLSQL, rSqlStatement.strMySQLSQL, enumMySQL_SQL);
 		}
 		else
 		{
-			_BuildSQL(varParms, rSQLFormats.strMySQL, rSqlStatement.strMySQL, enumMySQL_SQL);
+			_BuildSQL(varParms, rSQLFormats.strMySQLSQL, rSqlStatement.strMySQLSQL, enumMySQL_SQL);
 		}
 		
 		// build Oracle SQL Statement
-		uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strSqlite, enumOracle_SQL);
+		uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strOracleSQL, enumOracle_SQL);
 		if ( uiTotalSQLSize > MAX_SQLSTRING_LEN )
 		{
-			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strSqlite, rSqlStatement.strSqlite, enumOracle_SQL);
+			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strOracleSQL, rSqlStatement.strOracleSQL, enumOracle_SQL);
 		}
 		else
 		{
-			_BuildSQL(varParms, rSQLFormats.strSqlite, rSqlStatement.strSqlite, enumOracle_SQL);
+			_BuildSQL(varParms, rSQLFormats.strOracleSQL, rSqlStatement.strOracleSQL, enumOracle_SQL);
 		}
+
+		// build Oracle SQL Statement
+		uiTotalSQLSize = _GetSQLSize(varParms, rSQLFormats.strSQLiteSQL, enumSQLLite_SQL);
+		if ( uiTotalSQLSize > MAX_SQLSTRING_LEN )
+		{
+			_BuildLargeSQL(varParms, uiTotalSQLSize, rSQLFormats.strSQLiteSQL, rSqlStatement.strSQLiteSQL, enumSQLLite_SQL);
+		}
+		else
+		{
+			_BuildSQL(varParms, rSQLFormats.strSQLiteSQL, rSqlStatement.strSQLiteSQL, enumSQLLite_SQL);
+		}
+
 	}	
 
 }

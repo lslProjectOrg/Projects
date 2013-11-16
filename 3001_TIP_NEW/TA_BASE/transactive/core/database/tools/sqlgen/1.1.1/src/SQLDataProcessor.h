@@ -55,17 +55,20 @@ public:
 		std::string& strOUTSQLID, 
 		std::string& strOUTCommonSQL, 
 		std::string& strOUTOracleSQL, 
-		std::string& strOUTMySQLSQL);
+		std::string& strOUTMySQLSQL,
+		std::string& strOUTSQLiteSQL);
 		
-	int getDataForFileTypeOracleMySql(
+	int getDataForFileTypeOracleMySqlSQLite(
 		const std::string& strINSqlID, 
 		const std::string& strINOracleSQLLine, 
 		const std::string& strINMySqlSQLLine,
+		const std::string& strINSqliteSQLLine,
 		std::string& strOUTDefineID, 
 		std::string& strOUTSQLID, 
 		std::string& strOUTCommonSQL, 
 		std::string& strOUTOracleSQL, 
-		std::string& strOUTMySQLSQL);
+		std::string& strOUTMySQLSQL,
+		std::string& strOUTSQLiteSQL);
 
 private:	
 	int _WriteToFile(VrtLinesConT& vrtLines, std::ofstream* pofstreamFile);

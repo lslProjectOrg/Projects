@@ -125,22 +125,23 @@ SQLTypeAdapter::SQLTypeAdapter(const SQLStatement& rhs)
 : m_nDataCategory(enumBeginDbType)
 , m_bEmpty(true)
 {
-	if (rhs.strCommon.empty() && rhs.strSqlite.empty() && rhs.strMySQL.empty())
+	if (rhs.strCommonSQL.empty() && rhs.strOracleSQL.empty() && rhs.strMySQLSQL.empty() && rhs.strSQLiteSQL.empty())
 	{
 		m_nDataCategory = enumBeginDbType;
 		return;
 	}
 	m_bEmpty = false;
-	if (!rhs.strCommon.empty())
+	if (!rhs.strCommonSQL.empty())
 	{
 		m_nDataCategory = enumBeginDbType;
-		m_strParams[enumBeginDbType] = rhs.strCommon;
+		m_strParams[enumBeginDbType] = rhs.strCommonSQL;
 	}
 	else
 	{
 		m_nDataCategory = enumOracleDb;
-		m_strParams[enumOracleDb] = rhs.strSqlite;
-		m_strParams[enumMysqlDb] = rhs.strMySQL;
+		m_strParams[enumOracleDb] = rhs.strOracleSQL;
+		m_strParams[enumMysqlDb] = rhs.strMySQLSQL;
+		m_strParams[enumSqliteDb] = rhs.strSQLiteSQL;
 	}
 }
 
@@ -184,6 +185,8 @@ void SQLTypeAdapter::clear()
 	m_strParams[enumBeginDbType].clear();
 	m_strParams[enumOracleDb].clear();
 	m_strParams[enumMysqlDb].clear();	
+	m_strParams[enumSqliteDb].clear();	
+
 }
 
 

@@ -4,13 +4,6 @@
 
 namespace TA_Base_Core
 {
-	//0xxxxxxx
-	//110xxxxx 10xxxxxx
-	//1110xxxx 10xxxxxx 10xxxxxx
-	//11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-	//111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-	//1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-
 	unsigned char utf8_look_for_table[] = 
 	{
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -107,37 +100,20 @@ namespace TA_Base_Core
 #endif
 	}
 
-	int CodeConverter::getUtf8Length(const char *str)
+	int CodeConverter::getUtf8Length( char *str, int strLen /*= 0*/ )
 	{
-		int clen = strlen(str);
+		int clen = strLen;
+		if(clen <=0)
+		{
+			clen = strlen(str);
+		}
 		int len = 0;
 
-		for(const char *ptr = str; 
+		for(char *ptr = str; 
 			*ptr!=0&&len<clen; 
 			len++, ptr+=UTFLEN((unsigned char)*ptr));
 
 		return len;
-	}
-
-	char* CodeConverter::subUtfString(const char *str, int start, int end)
-	{
-		int len = getUtf8Length(str);
-
-		if(start >= len) return NULL;
-		if(end > len) end = len;
-
-		const char *sptr = str;
-		for(int i = 0; i < start; ++i,sptr+=UTFLEN((unsigned char)*sptr));
-
-		const char *eptr = sptr;
-		for(int i = start; i < end; ++i,eptr += UTFLEN((unsigned char)*eptr));
-
-		int retLen = eptr - sptr;
-		char *retStr = (char*)malloc(retLen+1);
-		memcpy(retStr, sptr, retLen);
-		retStr[retLen] = 0;
-
-		return retStr;
 	}
 
 #if defined(WIN32)

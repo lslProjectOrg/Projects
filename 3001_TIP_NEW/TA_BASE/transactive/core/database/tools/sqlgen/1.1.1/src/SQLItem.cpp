@@ -118,19 +118,18 @@ std::string CSQLItem::getSqlLine()
 	return m_strSqlLine;
 }
 
-int CSQLItem::getDataForFileTypeCommon(std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL)
+int CSQLItem::getDataForFileTypeCommon(std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL, std::string& strOUTSQLiteSQL)
 {
 	int nFunRes = 0;
-	CSQLDataProcessor::getInstance().getDataForFileTypeCommon(m_strSqlId, m_strSqlLine, strOUTDefineID, strOUTSQLID, strOUTCommonSQL,  strOUTOracleSQL, strOUTMySqlSQL);
+	CSQLDataProcessor::getInstance().getDataForFileTypeCommon(m_strSqlId, m_strSqlLine, strOUTDefineID, strOUTSQLID, strOUTCommonSQL,  strOUTOracleSQL, strOUTMySqlSQL, strOUTSQLiteSQL);
 	return nFunRes;
 }
 
 
-
-int CSQLItem::getDataForFileTypeOracleMySql( const std::string& strINMySqlLine, std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL )
+int CSQLItem::getDataForFileTypeOracleMySqlSQLite( const std::string& strINMySqlLine, const std::string& strINSQLiteLine, std::string& strOUTDefineID, std::string& strOUTSQLID, std::string& strOUTCommonSQL, std::string& strOUTOracleSQL, std::string& strOUTMySqlSQL, std::string& strOUTSQLiteSQL )
 {
 	int nFunRes = 0;
-	CSQLDataProcessor::getInstance().getDataForFileTypeOracleMySql(m_strSqlId, m_strSqlLine, strINMySqlLine, strOUTDefineID, strOUTSQLID, strOUTCommonSQL,  strOUTOracleSQL, strOUTMySqlSQL);
+	CSQLDataProcessor::getInstance().getDataForFileTypeOracleMySqlSQLite(m_strSqlId, m_strSqlLine, strINMySqlLine, strINSQLiteLine, strOUTDefineID, strOUTSQLID, strOUTCommonSQL,  strOUTOracleSQL, strOUTMySqlSQL, strOUTSQLiteSQL);
 	return nFunRes;
 }
 

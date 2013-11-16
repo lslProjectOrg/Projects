@@ -39,7 +39,7 @@ public:
 	Analyze One Table Lines
 	*/
 	int analyzeData(VrtLinesConT& VtrOneTable);
-	int checkOracleAndMysqlSqlNum();
+	int checkSupportDBSqlNum();
 	std::string getTableName();
 	int analyzeDataToFiles();
 
@@ -47,7 +47,7 @@ private:
 	void _FreeData();
 private:
 	std::string m_strTableName;
-	std::list<CSQLType*> m_LstDBInfo;  //[[common]][[oracle]][[mysql]]
+	std::list<CSQLType*> m_LstDBInfo;  //[[common]][[oracle]][[mysql]][[sqlite]]
 
 };
 

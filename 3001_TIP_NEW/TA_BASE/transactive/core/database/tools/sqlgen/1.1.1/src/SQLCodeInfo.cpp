@@ -114,7 +114,7 @@ int CSQLCodeInfo::analyzeData(VrtLinesConT& vrtAllLines)
 
 
 
-int CSQLCodeInfo::checkOracleAndMysqlSqlNum()
+int CSQLCodeInfo::checkSupportDBSqlNum()
 {
 	int			nFunRes = 0;
 	int			nTableAllClassListCount = 0;
@@ -133,10 +133,10 @@ int CSQLCodeInfo::checkOracleAndMysqlSqlNum()
 	{
 		pTableInfo = (*itemLst);
 		
-		nFunRes = pTableInfo->checkOracleAndMysqlSqlNum();
+		nFunRes = pTableInfo->checkSupportDBSqlNum();
 		if (0 != nFunRes)
 		{	   		
-			_SysLog(SourceFLInfo, DebugError, "error! checkOracleAndMysqlSqlNum() FileName=%s", m_strFileName.c_str());
+			_SysLog(SourceFLInfo, DebugError, "error! checkSupportDBSqlNum() FileName=%s", m_strFileName.c_str());
 			nFunRes = -1;
 			return nFunRes; 				
 		}

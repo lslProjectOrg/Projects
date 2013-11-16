@@ -22,8 +22,8 @@
 
 namespace TA_Base_Core
 {
-    ReEntrantThreadLockable ThreasdafeScreenOutput::m_coutLock;
-    ReEntrantThreadLockable ThreasdafeScreenOutput::m_cerrLock;
+    NonReEntrantThreadLockable ThreasdafeScreenOutput::m_coutLock;
+    NonReEntrantThreadLockable ThreasdafeScreenOutput::m_cerrLock;
 
     void ThreasdafeScreenOutput::outputToCout( const std::string& text )
     {

@@ -86,9 +86,10 @@ void  SQLFileHelper::getSQLString(const std::string& strSQLKey, SQLStatement& rS
 	nIndex = iterFound->second;
 
 	rSqlStatements.strSQLID  = strSQLKey;
-	rSqlStatements.strCommon = s_SQLArray[nIndex].pCommonSQL;
-	rSqlStatements.strSqlite = s_SQLArray[nIndex].pSqliteSQL;
-	rSqlStatements.strMySQL  = s_SQLArray[nIndex].pMySQLSQL;
+	rSqlStatements.strCommonSQL = s_SQLArray[nIndex].pCommonSQL;
+	rSqlStatements.strOracleSQL  = s_SQLArray[nIndex].pOracleSQL;
+	rSqlStatements.strMySQLSQL  = s_SQLArray[nIndex].pMySQLSQL;
+	rSqlStatements.strSQLiteSQL = s_SQLArray[nIndex].pSQLiteSQL;
 
 	FUNCTION_EXIT;
 }

@@ -34,6 +34,15 @@
     <ClCompile Include="src\WorkItemQueueProcessor.cpp">
       <Filter>WorkItemQueue</Filter>
     </ClCompile>
+    <ClCompile Include="src\IThreadPoolBase.cpp">
+      <Filter>ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LFThreadPoolManager.cpp">
+      <Filter>ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LFThreadPoolWorker.cpp">
+      <Filter>ThreadPool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Thread.h">
@@ -71,6 +80,15 @@
     </ClInclude>
     <ClInclude Include="src\WorkItemQueueProcessor.h">
       <Filter>WorkItemQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IThreadPoolBase.h">
+      <Filter>ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LFThreadPoolManager.h">
+      <Filter>ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LFThreadPoolWorker.h">
+      <Filter>ThreadPool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

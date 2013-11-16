@@ -1,3 +1,20 @@
+
+/**
+  * The source code in this file is the property of 
+  * Ripple Systems and is not for redistribution
+  * in any form.
+  *
+  * Source:   $File: //depot/3001_TIP_NEW/TA_BASE/transactive/core/threads/src/Thread.cpp $
+  * @author:  B Fountain
+  * @version: $Revision: #3 $
+  *
+  * Last modification: $DateTime: 2012/03/22 16:16:32 $
+  * Last modified by:  $Author: limin.zhu $
+  * 
+  * Platform independent wrapper which allows us to manage a single thread. This
+  * is an abstract class - extend it to specify run() and terminate() methods
+  *
+  */
 #include "Thread.h"
 
 // #ifdef WIN32
@@ -164,7 +181,12 @@ namespace TA_Base_Core
 		}
 	}
 
-
+	/*
+	struct timeval tv;
+	tv.tv_sec = 1;
+	tv.tv_usec = 500;
+	select(0,NULL, NULL, NULL, &tv); 
+	*/
 	void Thread::sleep(unsigned int milliSeconds)
 	{  
 		//0.001 s = 1 Millisecond = 1000 Microseconds = 1000 000	Nanoseconds
@@ -187,7 +209,6 @@ namespace TA_Base_Core
 
 		pthread_delay_np (&delayVal);
 	}
-
 
 
 

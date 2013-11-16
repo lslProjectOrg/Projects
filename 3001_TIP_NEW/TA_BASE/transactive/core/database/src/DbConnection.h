@@ -22,7 +22,7 @@
 #include "core/database/src/DbStatus.h"
 #include "core/database/src/DataTypeEnums.h"
 #include "core/synchronisation/src/ThreadGuard.h"
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 
 namespace TA_Base_Core
 {
@@ -60,7 +60,7 @@ namespace TA_Base_Core
         typedef std::map<DataKey, std::vector<DataConnection> > DatabaseMap; 
         DatabaseMap m_dbMap;
         static DbConnection* m_instance;
-        static ReEntrantThreadLockable m_instanceLock;
+        static NonReEntrantThreadLockable m_instanceLock;
 
     };
 } // namespace

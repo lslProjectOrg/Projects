@@ -20,7 +20,7 @@
 
 #include "core/threads/src/Thread.h"
 #include "core/threads/src/QueueItem.h"
-#include "core/synchronisation/src/ReEntrantThreadLockable.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 #include "core/synchronisation/src/ThreadGuard.h"
 #include "core/synchronisation/src/TASemaphore.h"
 #include "core/utilities/src/DebugUtil.h"
@@ -267,7 +267,7 @@ namespace TA_Base_Core
 	private:
 
 		ItemQueue										m_queue;
-		ReEntrantThreadLockable							m_queueLock;
+		NonReEntrantThreadLockable						m_queueLock;
 		CTASemaphore									m_semaphore;
 		unsigned long									m_maxQueueSize;
 		bool											m_keepRunning;

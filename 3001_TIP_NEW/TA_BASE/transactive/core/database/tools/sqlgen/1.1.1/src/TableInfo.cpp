@@ -119,14 +119,17 @@ void CTableInfo::_FreeData()
 	m_LstDBInfo.clear();
 } 
 
-int CTableInfo::checkOracleAndMysqlSqlNum()
+int CTableInfo::checkSupportDBSqlNum()
 {
 	int				nFunRes = 0;
 	int				nListCount = 0;	
 	int				nOralceSqlCount = 0;
 	int				nMysqlSqlCount = 0;
+	int				nSQLiteSqlCount = 0;
+
 	std::string     strDbOracle;
 	std::string     strDbMysql;
+	std::string     strDbSQLite;
 	std::list<CSQLType*>::iterator itemLst;
 	CSQLType*        pDBInfo = NULL;
 	std::string     strDBName;
@@ -141,8 +144,11 @@ int CTableInfo::checkOracleAndMysqlSqlNum()
 	
 	strDbOracle = DB_ORACLE;
 	strDbMysql = DB_MYSQL;
+	strDbSQLite = DB_SQLite;
+
 	nOralceSqlCount = 0;
 	nMysqlSqlCount = 0;
+	nSQLiteSqlCount = 0;
 	
 	//get data
 	itemLst = m_LstDBInfo.begin();
@@ -159,15 +165,35 @@ int CTableInfo::checkOracleAndMysqlSqlNum()
 		{
 			nMysqlSqlCount =  pDBInfo->getDataNum();
 		}
+		else if (0 == CUtilityFun::getInstance().sysStricmp(strDBName.c_str(), strDbSQLite.c_str()))
+		{
+			nSQLiteSqlCount =  pDBInfo->getDataNum();
+		}
 	
 		itemLst++;
 	}//while
 	
+	//check
 	if (nOralceSqlCount != nMysqlSqlCount)
 	{
 		nFunRes = -1;
 		_SysLog(SourceFLInfo, DebugError, "error! nOralceSqlCount != nMysqlSqlCount TableName=%s", m_strTableName.c_str());
+		return nFunRes;
 	} 
+	if (nOralceSqlCount != nSQLiteSqlCount)
+	{
+		nFunRes = -1;
+		_SysLog(SourceFLInfo, DebugError, "error! nOralceSqlCount != nSQLiteSqlCount TableName=%s", m_strTableName.c_str());
+		return nFunRes;
+	} 
+	if (nMysqlSqlCount != nSQLiteSqlCount)
+	{
+		nFunRes = -1;
+		_SysLog(SourceFLInfo, DebugError, "error! nMysqlSqlCount != nSQLiteSqlCount TableName=%s", m_strTableName.c_str());
+		return nFunRes;
+	} 
+
+
 
 	return nFunRes;
 }
@@ -187,11 +213,13 @@ int CTableInfo::analyzeDataToFiles()
 	CSQLType* pDBInfoCommon = NULL;
 	CSQLType* pDBInfoOracle = NULL;
 	CSQLType* pDBInfoMysql = NULL;
+	CSQLType* pDBInfoSQLite = NULL;
 
 	CSQLType* pGet = NULL;
 	std::string strDBNameCommon = DB_COMMON;
 	std::string strDBNameOracle = DB_ORACLE;	
 	std::string strDBNameMySql = DB_MYSQL;	
+	std::string strDBNameSQLite = DB_SQLite;	
 
 	std::string strDBName;
 	std::string strIndexTableName;
@@ -215,6 +243,10 @@ int CTableInfo::analyzeDataToFiles()
 		{
 			pDBInfoMysql = pGet;
 		}
+		else if (0 == CUtilityFun::getInstance().sysStricmp(strDBName.c_str(), strDBNameSQLite.c_str()))//DB_SQLite
+		{
+			pDBInfoSQLite = pGet;
+		}
 
 		itemLst++;
 	}//while
@@ -222,15 +254,15 @@ int CTableInfo::analyzeDataToFiles()
 	//[0][AlarmState]
 	strIndexTableName = CSQLDataProcessor::getInstance().getIndexTableName(m_strTableName);
 
-	if (NULL != pDBInfoCommon && NULL != pDBInfoOracle && NULL != pDBInfoMysql)
+	if (NULL != pDBInfoCommon && NULL != pDBInfoOracle && NULL != pDBInfoMysql && NULL != pDBInfoSQLite)
 	{
-		//have [[common]] [[oracle]] [[mysql]]
-		nFunRes = pDBInfoCommon->analyzeDataTypeCommonOracleMysql(strIndexTableName, pDBInfoOracle, pDBInfoMysql);
+		//have [[common]] [[oracle]] [[mysql]] [[sqlite]]
+		nFunRes = pDBInfoCommon->analyzeDataTypeCommonOracleMysqlSqlite(strIndexTableName, pDBInfoOracle, pDBInfoMysql, pDBInfoSQLite);
 	}
-	else if (NULL != pDBInfoOracle && NULL != pDBInfoMysql)
+	else if (NULL != pDBInfoOracle && NULL != pDBInfoMysql && NULL != pDBInfoSQLite)
 	{
-		//just have [[oracle]] [[mysql]]
-		nFunRes = pDBInfoOracle->analyzeDataTypeOracleMysql(strIndexTableName, pDBInfoMysql);
+		//just have [[oracle]] [[mysql]] [[sqlite]]
+		nFunRes = pDBInfoOracle->analyzeDataTypeOracleMysqlSqlite(strIndexTableName, pDBInfoMysql, pDBInfoSQLite);
 	} 
 	else if (NULL != pDBInfoCommon)
 	{

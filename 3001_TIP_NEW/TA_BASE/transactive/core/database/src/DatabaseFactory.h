@@ -21,6 +21,7 @@
 #include "core/database/src/SimpleDbDatabase.h"
 #include "core/exceptions/src/DatabaseException.h"
 #include "core/synchronisation/src/ThreadGuard.h"
+#include "core/synchronisation/src/NonReEntrantThreadLockable.h"
 #include "core/synchronisation/src/ReEntrantThreadLockable.h"
 
 #include <map>
@@ -106,8 +107,8 @@ namespace TA_Base_Core
 		DbNameStrMap      m_DbStrMap;
 
         static DatabaseFactory* m_instance;
-        static ReEntrantThreadLockable m_instanceLock;
-        ReEntrantThreadLockable m_getDatabaseLock;
+        static NonReEntrantThreadLockable m_instanceLock;
+        NonReEntrantThreadLockable m_getDatabaseLock;
 		ReEntrantThreadLockable m_getDbNameLock;
 	};
 } // closes TA_Base_Core

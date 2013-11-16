@@ -122,6 +122,17 @@ private:
 	////////////////////////////////////////////////////////////////////////////////
 
 
+
+	// Member used to backup the number of times the current lockholding thread
+	// has acquired the lock.
+	volatile unsigned int m_previousNumTimesThreadAcquiredLock;
+
+	// Member used to backup the identifier of the thread that has currently aquired
+	// the lock.
+	ThreadIdWrapper* m_previousThreadLockableHolderVerifier;
+
+public:	
+
 	/** 
 	* backupReEntrantAcquisitionState
 	*
@@ -142,14 +153,6 @@ private:
 	void restoreReEntrantAcquisitionState();
 
 
-
-	// Member used to backup the number of times the current lockholding thread
-	// has acquired the lock.
-	volatile unsigned int m_previousNumTimesThreadAcquiredLock;
-
-	// Member used to backup the identifier of the thread that has currently aquired
-	// the lock.
-	ThreadIdWrapper* m_previousThreadLockableHolderVerifier;
 
 };
 }//namespace TA_Base_Core

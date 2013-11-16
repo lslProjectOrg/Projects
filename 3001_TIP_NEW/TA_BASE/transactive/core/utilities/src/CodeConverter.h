@@ -45,10 +45,8 @@ namespace TA_Base_Core
 		std::string UnicodeToUTF8 ( const std::wstring& str );
 
 #endif
-		static int getUtf8Length(const char *str);
+		static int getUtf8Length(char *str, int strLen = 0);
 
-		static char* CodeConverter::subUtfString(const char *str, int start, int end);
-	
 	private:
 
 #if !defined(WIN32)

@@ -287,6 +287,10 @@ namespace TA_Base_Core
 
 	void SimpleDb::parseDBType(const std::string& strDBName)
 	{
+		std::string strDBTypeTmp;
+		strDBTypeTmp = strDBName;
+		strDBTypeTmp = strlwr((char*)strDBTypeTmp.c_str());
+
 		if(strDBName.compare(defOracleDBName) == 0) //case sensitive
 		{
 			m_nDBType = static_cast<int>(enumOracleDb);

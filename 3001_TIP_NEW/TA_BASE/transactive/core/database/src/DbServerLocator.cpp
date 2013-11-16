@@ -29,6 +29,7 @@
 #include "core/utilities/src/RunParams.h"
 #include "core/synchronisation/src/ThreadGuard.h"
 #include "core/database/src/IQueryAdapter.h"
+#include "core/database/src/SQLiteConnection.h"
 #include "core/database/src/MysqlConnection.h"
 #include "cppconn/driver.h"
 
@@ -766,7 +767,7 @@ namespace TA_Base_Core
 				pDbConnection = new MysqlConnection( m_pDriver, connectionStr, databaseName, userName, password, hostName );
 				break;
 			case enumSqliteDb:
-				//TODO..
+				pDbConnection = new SQLiteConnection(connectionStr, databaseName, userName, password, hostName );
 				break;
 			default:
 				break;
@@ -874,6 +875,10 @@ namespace TA_Base_Core
 	int DbServerLocator::_ParseDBType(const std::string& strDbType)
 	{
 		int nRet = 0;
+		std::string strDBTypeTmp;
+		strDBTypeTmp = strDbType;
+		strDBTypeTmp = strlwr((char*)strDBTypeTmp.c_str());
+
 		if(strDbType.compare(defOracleDBName) == 0) //case sensitive
 		{
 			nRet = static_cast<int>(enumOracleDb);
