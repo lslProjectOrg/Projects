@@ -33,7 +33,7 @@
 namespace TA_Base_Core
 {
     DbConnection* DbConnection::m_instance = 0;
-    ReEntrantThreadLockable DbConnection::m_instanceLock;
+    NonReEntrantThreadLockable DbConnection::m_instanceLock;
 
 
     DbConnection::DbConnection()
