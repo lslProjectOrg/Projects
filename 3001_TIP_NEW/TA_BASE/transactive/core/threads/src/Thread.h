@@ -126,6 +126,7 @@ namespace TA_Base_Core
 	public:
 		unsigned int    m_priority;
 		EThreadState    m_ThreadState;
+		int             m_nThreadID;
 	};
 	void* runThread(void * args);
 

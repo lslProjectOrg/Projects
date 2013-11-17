@@ -100,11 +100,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ClassThreadPoolExecuteItemImp.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\VersionGen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ClassThreadPoolExecuteItemImp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

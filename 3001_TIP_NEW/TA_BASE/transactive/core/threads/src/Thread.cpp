@@ -54,9 +54,11 @@ namespace TA_Base_Core
 		//TA_Assert(myThread->m_thread != NULL);
 
 		// printf("&i = %p\n", &i)	// printf Thread address
+		myThread->m_nThreadID = TA_Base_Core::Thread::getCurrentThreadId();
+
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"runThread(): myThread=%s about to call run()", 
-			gPtrToStr(myThread).c_str() );
+			"runThread(): Thrd=%s [Thrd: %d] about to call run()", 
+			gPtrToStr(myThread).c_str(), myThread->m_nThreadID );
 
 		try
 		{
@@ -75,8 +77,8 @@ namespace TA_Base_Core
 		}
 
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"runThread(): myThread=%s finished calling run()",  
-			gPtrToStr(myThread).c_str());
+			"runThread(): Thrd=%s [Thrd: %d] finished calling run()",  
+			gPtrToStr(myThread).c_str(), myThread->m_nThreadID);
 
 		myThread->m_ThreadState = THREAD_STATE_RUNEND; 
 		return NULL;
@@ -98,7 +100,7 @@ namespace TA_Base_Core
 		{
 			m_ThreadState = THREAD_STATE_NEW;
 		}
-
+		m_nThreadID = 0;
 	}
 
 	Thread::~Thread()
@@ -106,8 +108,8 @@ namespace TA_Base_Core
 		if(NULL != m_thread) 
 		{
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug,
-				"Thread::~Thread(): this=%s destructor called", 
-				gPtrToStr(this).c_str());
+				"Thread::~Thread(): Thrd=%s [Thrd: %d] destructor called", 
+				gPtrToStr(this).c_str(), this->m_nThreadID);
 
 			free(m_thread);
 			m_thread = NULL; 
@@ -126,26 +128,33 @@ namespace TA_Base_Core
 			|| THREAD_STATE_RUNEND == m_ThreadState)
 		{
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError,
-				"Thread::start(): this=%s is already running.", gPtrToStr(this).c_str() );
+				"Thread::start(): Thrd=%s [Thrd: %d] is already running.", 
+				gPtrToStr(this).c_str(), this->m_nThreadID);
+
 			return;
 		}
 
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"Thread::start(): this=%s about to start.", gPtrToStr(this).c_str() );
+			"Thread::start(): Thrd=%s [Thrd: %d] about to start.", 
+			gPtrToStr(this).c_str(), this->m_nThreadID );
+
 
 		// THREAD_STATE_NEW only occurs during the following two calls
 		status = pthread_create(m_thread, NULL, runThread, this); 
 
 		if(0 != status)
 		{
-			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "pthread_create [status=%d][m_thread=%s]", 
-				status, gPtrToStr(m_thread).c_str());
+			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
+				"pthread_create [status=%d] Thrd=%s [Thrd: %d]", 
+				status, gPtrToStr(m_thread).c_str(), this->m_nThreadID);
+
 		}
 
 
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"Thread::start(): this=%s has been started successfully. m_thread=%s", 
-			gPtrToStr(this).c_str(), gPtrToStr(m_thread).c_str() );
+			"Thread::start(): this=%s has been started successfully. Thrd=%s [Thrd: %d]", 
+			gPtrToStr(this).c_str(), gPtrToStr(m_thread).c_str(), this->m_nThreadID);
+
 	}
 
 
@@ -156,28 +165,29 @@ namespace TA_Base_Core
 		if (NULL != m_thread)
 		{
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-				"Thread::terminateAndWait(): this=%s about to call terminate()", 
-				gPtrToStr(this).c_str() );
+				"Thread::terminateAndWait(): Thrd=%s [Thrd: %d] about to call terminate()", 
+				gPtrToStr(this).c_str(), this->m_nThreadID );
 
 			terminate();
 
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-				"Thread::terminateAndWait(): this=%s about to wait.",
-				gPtrToStr(this).c_str() );
+				"Thread::terminateAndWait(): Thrd=%s [Thrd: %d] about to wait.",
+				gPtrToStr(this).c_str(), this->m_nThreadID );
 
 			status = pthread_join(*m_thread, NULL);
 			if(status != 0)
 			{
-				LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "pthread_join [status=%d][m_thread=%s]", 
-					status, gPtrToStr(m_thread).c_str());
+				LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
+					"pthread_join [status=%d] Thrd=%s [Thrd: %d]", 
+					status, gPtrToStr(m_thread).c_str(), this->m_nThreadID);
 			}
 			m_ThreadState = THREAD_STATE_TERMINATED;
 			m_ThreadState = THREAD_STATE_RUNEND;
 
 
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-				"Thread::terminateAndWait(): this=%s has stopped.", 
-				gPtrToStr(this).c_str() );
+				"Thread::terminateAndWait(): Thrd=%s [Thrd: %d] has stopped.", 
+				gPtrToStr(this).c_str(), this->m_nThreadID );
 		}
 	}
 

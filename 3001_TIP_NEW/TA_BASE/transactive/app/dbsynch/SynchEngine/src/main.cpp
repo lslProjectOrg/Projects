@@ -2,16 +2,22 @@
 //
 #include "vld.h"
 #include <signal.h>
-
+//
 #include "core/utilities/src/RunParams.h"
 #include "core/utilities/src/DebugUtil.h"
 
-
+//
 #include "core/database/src/IDatabase.h"
 #include "core/database/src/DatabaseFactory.h"
 //#include "core/exceptions/src/DbSyncException.h"
-
 #include "core/database/src/sqlmacrodef.h"
+
+//
+#include "core/threads/src/LFThreadPoolManager.h"
+#include "ClassThreadPoolExecuteItemImp.h"
+#include "core/threads/src/Thread.h"
+//
+
 
 
 bool g_b_main_continue = true;
@@ -32,6 +38,17 @@ void usr_signal(int SigNo)
 }
 
 
+//////////////////////////////////////////////////////////////////////////
+
+void test_sqlitedb();
+
+void test_threadpool();
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+
 
 int main( int argc, char* argv[] )
 { 	   
@@ -39,11 +56,25 @@ int main( int argc, char* argv[] )
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
-
-	TA_Base_Core::DebugUtil::getInstance();
 	bool bSet = TA_Base_Core::RunParams::getInstance().parseCmdLine(argc, argv);
 
+
+	//
+	//test_sqlitedb();
+	test_threadpool();
+
+	//
 	
+	return 0;
+}
+
+
+
+
+void test_sqlitedb()
+{ 	   
+
+	TA_Base_Core::DebugUtil::getInstance();
 
 	TA_Base_Core::RunParams::getInstance().set(RPARAM_DBCONNECTIONFILE,"./OCConnectionStrings.csv");
 	TA_Base_Core::DebugUtil::getInstance().setFile("log_dbSynch.log");
@@ -52,12 +83,12 @@ int main( int argc, char* argv[] )
 
 	//Event_Ad,Read,Sqlite,tableTest,noUser,noPWD,127.0.0.1,Mysql,tra_occ,IT271350_5,IT271350_5,192.168.123.43,
 	//Oracle,TRANSACT,IT271350_5,IT271350_5,192.168.123.43
- 	//
+	//
 	TA_Base_Core::RunParams::getInstance().set("DataBase_tableTest.db@127.0.0.1",RPARAM_DBONLINE); 	 
 	//TA_Base_Core::RunParams::getInstance().set("DataBase_tra_occ@192.168.123.43",RPARAM_DBOFFLINE); 	 
 	//TA_Base_Core::RunParams::getInstance().set("DataBase_TRANSACT@192.168.123.43",RPARAM_DBONLINE); 	 
 
-	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "error");
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugInfo, "test_sqlitedb");
 
 
 
@@ -115,12 +146,91 @@ int main( int argc, char* argv[] )
 	pDatabase->executeModification(rSqlObj);
 	rSqlObj.clear();
 	
-
 	TA_Base_Core::DatabaseFactory::removeInstance();
 
 	TA_Base_Core::DebugUtil::removeInstance();
 	TA_Base_Core::RunParams::removeInstance();
 
-	return 0;
+	
 }
+
+
+
+void test_threadpool()
+{
+	//
+	TA_Base_Core::DebugUtil::getInstance();
+	TA_Base_Core::RunParams::getInstance().set(RPARAM_DBCONNECTIONFILE,"./OCConnectionStrings.csv");
+	TA_Base_Core::DebugUtil::getInstance().setFile("log_dbSynch.log");
+	TA_Base_Core::DebugUtil::getInstance().setMaxSize(2000000);
+	TA_Base_Core::DebugUtil::getInstance().setLevel(TA_Base_Core::DebugUtil::DebugSQL);	
+	TA_Base_Core::RunParams::getInstance().set("DataBase_tableTest.db@127.0.0.1",RPARAM_DBONLINE); 	 
+	//
+
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugInfo, "test_threadpool");
+
+	//
+	int nNumberOfThreads = 2;
+	bool bIsAutoRun = false;
+	int nQueueSize = 0;
+	TA_Base_Core::LFThreadPoolManager* pThreadPoolManager = NULL;
+	ClassThreadPoolExecuteItemImp* pWorker1 = NULL;
+	ClassThreadPoolExecuteItemImp* pWorker2 = NULL;
+
+	pThreadPoolManager = new TA_Base_Core::LFThreadPoolManager(nNumberOfThreads, bIsAutoRun);
+
+
+	pThreadPoolManager->start();
+	nNumberOfThreads = pThreadPoolManager->getNumberOfThreads();
+	nQueueSize = pThreadPoolManager->getQueueSize();
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "nNumberOfThreads=%d,nQueueSize=%d", nNumberOfThreads, nQueueSize);
+
+	pWorker1 = new ClassThreadPoolExecuteItemImp();
+	pWorker1->newJob();
+	pThreadPoolManager->queueWorkItem(pWorker1);
+
+	pWorker2 = new ClassThreadPoolExecuteItemImp();
+	pWorker2->newJob();
+	pThreadPoolManager->queueWorkItem(pWorker2);
+
+	while (1)
+	{
+		if (ClassThreadPoolExecuteItemImp::JOB_STATE_DONE == pWorker1->getJobState()
+			&& ClassThreadPoolExecuteItemImp::JOB_STATE_DONE == pWorker2->getJobState())
+		{
+			break;
+		}
+		TA_Base_Core::Thread::sleep(1000);
+	}
+	
+	pThreadPoolManager->removeWorkItem(pWorker1);
+	delete pWorker1;
+	pWorker1 = NULL;
+	pThreadPoolManager->removeWorkItem(pWorker2);
+	delete pWorker2;
+	pWorker2 = NULL;
+	//
+	if (NULL != pThreadPoolManager)
+	{
+		delete pThreadPoolManager;
+		pThreadPoolManager = NULL;
+	}
+
+	//
+	TA_Base_Core::DebugUtil::removeInstance();
+	TA_Base_Core::RunParams::removeInstance();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

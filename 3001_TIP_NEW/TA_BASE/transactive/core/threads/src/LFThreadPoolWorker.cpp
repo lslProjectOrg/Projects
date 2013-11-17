@@ -27,7 +27,7 @@ namespace TA_Base_Core
 	:
 	m_threadRunning ( true ),
     m_callback( callback ),
-	m_semaphore(0)	//zn++
+	m_semaphore(0)	//init m_semaphore 0
 	{
 
 	}
@@ -105,6 +105,8 @@ namespace TA_Base_Core
                 LOG_EXCEPTION_CATCH( SourceInfo, "Unknown Exception", "Caught unknown exception in LFThreadPoolManager::run");
             }
 		}
+
+		// tell the callback it can give some work
         m_callback.workerFree(this);
 	}
 }

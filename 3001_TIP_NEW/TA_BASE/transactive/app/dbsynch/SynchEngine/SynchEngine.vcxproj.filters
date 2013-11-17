@@ -12,8 +12,16 @@
     <ClCompile Include="src\VersionGen.cpp">
       <Filter>main</Filter>
     </ClCompile>
+    <ClCompile Include="src\ClassThreadPoolExecuteItemImp.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ClassThreadPoolExecuteItemImp.h">
+      <Filter>main</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

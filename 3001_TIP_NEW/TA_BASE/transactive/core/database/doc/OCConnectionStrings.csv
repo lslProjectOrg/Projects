@@ -1,3 +1,3 @@
 DataType,DataAction,DBType,Database,Schema,User,Password,Hostname,DBType,Database,Schema,User,Password,Hostname,DBType,Database,Schema,User,Password,Hostname
-Event_Ad,Read,Sqlite,tableTest,noUser,noPWD,127.0.0.1,Mysql,tra_occ,IT271350_5,IT271350_5,192.168.123.43,Oracle,TRANSACT,IT271350_5,IT271350_5,192.168.123.43
-Event_Ad,Write,Sqlite,tableTest,noUser,noPWD,127.0.0.1,Mysql,tra_occ,IT271350_5,IT271350_5,192.168.123.43,Oracle,TRANSACT,IT271350_5,IT271350_5,192.168.123.43
+Event_Ad,Read,Sqlite,tableTest.db,noUser,noPWD,127.0.0.1,Mysql,tra_occ,IT271350_5,IT271350_5,192.168.123.43,Oracle,TRANSACT,IT271350_5,IT271350_5,192.168.123.43
+Event_Ad,Write,Sqlite,tableTest.db,noUser,noPWD,127.0.0.1,Mysql,tra_occ,IT271350_5,IT271350_5,192.168.123.43,Oracle,TRANSACT,IT271350_5,IT271350_5,192.168.123.43
