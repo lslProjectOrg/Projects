@@ -17,13 +17,13 @@
   */
 #include "Thread.h"
 
-// #ifdef WIN32
-// #include <windows.h>
-// #elif defined ( SOLARIS ) || defined ( LINUX )
-// #include "pthread.h"
-// #else
-// #error Unsupported platform!
-// #endif // WIN32
+#ifdef WIN32
+#include <windows.h>
+#elif defined ( SOLARIS ) || defined ( LINUX )
+#include "pthread.h"
+#else
+#error Unsupported platform!
+#endif // WIN32
 
 
 #include "core/utilities/src/TA_String.h"
@@ -226,29 +226,18 @@ namespace TA_Base_Core
 		return (m_thread != NULL) ? m_thread->x : static_cast< unsigned int >( -1 );
 	}
 
-
+	
 	unsigned int Thread::getCurrentThreadId()
 	{
 #ifdef WIN32
-		//	return ::GetCurrentThreadId();
+		return ::GetCurrentThreadId();
 #elif defined ( SOLARIS ) || defined ( LINUX )
-		// 	return pthread_self();
+		return pthread_self();
 #else
 #error Unsupported Platform!
 #endif // WIN32
-		unsigned int threadWin32Tmp = 0;
-		pthread_t threadLinuxTmp;
 
-		//threadWin32Tmp = ::GetCurrentThreadId();
-
-		threadLinuxTmp = pthread_self();
-
-		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"fun getCurrentThreadId() [GetCurrentThreadId=%d][threadLinuxTmp.x=%d]", 
-			threadWin32Tmp, threadLinuxTmp.x);
-
-		return threadLinuxTmp.x;
-
+		return 0;
 	}
 
 

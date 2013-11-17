@@ -1,3 +1,4 @@
+;begin readme
 ; this file is to store all static SQL statements used in our system
 ; all table names in the SQL statement should be in lower case
 ; all the SQL statements store in this file follows a format like
@@ -12,7 +13,68 @@
 ; [[sqlite]]
 ; contains the statements which can only apply in MySQL database
 
-;---------------------------------------------------------------------------------------------------------------
+;ID:
+;TABLENAME_SELECT_1XXX=sql
+;TABLENAME_INSERT_2XXX=sql
+;TABLENAME_UPDATE_3XXX=sql
+;TABLENAME_DELETE_4XXX=sql
+;TABLENAME_DROP_5XXX=sql
+;TABLENAME_CREATE_6XXX=sql
+
+
+;sql
+;string   '%s'
+;time     hardcode
+;other     %s
+
+
+
+;end readme
+;;;;--------------------------------------------------------------------------------------------------------------
+
+
+
+				   
+
+[TABLE_TEST_DAITEST]
+; the following SQL Statements of the TABLE_TEST_DAITEST table used in source file: 
+
+[[common]]
+TABLETESTDAITEST_SELECT_1000=SELECT STR_COLUMN FROM TABLE_TEST_DAITEST WHERE LINE_ID = 1000
+TABLETESTDAITEST_UPDATE_3000=UPDATE TABLE_TEST_DAITEST SET INT_COLUMN=5000, STR_COLUMN='SQL_UPDATE_OK' WHERE LINE_ID = 1000
+TABLETESTDAITEST_DELETE_4000=DELETE FROM TABLE_TEST_DAITEST WHERE LINE_ID = 1000 
+TABLETESTDAITEST_DROP_5000=DROP TABLE TABLE_TEST_DAITEST
+
+
+[[oracle]]
+TABLETESTDAITEST_INSERT_2000=INSERT INTO TABLE_TEST_DAITEST(LINE_ID, TEST_TYPE, INT_COLUMN, STR_COLUMN, BOOL_COLUMN, REAL_COLUMN,
++ DATE_COLUMN, TIMESTAMP_COLUMN) VALUES (1000, 'Test_Type_NormalValue', 1000000, 'str_normal_value', 1, 10000000.10001, sysdate, sysdate)
+
+TABLETESTDAITEST_CREATE_6000=CREATE TABLE TABLE_TEST_DAITEST(LINE_ID NUMBER, TEST_TYPE VARCHAR2(200), INT_COLUMN NUMBER, STR_COLUMN VARCHAR2(200), BOOL_COLUMN NUMBER, REAL_COLUMN NUMBER(38,8), 
++ DATE_COLUMN DATE, TIMESTAMP_COLUMN TIMESTAMP)
+
+
+[[mysql]]
+TABLETESTDAITEST_INSERT_2000=INSERT INTO TABLE_TEST_DAITEST(LINE_ID, TEST_TYPE, INT_COLUMN, STR_COLUMN, BOOL_COLUMN, REAL_COLUMN,
++ DATE_COLUMN, TIMESTAMP_COLUMN) VALUES (1000, 'Test_Type_NormalValue', 1000000, 'str_normal_value', 1, 10000000.10001, sysdate(), sysdate())
+
+TABLETESTDAITEST_CREATE_6000=CREATE TABLE TABLE_TEST_DAITEST(LINE_ID int, TEST_TYPE VARCHAR(200), INT_COLUMN int, STR_COLUMN VARCHAR(200), BOOL_COLUMN int, REAL_COLUMN double, 
++ DATE_COLUMN datetime, TIMESTAMP_COLUMN TIMESTAMP)
+
+
+[[sqlite]]
+TABLETESTDAITEST_INSERT_2000=INSERT INTO TABLE_TEST_DAITEST(LINE_ID, TEST_TYPE, INT_COLUMN, STR_COLUMN, BOOL_COLUMN, REAL_COLUMN
++ ) VALUES (1000, 'Test_Type_NormalValue', 1000000, 'str_normal_value', 1, 10000000.10001)
+
+TABLETESTDAITEST_CREATE_6000=CREATE TABLE TABLE_TEST_DAITEST(LINE_ID int, TEST_TYPE VARCHAR(200), INT_COLUMN int, STR_COLUMN VARCHAR(200), BOOL_COLUMN int, REAL_COLUMN double, 
++ DATE_COLUMN DateTime, TIMESTAMP_COLUMN DateTime)
+
+
+
+
+;;;;--------------------------------------------------------------------------------------------------------------
+
+
 
 
 [AlarmRule]
@@ -22,15 +84,19 @@
 ALARMRULE_SELECT_1001=SELECT pkey, ruleType FROM alarmrule
 
 [[oracle]]
-ALARMRULE_SELECT_1052=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmrule where pkey = %s
+ALARMRULE_SELECT_1002=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmrule where pkey = %s
 [[mysql]]
-ALARMRULE_SELECT_1052=SELECT DATE_FORMAT(DATE_CREATED,'%%Y%%m%%d%%H%%i%%S') from alarmrule where pkey = %s
+ALARMRULE_SELECT_1002=SELECT DATE_FORMAT(DATE_CREATED,'%%Y%%m%%d%%H%%i%%S') from alarmrule where pkey = %s
 [[sqlite]]
-ALARMRULE_SELECT_1052=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmrule where pkey = %s
+ALARMRULE_SELECT_1002=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmrule where pkey = %s
+
+
 
 			
-;---------------------------------------------------------------------------------------------------------------				   
-				   
+;;;;--------------------------------------------------------------------------------------------------------------
+
+
+
 
 [AlarmRuleType]
 ; the following SQL Statements of the AlarmRule table used in source file: 
@@ -39,10 +105,22 @@ ALARMRULE_SELECT_1052=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarm
 ALARMRULETYPE_SELECT_1001=SELECT pkey, ruleType FROM alarmruletype
 
 [[oracle]]
-ALARMRULETYPE_SELECT_1052=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmruletype where pkey = %s
+ALARMRULETYPE_SELECT_1002=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmruletype where pkey = %s
 [[mysql]]
-ALARMRULETYPE_SELECT_1052=SELECT DATE_FORMAT(DATE_CREATED,'%%Y%%m%%d%%H%%i%%S') from alarmruletype where pkey = %s
+ALARMRULETYPE_SELECT_1002=SELECT DATE_FORMAT(DATE_CREATED,'%%Y%%m%%d%%H%%i%%S') from alarmruletype where pkey = %s
 [[sqlite]]
-ALARMRULETYPE_SELECT_1052=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmruletype where pkey = %s
+ALARMRULETYPE_SELECT_1002=SELECT TO_CHAR(DATE_CREATED,'YYYYMMDDHH24MISS') from alarmruletype where pkey = %s
 
-;---------------------------------------------------------------------------------------------------------------
+
+
+
+;;;;--------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+

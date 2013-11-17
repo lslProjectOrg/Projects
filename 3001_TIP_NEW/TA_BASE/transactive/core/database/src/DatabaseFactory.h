@@ -36,7 +36,7 @@ namespace TA_Base_Core
 	// are all made private;
 
 	private:
-		DatabaseFactory() { };
+		DatabaseFactory();
 		DatabaseFactory( const DatabaseFactory& theDatabaseFactory);
 		DatabaseFactory& operator=(const DatabaseFactory &);
 

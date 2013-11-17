@@ -296,9 +296,9 @@ void CppSQLite3Binary::clear()
 CppSQLite3Query::CppSQLite3Query()
 {
 	mpVM = 0;
-	mbEof = true;
 	mnCols = 0;
 	mbOwnVM = false;
+	mbEof = true;
 }
 
 
@@ -1323,7 +1323,7 @@ CppSQLite3Query* CppSQLite3DB::execQueryEx(const char* szSQL)
 	else if (nRet == SQLITE_ROW)
 	{
 		// at least 1 row
-		pQuery = new CppSQLite3Query(mpDB, pVM, true/*eof*/);
+		pQuery = new CppSQLite3Query(mpDB, pVM, false/*eof*/);
 		return pQuery;
 	}
 	else

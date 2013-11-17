@@ -117,9 +117,11 @@ namespace TA_Base_Core
 
 		LOG_GENERIC(SourceInfo, DebugUtil::DebugDatabase, "Starting Connection Reaper");
 		
+		//
+		m_pDriver = NULL;
 		//mysql init
-		m_pDriver = (sql::Driver*)get_driver_instance();  // for mysql db connection
-
+		//m_pDriver = (sql::Driver*)get_driver_instance();  // for mysql db connection
+		
 		//m_reaper->start();//for testing
 
 	}
@@ -151,6 +153,7 @@ namespace TA_Base_Core
 		//{
 		//	m_reaper->terminateAndWait();
 		//}
+
 	}
 
 
@@ -763,6 +766,10 @@ namespace TA_Base_Core
 				//pDbConnection = new OCIConnection( connectionStr, databaseName, userName, password, hostName ); 
 				break;
 			case enumMysqlDb:
+				if (NULL == m_pDriver)
+				{
+					m_pDriver = (sql::Driver*)get_driver_instance();  // for mysql db connection
+				}
 				TA_ASSERT(NULL != m_pDriver, "the Mysql database Driver is null");
 				pDbConnection = new MysqlConnection( m_pDriver, connectionStr, databaseName, userName, password, hostName );
 				break;
@@ -879,15 +886,15 @@ namespace TA_Base_Core
 		strDBTypeTmp = strDbType;
 		strDBTypeTmp = strlwr((char*)strDBTypeTmp.c_str());
 
-		if(strDbType.compare(defOracleDBName) == 0) //case sensitive
+		if(strDBTypeTmp.compare(defOracleDBName) == 0) //case sensitive
 		{
 			nRet = static_cast<int>(enumOracleDb);
 		}
-		else if (strDbType.compare(defMysqlDBName) == 0)
+		else if (strDBTypeTmp.compare(defMysqlDBName) == 0)
 		{
 			nRet = static_cast<int>(enumMysqlDb);
 		}
-		else if (strDbType.compare(defSqliteDBName) == 0)
+		else if (strDBTypeTmp.compare(defSqliteDBName) == 0)
 		{
 			nRet = static_cast<int>(enumSqliteDb);
 		}

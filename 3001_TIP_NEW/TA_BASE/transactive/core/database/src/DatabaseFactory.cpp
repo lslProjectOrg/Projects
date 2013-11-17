@@ -28,6 +28,8 @@
 #include "core/threads/src/Thread.h"
 #include "core/database/src/DbConnectionStrings.h"
 
+#include "core/database/src/DbServerLocator.h"
+
 using TA_Base_Core::DebugUtil;
 using TA_Base_Core::Thread;
 
@@ -37,9 +39,19 @@ namespace TA_Base_Core
     DatabaseFactory* DatabaseFactory::m_instance = 0;
     NonReEntrantThreadLockable DatabaseFactory::m_instanceLock;
 
+	DatabaseFactory::DatabaseFactory() 
+	{
+		TA_Base_Core::SQLCode::getInstance();
+		TA_Base_Core::DbServerLocator::getInstance();
+		TA_Base_Core::DbConnection::getInstance();
+	}
+
     DatabaseFactory::~DatabaseFactory()
     {
         cleanup();  
+		TA_Base_Core::SQLCode::removeInstance();
+		TA_Base_Core::DbServerLocator::removeInstance();
+		TA_Base_Core::DbConnection::removeInstance();
 	}
 
     DatabaseFactory& DatabaseFactory::getInstance()

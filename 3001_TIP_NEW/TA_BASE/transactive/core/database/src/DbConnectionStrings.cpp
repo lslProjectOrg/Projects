@@ -19,6 +19,7 @@
 
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
+#include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/filesystem/exception.hpp"
 #include "boost/tokenizer.hpp"
@@ -117,12 +118,15 @@ namespace TA_Base_Core
         FUNCTION_ENTRY("ParseFile");
         // open file and slurp data into map
         TA_ASSERT(!m_filename.empty(),"Filename can not be null");
-
+		
         fs::path filepath = fs::system_complete(  fs::path( m_filename, fs::native ));
-        fs::ifstream dbConnectStringFile( filepath );
+		//if (fs::exists(filepath) ){}
+		fs::ifstream dbConnectStringFile( filepath );
+
         if ( !dbConnectStringFile )
-        {
-            std::string msg ("Unable to open file:" + filepath.native_file_string());
+        {            
+			//std::string msg ("Unable to open file:" + filepath.native_file_string());
+			std::string msg ("Unable to open file:" + filepath.string());
             LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug, msg.c_str());
 			throw DbConnectionNoFile( msg.c_str() ); 
 
@@ -159,8 +163,12 @@ namespace TA_Base_Core
             if ( values.size() < 7 ) // min required is datatype,dataaction,dbtype,dbname,dbuser,dbpass,dbhostname
             {
                 //throw; //something OR just log it ??
-                LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
-                    "Not enough parameters in file: %s ", filepath.native_file_string().c_str());
+				//LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
+				//	"Not enough parameters in file: %s ", filepath.native_file_string().c_str());
+
+				LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
+					"Not enough parameters in file: %s ", filepath.string().c_str());
+
                 LOGMORE ( SourceInfo, "line is: %s :SKIPPING", line);
                 continue;
             }
@@ -168,7 +176,7 @@ namespace TA_Base_Core
             {
                 //throw; // something OR just log it ??
                 LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
-                    "Incorrect number of parameters in file: %s ", filepath.native_file_string().c_str());
+                    "Incorrect number of parameters in file: %s ", filepath.string().c_str());
                 LOGMORE ( SourceInfo, "line is: %s :SKIPPING", line);
                 continue;
             }
@@ -213,7 +221,8 @@ namespace TA_Base_Core
 		fs::ifstream dbConnectStringFile( filepath );
 		if ( !dbConnectStringFile )
 		{
-			std::string msg ("Unable to open file:" + filepath.native_file_string());
+			//std::string msg ("Unable to open file:" + filepath.native_file_string());
+			std::string msg ("Unable to open file:" + filepath.string());
 			LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug, msg.c_str());
 			throw DbConnectionNoFile( msg.c_str() ); 
 
@@ -250,16 +259,21 @@ namespace TA_Base_Core
 			if ( values.size() < 7 ) // min required is datatype,dataaction,dbtype,dbname,dbuser,dbpass,dbhostname
 			{
 				//throw; //something OR just log it ??
+				//LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
+				//	"Not enough parameters in file: %s ", filepath.native_file_string().c_str());
 				LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
-					"Not enough parameters in file: %s ", filepath.native_file_string().c_str());
+					"Not enough parameters in file: %s ", filepath.string().c_str());
 				LOGMORE ( SourceInfo, "line is: %s :SKIPPING", line);
 				continue;
 			}
 			if ( (values.size() - 7 ) % 5 != 0 ) // any remaing values must be connection triples
 			{
 				//throw; // something OR just log it ??
+				//LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
+				//	"Incorrect number of parameters in file: %s ", filepath.native_file_string().c_str());
 				LOG ( SourceInfo, DebugUtil::GenericLog, DebugUtil::DebugDebug,
-					"Incorrect number of parameters in file: %s ", filepath.native_file_string().c_str());
+					"Incorrect number of parameters in file: %s ", filepath.string().c_str());
+
 				LOGMORE ( SourceInfo, "line is: %s :SKIPPING", line);
 				continue;
 			}

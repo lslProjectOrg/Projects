@@ -291,15 +291,15 @@ namespace TA_Base_Core
 		strDBTypeTmp = strDBName;
 		strDBTypeTmp = strlwr((char*)strDBTypeTmp.c_str());
 
-		if(strDBName.compare(defOracleDBName) == 0) //case sensitive
+		if(strDBTypeTmp.compare(defOracleDBName) == 0) //case sensitive
 		{
 			m_nDBType = static_cast<int>(enumOracleDb);
 		}
-		else if (strDBName.compare(defMysqlDBName) == 0)
+		else if (strDBTypeTmp.compare(defMysqlDBName) == 0)
 		{
 			m_nDBType = static_cast<int>(enumMysqlDb);
 		}
-		else if (strDBName.compare(defSqliteDBName) == 0)
+		else if (strDBTypeTmp.compare(defSqliteDBName) == 0)
 		{
 			m_nDBType = static_cast<int>(enumSqliteDb);
 		}

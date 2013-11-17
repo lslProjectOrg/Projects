@@ -400,7 +400,7 @@ void SQLiteConnection::exec( const SQLStatement& rSqlObj, IQueryAdapter*& pIQuer
 			else
 			{
 				LOG_GENERIC( SourceInfo, DebugUtil::DebugDebug, 
-					"the statement exec, and %s Rows Changed", nRowsChanged);
+					"the statement exec, and %d Rows Changed", nRowsChanged);
 			}
 
 		}

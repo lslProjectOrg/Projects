@@ -53,12 +53,14 @@ namespace TA_Base_Core
         {
             throw DbConnectionFailed( e.what() );
         }
+		TA_Base_Core::DbStatus::getInstance();
 
     	FUNCTION_EXIT;
     }
 
     DbConnection::~DbConnection()
     {
+		TA_Base_Core::DbStatus::removeInstance();
     }
 
     DbConnection& DbConnection::getInstance()

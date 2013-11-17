@@ -300,30 +300,8 @@ namespace TA_Base_Core
 			LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DBException : %s", e.getSummary().c_str());
 
 			// this db has gone bad, try another one
-			disconnect();
-			try
-			{
-				DatabaseFactory::getInstance().getDatabase(m_dataType, m_dataAction, this);
-				m_db->Exec( rSqlObj );
-			}
-			catch( const DBException& e )
-			{
-				disconnect();
-				try
-				{
-					DatabaseFactory::getInstance().getDatabase(m_dataType, m_dataAction, this);
-					m_db->Exec( rSqlObj );
-				}
-				catch(...)
-				{
-					// if we catch anything it means there are no dbs available
-					// so just throw original error
-					LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DBException : %s", e.getSummary().c_str());
-
-					m_db->Close();
-					TA_THROW( DbConnectionFailed(e.getReason()) );
-				}
-			}				
+			
+			throw e;				
 
 		}
 		catch(const DatabaseException& e)

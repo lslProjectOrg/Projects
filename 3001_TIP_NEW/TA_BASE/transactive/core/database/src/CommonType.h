@@ -34,8 +34,31 @@ namespace TA_Base_Core
 		ER_ORA_TNS_CLOSE             = 12537 // TNS:connection closed
 	};
 
-	typedef struct st_sql_tag
+	//typedef struct st_sql_tag
+	//{
+	//	int nSQLID;                                // the SQL ID map in the sqlcode.txt
+	//	std::string strSQLID;                      // the SQL ID map in the sqlcode.txt
+	//	std::string strCommonSQL;                     // the common SQL which can run at all supported db
+	//	std::string strOracleSQL;                     // the oracle SQL statement
+	//	std::string strMySQLSQL;                      // the mysql SQL statement
+	//	std::string strSQLiteSQL;                     // the SQLite SQL statement
+
+	//}SQLStatement, *PSQLStatement;
+
+
+
+	class SQLStatement
 	{
+	public:
+		SQLStatement()
+		{
+			clear();
+		}
+		~SQLStatement()
+		{
+			clear();
+		}
+	public:
 		int nSQLID;                                // the SQL ID map in the sqlcode.txt
 		std::string strSQLID;                      // the SQL ID map in the sqlcode.txt
 		std::string strCommonSQL;                     // the common SQL which can run at all supported db
@@ -43,8 +66,17 @@ namespace TA_Base_Core
 		std::string strMySQLSQL;                      // the mysql SQL statement
 		std::string strSQLiteSQL;                     // the SQLite SQL statement
 
-	}SQLStatement, *PSQLStatement;
-
+	public:
+		void clear()
+		{
+			this->nSQLID = 0;
+			this->strSQLID.clear();
+			this->strCommonSQL.clear();
+			this->strOracleSQL.clear();
+			this->strMySQLSQL.clear();
+			this->strSQLiteSQL.clear();
+		}
+	};//class SQLStatement
 
 }
 

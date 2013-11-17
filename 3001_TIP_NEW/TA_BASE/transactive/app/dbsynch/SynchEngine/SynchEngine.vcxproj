@@ -53,7 +53,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;..\;..\..\;..\..\..\;..\..\..\..\COTS\GnuWin32\include;..\..\..\..\COTS\boost\boost_1_39_0\boost;..\..\..\..\COTS\boost\boost_1_39_0;..\..\..\..\COTS\mcl\1.1.0;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\Visual_Leak_Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;..\;..\..\;..\..\..\;..\..\..\..\COTS\GnuWin32\include;..\..\..\..\COTS\boost\boost_1_55_0;..\..\..\..\COTS\boost\boost_1_55_0\boost;..\..\..\..\COTS\mcl\1.1.0;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\Visual_Leak_Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=5;_WIN32_WINNT=0x500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -68,9 +68,9 @@
       <ProgramDataBaseFileName>.\../../../../../build/win32_nd/transactive/app/dbsynch/SynchEngine/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>TA_DataAccess_d.lib;TA_mcl_d.lib;TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;stracelib.lib;TA_Uuid_d.lib;pthreadVC2.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>TA_DataAccess_d.lib;TA_CppSQLiteLib.lib;sqlite3.lib;TA_mcl_d.lib;TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;stracelib.lib;TA_Uuid_d.lib;pthreadVC2.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../../../../bin/win32_nd/SynchEngine.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_39_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>

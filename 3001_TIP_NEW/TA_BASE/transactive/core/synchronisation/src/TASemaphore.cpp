@@ -24,13 +24,17 @@ namespace TA_Base_Core
 
 	CTASemaphore::CTASemaphore( unsigned int initial )
 	{
-
+		if (sem_init(&m_sem, 0, initial) == -1)
+		{
+			//printf("\n sem_init error! \n ");
+		}
+		
 	}
 
 
 	CTASemaphore::~CTASemaphore()
 	{
-
+		sem_destroy(&m_sem);
 	}
 
 

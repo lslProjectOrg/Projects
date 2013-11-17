@@ -1,12 +1,12 @@
-﻿Build started 11/13/2013 5:02:39 PM.
-     1>Project "C:\LSL\SVNWork\MT\3001_TIP_NEW\TA_BASE\tools\build\COTS\tools.build.cots.Build_Base_Cots.vcxproj" on node 2 (Build target(s)).
+﻿Build started 2013/11/16 20:46:48.
+     1>Project "D:\SVNHome\MT\3001_TIP_NEW\TA_BASE\tools\build\COTS\tools.build.cots.Build_Base_Cots.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
          Creating ".\Debug\tools.build.cots.unsuccessfulbuild" because "AlwaysCreate" was specified.
        FinalizeBuildStatus:
          Deleting file ".\Debug\tools.build.cots.unsuccessfulbuild".
          Touching ".\Debug\tools.build.cots.lastbuildstate".
-     1>Done Building Project "C:\LSL\SVNWork\MT\3001_TIP_NEW\TA_BASE\tools\build\COTS\tools.build.cots.Build_Base_Cots.vcxproj" (Build target(s)).
+     1>Done Building Project "D:\SVNHome\MT\3001_TIP_NEW\TA_BASE\tools\build\COTS\tools.build.cots.Build_Base_Cots.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.11
+Time Elapsed 00:00:00.25
