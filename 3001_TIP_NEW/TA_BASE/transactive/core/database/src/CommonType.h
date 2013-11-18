@@ -24,6 +24,8 @@ namespace TA_Base_Core
 
 	enum DB_ERR_CODE
 	{
+		ER_DB_ERR_UNKNOWN			 = 0,
+
 		ER_MYSQL_READ_ONLY			 = 1290, // MySQL server is read-only
 		ER_MYSQL_CANNT_CONNECT		 = 2003, // Can't connect to MySQL server 
 		ER_MYSQL_GONE_AWAY			 = 2006, // MySQL server has gone away
@@ -32,6 +34,7 @@ namespace TA_Base_Core
 		ER_ORA_INITORSHUTDOWN        = 1033, // ORACLE initialization or shutdown in progress
 		ER_ORA_NOT_AVALIABLE         = 1034, // ORACLE not available
 		ER_ORA_TNS_CLOSE             = 12537 // TNS:connection closed
+
 	};
 
 	//typedef struct st_sql_tag

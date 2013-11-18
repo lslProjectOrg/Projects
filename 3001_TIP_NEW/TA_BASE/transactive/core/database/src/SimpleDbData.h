@@ -261,6 +261,9 @@ namespace TA_Base_Core
 
 
 		std::string getData(const unsigned long rowIndex, const std::string& fieldName);
+
+		std::string _RemoveUnNeedCharForSQLiteFtime(const std::string& strSQLietFtime);
+
 	};
 } // close namespace TA_Base_Core
 #endif // !defined(SimpleDbData_1C4FBB55_1927_4465_A25F_FFDD0FCCF225__INCLUDED_)

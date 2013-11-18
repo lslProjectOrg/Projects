@@ -171,6 +171,11 @@ namespace TA_Base_Core
 				throw e;				
 			}
 		}
+		catch (...)
+		{
+			TA_THROW( DBException("Database_ERROR", "UnKnown Database ERROR", ER_DB_ERR_UNKNOWN) );
+		}
+
 		FUNCTION_EXIT;
 	}
 
@@ -219,6 +224,10 @@ namespace TA_Base_Core
 				// if go here : sql error
 				throw e;
 			}	
+		}
+		catch (...)
+		{
+			TA_THROW( DBException("Database_ERROR", "UnKnown Database ERROR", ER_DB_ERR_UNKNOWN) );
 		}
 
 		FUNCTION_EXIT;

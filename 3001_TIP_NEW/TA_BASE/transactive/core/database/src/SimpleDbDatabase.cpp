@@ -231,30 +231,8 @@ namespace TA_Base_Core
 		}
 		catch( const DBException& e )
 		{
-			disconnect();
-			try
-			{
-				DatabaseFactory::getInstance().getDatabase(m_dataType, m_dataAction, this);
-				m_db->Exec( rSqlObj, columnNames.size(), data, numRows );
-			}
-			catch(const DBException& e)
-			{
-				disconnect();
-				try
-				{
-					DatabaseFactory::getInstance().getDatabase(m_dataType, m_dataAction, this);
-					m_db->Exec( rSqlObj, columnNames.size(), data, numRows );
-				}
-				catch(...)
-				{
-					// if we catch anything it means there are no dbs available
-					// so just throw original error
-					LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DBException : %s", e.getSummary().c_str());
-
-					m_db->Close();
-					TA_THROW( DbConnectionFailed(e.getReason()) );
-				}
-			}			
+			LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DBException : %s", e.getSummary().c_str());
+			throw e;	
 		}
 		catch(const DatabaseException& e)
 		{
@@ -262,7 +240,11 @@ namespace TA_Base_Core
 			// so just record the log, next time the application getDatabase will try another db
 			
 			LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DatabaseException : %s", e.what());
-
+			throw e;	
+		}
+		catch (...)
+		{
+			TA_THROW( DBException("Database_ERROR", "UnKnown Database ERROR", ER_DB_ERR_UNKNOWN) );
 		}
 
 		// Set the member variables to match the passed-in variables
@@ -311,6 +293,10 @@ namespace TA_Base_Core
 			LOG_GENERIC( SourceInfo, DebugUtil::DebugError, "TA_Base_Core::DatabaseException : %s", e.what());
 			throw e;
 					
+		}
+		catch (...)
+		{
+			TA_THROW( DBException("Database_ERROR", "UnKnown Database ERROR", ER_DB_ERR_UNKNOWN) );
 		}
 		FUNCTION_EXIT;
 	}

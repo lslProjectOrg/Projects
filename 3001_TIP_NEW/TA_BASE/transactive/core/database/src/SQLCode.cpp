@@ -133,11 +133,11 @@ size_t  SQLCode::_GetSQLSize(const SQLVarParms& varParms, const std::string& str
 void  SQLCode::_BuildSQL(const SQLVarParms& varParms, const std::string& strSQLFormat, std::string& strSQL, int nSQLType)
 {	
 	size_t uVarCount = varParms.size();
-	if (defMINPARAMSIZE == uVarCount)	
-	{
-		strSQL = strSQLFormat;	
-	}
-	else
+	//if (defMINPARAMSIZE == uVarCount)	
+	//{
+	//	strSQL = strSQLFormat;	
+	//}
+	//else
 	{
 		/*
 		uVarCount=2  varParms[1]=param 1

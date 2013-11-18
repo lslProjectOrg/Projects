@@ -361,6 +361,11 @@ namespace TA_Base_Core
 	// Minute	= string(10-11)
 	// Second	= string(12-13)
 	// Total length = 14 characters
+
+	//eg: 2013-11-18 17:09:30 --> 20131118170930  14characters 
+	//oracle SELECT TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS SYSDATENOW FROM DUAL
+	//mysql SELECT DATE_FORMAT(SYSDATE(),'%Y%m%d%H%i%S') AS SYSDATENOW FROM DUAL
+	//SQLite SELECT STRFTIME('%Y%m%d%H%M%S', 'now', 'localtime') AS SYSDATENOW
 	time_t SimpleDbData::getDateData(const unsigned long rowIndex, const std::string& fieldName, const time_t defaultValue )
 	{
         LOG0 ( SourceInfo, DebugUtil::DebugTrace, "SimpleDbData::getDateData" );
@@ -484,6 +489,44 @@ namespace TA_Base_Core
 		return value;
 	}
 
+	//IN "20131118173505.181"
+	//OUT "20131118173505181"
+	std::string SimpleDbData::_RemoveUnNeedCharForSQLiteFtime(const std::string& strSQLietFtime)
+	{		
+		std::string strParamCopy = strSQLietFtime;
+		std::string strYYYYMMDDHHMMSS;
+		std::string strFFF;
+		std::string strYYYYMMDDHHMMSSFFF;
+		strYYYYMMDDHHMMSS.clear();
+		strFFF.clear();
+		strYYYYMMDDHHMMSSFFF.clear();
+
+		if (strParamCopy.size() < 14)
+		{
+			strYYYYMMDDHHMMSSFFF = strParamCopy;
+			return strYYYYMMDDHHMMSSFFF;
+		}
+
+		if (std::string::npos != strParamCopy.find_first_of("."))
+		{
+			int numberTest = 0;
+			numberTest = strParamCopy.find_first_of(".");
+			strYYYYMMDDHHMMSS = strParamCopy.substr(0, numberTest);
+			strFFF = strParamCopy.substr(numberTest + 1, strParamCopy.length() - numberTest - 1);
+		}
+
+		if (false == strYYYYMMDDHHMMSS.empty())
+		{
+			strYYYYMMDDHHMMSSFFF = strYYYYMMDDHHMMSS + strFFF;
+		}
+		else
+		{
+			strYYYYMMDDHHMMSSFFF = strParamCopy;
+		}
+
+		return strYYYYMMDDHHMMSSFFF;
+	}
+
     // YYYYMMDDHH24MMSSFF3
 	// Year		    = string(00-03)
 	// Month	    = string(04-05)
@@ -493,11 +536,19 @@ namespace TA_Base_Core
 	// Second	    = string(12-13)
     // Millisecond   = string(14-16)
 	// Total length = 17 characters
+
+	//eg: 2013-11-18 17:09:30.111 --> 20131118170930111  17characters 
+	//oracle SELECT TO_CHAR(SYSTIMESTAMP,'YYYY-MM-DD HH24:MI:SS.FF3') AS SYSDATENOW FROM DUAL;-- 2013-11-18 17:17:49.000
+	//mysql SELECT DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d %H:%i:%S.%f') AS SYSDATENOW FROM DUAL  -- 2013-11-18 17:17:49.000000 
+	//SQLite SELECT STRFTIME('%Y-%m-%d %H:%M.%f', 'now', 'localtime') AS SYSDATENOW -- 2013-11-18 17:17:49.000
+
 	timeb SimpleDbData::getTimestampData(const unsigned long rowIndex, const std::string& fieldName)
 	{
         LOG0 ( SourceInfo, DebugUtil::DebugTrace, "SimpleDbData::getDateData" );
 		std::string target = getData(rowIndex,fieldName);
         
+		target = _RemoveUnNeedCharForSQLiteFtime(target);
+
         // The date string should have no non-numeric characters. This test will determine that.
 		int numberTest = target.find_first_not_of("0123456789");
 		// The target string MUST be 17 characters long, and 17 characters long ONLY

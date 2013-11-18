@@ -172,6 +172,8 @@
 
 #define DEF_CONSTRUCT_SQLCODE(SQLSTRING_LEN,SQLTYPE) \
 	switch(uVarCount){ \
+	case 1: \
+	sql_snprintf(szSQL, SQLSTRING_LEN, strSQLFormat.c_str()); break; \
 	case 2: \
 		sql_snprintf(szSQL, SQLSTRING_LEN, strSQLFormat.c_str(), varParms[1].data(SQLTYPE)); break; \
 	case 3: \

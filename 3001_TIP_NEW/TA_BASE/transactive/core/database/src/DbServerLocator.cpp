@@ -493,6 +493,10 @@ namespace TA_Base_Core
 				LOG_GENERIC( SourceInfo,  DebugUtil::DebugError, "[database error]: %s" , osMsg.str().c_str());
 				throw e; //cause the agent or application down right now, maybe.				
 			}
+			catch (...)
+			{
+				TA_THROW( DBException("Database_ERROR", "UnKnown Database ERROR", ER_DB_ERR_UNKNOWN) );
+			}
 		}
 
 		connection->decrementExecutionCount();

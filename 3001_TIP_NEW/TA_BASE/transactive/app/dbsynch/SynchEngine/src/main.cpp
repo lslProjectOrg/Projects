@@ -60,8 +60,8 @@ int main( int argc, char* argv[] )
 
 
 	//
-	//test_sqlitedb();
-	test_threadpool();
+	test_sqlitedb();
+	//test_threadpool();
 
 	//
 	
@@ -98,6 +98,9 @@ void test_sqlitedb()
 	TA_Base_Core::IData* pData = NULL;
 	unsigned long ulongPkeyValue = 0;
 	std::string strValue = "";
+	std::string strSYSDATENOW = "";
+	std::vector<std::string> columnNames;
+
 
 	pDatabase = TA_Base_Core::DatabaseFactory::getInstance().getDatabase(TestEDataType, TestEDataAction);
 
@@ -120,23 +123,75 @@ void test_sqlitedb()
 	pDatabase->executeModification(rSqlObj);
 	rSqlObj.clear();
 
-
-
+	//SYS_SYSDATE_NOW_SELECT_1000
+	//SYS_SYSDATE_NOW_SELECT_1000=SELECT TO_CHAR(SYSDATE£¬'YYYY-MM-DD HH24:MI:SS') AS SYSDATENOW  FROM DUAL
+	columnNames.clear();
+	columnNames.push_back("SYSDATENOW");
 	rSqlObj.clear();
-	pDatabase->prepareSQLStatement(rSqlObj, TABLETESTDAITEST_INSERT_2000);
+	pDatabase->prepareSQLStatement(rSqlObj, SYS_SYSDATE_NOW_SELECT_1000);
+	pData = pDatabase->executeQuery(rSqlObj, columnNames);
+	rSqlObj.clear();
+	strSYSDATENOW = pData->getStringData(0, "SYSDATENOW");
+	delete pData;
+	pData = NULL;
+
+	columnNames.clear();
+	columnNames.push_back("SYSDATENOW");
+	rSqlObj.clear();
+	pDatabase->prepareSQLStatement(rSqlObj, SYS_SYSDATE_NOW_SELECT_1001);
+	pData = pDatabase->executeQuery(rSqlObj, columnNames);
+	rSqlObj.clear();
+	//time_t nTimeTGet = pData->getDateData(0, "SYSDATENOW");
+	delete pData;
+	pData = NULL;
+
+	columnNames.clear();
+	columnNames.push_back("SYSDATENOW");
+	rSqlObj.clear();
+	pDatabase->prepareSQLStatement(rSqlObj, SYS_SYSDATE_NOW_SELECT_1003);
+	pData = pDatabase->executeQuery(rSqlObj, columnNames);
+	rSqlObj.clear();
+	pData->getTimestampData(0, "SYSDATENOW");
+	delete pData;
+	pData = NULL;
+
+
+	/*
+	TABLETESTDAITEST_INSERT_2000=INSERT INTO TABLE_TEST_DAITEST(LINE_ID, TEST_TYPE, INT_COLUMN, STR_COLUMN, BOOL_COLUMN, REAL_COLUMN,
+	+ DATE_COLUMN, TIMESTAMP_COLUMN) VALUES (1000, 'Test_Type_NormalValue', 1000000, 'str_normal_value', 1, 10000000.10001, '%s', '%s')
+	*/
+	rSqlObj.clear();
+	pDatabase->prepareSQLStatement(rSqlObj, TABLETESTDAITEST_INSERT_2000, strSYSDATENOW, strSYSDATENOW);
 	pDatabase->executeModification(rSqlObj);
 	rSqlObj.clear();
 
 
-	std::vector<std::string> columnNames;
-	columnNames.push_back("STR_COLUMN");
 
 	//	/*CommonSQL*/("SELECT STR_COLUMN FROM TABLE_TEST_DAITEST WHERE LINE_ID = 1000"),
+	columnNames.clear();
+	columnNames.push_back("LINE_ID");
+	columnNames.push_back("TEST_TYPE");
+	columnNames.push_back("INT_COLUMN");
+	columnNames.push_back("STR_COLUMN");
+	columnNames.push_back("BOOL_COLUMN");
+	columnNames.push_back("REAL_COLUMN");
+	columnNames.push_back("DATE_COLUMN");
+	columnNames.push_back("TIMESTAMP_COLUMN");
+
 	rSqlObj.clear();
-	pDatabase->prepareSQLStatement(rSqlObj, TABLETESTDAITEST_SELECT_1000);
+	pDatabase->prepareSQLStatement(rSqlObj, TABLETESTDAITEST_SELECT_1001);
 	pData = pDatabase->executeQuery(rSqlObj, columnNames);
 	rSqlObj.clear();
+	strValue = pData->getStringData(0, "LINE_ID");
+	strValue = pData->getStringData(0, "TEST_TYPE");
+	strValue = pData->getStringData(0, "INT_COLUMN");
 	strValue = pData->getStringData(0, "STR_COLUMN");
+	strValue = pData->getStringData(0, "BOOL_COLUMN");
+	strValue = pData->getStringData(0, "REAL_COLUMN");
+	strValue = pData->getStringData(0, "DATE_COLUMN");
+	strValue = pData->getStringData(0, "TIMESTAMP_COLUMN");
+	//pData->getDateData(0, "TIMESTAMP_COLUMN");
+	//pData->getTimestampData(0, "TIMESTAMP_COLUMN");
 	delete pData;
 	pData = NULL;
 
