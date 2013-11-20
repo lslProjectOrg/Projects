@@ -80,7 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\cots\SQLite\include\;..\..\;..\..\..\cots\GnuWin32\include;..\..\..\cots\boost\boost_1_55_0;..\mcl\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\src;..\;..\..\;..\..\..\;..\..\..\cots\GnuWin32\include;..\..\..\cots\boost\boost_1_55_0;..\..\core\mcl\;..\..\core\ocl\src;..\..\..\cots\SQLite\include\;..\..\..\cots\oracle\10.2.0\winnt\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;__WIN32__;__x86__;__NT__;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;_USE_32BIT_TIME_T;mysqlcppconn_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -124,6 +124,8 @@
     <ClInclude Include="src\IQueryAdapter.h" />
     <ClInclude Include="src\MysqlConnection.h" />
     <ClInclude Include="src\MysqlQueryAdapter.h" />
+    <ClInclude Include="src\OCIConnection.h" />
+    <ClInclude Include="src\OCIQueryAdapter.h" />
     <ClInclude Include="src\SimpleDb.h" />
     <ClInclude Include="src\SimpleDbData.h" />
     <ClInclude Include="src\SimpleDbDatabase.h" />
@@ -150,6 +152,8 @@
     <ClCompile Include="src\DbStatus.cpp" />
     <ClCompile Include="src\MysqlConnection.cpp" />
     <ClCompile Include="src\MysqlQueryAdapter.cpp" />
+    <ClCompile Include="src\OCIConnection.cpp" />
+    <ClCompile Include="src\OCIQueryAdapter.cpp" />
     <ClCompile Include="src\SimpleDb.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>

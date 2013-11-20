@@ -91,6 +91,12 @@
     <ClInclude Include="src\SQLiteQueryAdapter.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\OCIConnection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OCIQueryAdapter.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DBException.cpp">
@@ -145,6 +151,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\SQLiteQueryAdapter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OCIConnection.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OCIQueryAdapter.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

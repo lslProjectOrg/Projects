@@ -31,6 +31,7 @@
 #include "core/database/src/IQueryAdapter.h"
 #include "core/database/src/SQLiteConnection.h"
 #include "core/database/src/MysqlConnection.h"
+#include "core/database/src/OCIConnection.h"
 #include "cppconn/driver.h"
 
 #include <boost/lexical_cast.hpp>
@@ -318,8 +319,15 @@ namespace TA_Base_Core
 	void DbServerLocator::open( const std::string& connectionStr )
 	{
 		IDbConnection* connection = getConnection( connectionStr );
-
-		connection->open();
+		try
+		{
+			connection->open();
+		}
+		catch (...)
+		{
+			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
+				"Error: connection->open connectionStr=%s", connectionStr.c_str());
+		}
 		connection->decrementExecutionCount();
 	}
 
@@ -767,7 +775,7 @@ namespace TA_Base_Core
 			switch (nDbType)
 			{
 			case enumOracleDb:
-				//pDbConnection = new OCIConnection( connectionStr, databaseName, userName, password, hostName ); 
+				pDbConnection = new OCIConnection( connectionStr, databaseName, userName, password, hostName ); 
 				break;
 			case enumMysqlDb:
 				if (NULL == m_pDriver)

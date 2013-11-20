@@ -1,0 +1,1 @@
+The workspace located in this directory works on the 'Test Framework' view.

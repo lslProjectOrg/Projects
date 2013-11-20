@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A5D5FF44-988C-4281-A417-0D85A9381B7B}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\../../../../../bin/win32_nd\</OutDir>
+    <IntDir>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\COTS\GnuWin32\include;..\..\..\..\COTS\boost\boost_1_55_0;..\..\..\..\COTS\boost\boost_1_55_0\boost;..\..\..\..\COTS\mcl\1.1.0;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\Visual_Leak_Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=5;_WIN32_WINNT=0x500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PrecompiledHeaderOutputFile>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/app.CFDServer.CFDServer.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</AssemblerListingLocation>
+      <ObjectFileName>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;TA_Uuid_d.lib;pthreadVC2.lib;stracelib.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../../../bin/win32_nd/CFDServer.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ProgramDatabaseFile>.\../../../../../bin/win32_nd/CFDServer.pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\;..\..\..\..\COTS/omniORB/omniORB_4.1.6/include;..\..\..\..\COTS\boost\boost_1_39_0\boost;..\..\..\..\COTS\boost\boost_1_39_0;..\..\..\..\COTS\mcl\1.1.0;..\..\..\..\COTS\ZipArchive\zlib;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\ocilib\3.9.3\src;..\MAQLib\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;__WIN32__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>omniORB416_rt.lib;omniDynamic416_rt.lib;omnithread34_rt.lib;TA_mcl.lib;TA_Sockets.lib;TA_Thread.lib;TA_Utilities.lib;TA_Exceptions.lib;TA_Synchronisation.lib;TA_Version.lib;TA_MAQ.lib;TA_Uuid.lib;stracelib.lib;zlib.lib;ocilib.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../../../bin/win32_nr/CFDServer.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nr;..\..\..\..\cots\boost\boost_1_39_0\stage\lib;..\..\..\..\cots\omniORB\omniORB_4.1.6\lib\x86_win32\;..\..\..\..\cots\WinStackTrace\build\Release;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\ZipArchive\zlib;..\..\..\..\cots\ZipArchive\zlib\Release;..\..\..\..\cots\ocilib\3.9.3\lib\winnt;..\..\..\..\cots\oracle\10.2.0\winnt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CFDRequestHelper.cpp" />
+    <ClCompile Include="src\ComWorker.cpp" />
+    <ClCompile Include="src\ConnectionActor.cpp" />
+    <ClCompile Include="src\DataBuffer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RequestManager.cpp" />
+    <ClCompile Include="src\ServerConnectionListener.cpp" />
+    <ClCompile Include="src\ServerConnectionManager.cpp" />
+    <ClCompile Include="src\ServerRequestMonitor.cpp" />
+    <ClCompile Include="src\UtilityFun.cpp" />
+    <ClCompile Include="src\VersionGen.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CFDRequestHelper.h" />
+    <ClInclude Include="src\CommonData.h" />
+    <ClInclude Include="src\CommonDef.h" />
+    <ClInclude Include="src\ComWorker.h" />
+    <ClInclude Include="src\ConnectionActor.h" />
+    <ClInclude Include="src\DataBuffer.h" />
+    <ClInclude Include="src\RequestManager.h" />
+    <ClInclude Include="src\ServerConnectionListener.h" />
+    <ClInclude Include="src\ServerConnectionManager.h" />
+    <ClInclude Include="src\ServerRequestMonitor.h" />
+    <ClInclude Include="src\UtilityFun.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{ce834331-c902-42aa-ba58-e0d94fa67f55}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VersionGen.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ServerConnectionListener.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UtilityFun.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ServerConnectionManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ServerRequestMonitor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RequestManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConnectionActor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFDRequestHelper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComWorker.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ServerConnectionListener.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CommonData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CommonDef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UtilityFun.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ServerConnectionManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ServerRequestMonitor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RequestManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ConnectionActor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CFDRequestHelper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComWorker.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

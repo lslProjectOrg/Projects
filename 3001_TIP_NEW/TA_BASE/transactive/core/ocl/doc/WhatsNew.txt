@@ -1,0 +1,71 @@
+08-Apr-05 New features in OCL 3.00
+--------------------------------------------------------
+- Oracle 10g support added
+- Oracle 10g Instant Client support added
+- Support BINARY_DOUBLE, BINARY_FLOAT types
+- Add new getChars function to OraField and CRField classes
+- Support reading records from several REF CURSOR parameters
+- Fix memory leak after fetching data from cursor
+
+
+25-May-03 New features in OCL 2.55
+--------------------------------------------------------
+
+- New DB Monitor interface support
+- OCLMonitor class renamed to OraMonitor class
+
+
+28-Oct-02 New features in OCL 2.50
+--------------------------------------------------------
+
+- MS Visual Studio.NET C++ support, Borland C++ Builder 6 support,
+  Kylix 3 for C++ support
+- OraLoader class for direct path loading Oracle API
+- OraTransaction class for Oracle distributed transaction support
+- OraScript class was added for scripts executing similar to
+  SQL*Plus scripts
+- OraEnvironment class was implemented for advanced OCI initialization
+  control and other Oracle specific features
+- OraConnection::setHome function was added for assigning Oracle
+  home to connection
+- OraConnection::changePassword function was added
+- OraConnection::setConnectMode function was added
+- OraConnection::getTNSAliases function was added to retrieve
+  TNS aliases existing in Oracle client
+- OraCommand::errorOffset function was added for retrieving error symbol or
+  statement position
+- Support Binary and Boolean datatypes was implemented
+- OraInterval and OraTimeStamp classes were implemented to represent new Oracle 9i
+  data types
+- DB Monitor support
+
+
+19-Feb-02 New features in OCL 2.00
+--------------------------------------------------------
+
+- New model of working with result records that uses object of 
+  new class OraRecordset returned by OraCommand
+- Support Oracle 8 Call Interface
+- Support Oracle 8 types such as CLOB, BLOB and BFILE data types
+- Support Oracle 9i
+- Simplified work with tables and stored procedures
+- Using namespace
+- Dynamic linking with OCI
+- Ability to write external procedures
+- Support transaction isolation
+- Monitoring of execution SQL statements
+- Printed documentation
+
+
+15-Mar-01 New features in OCL 1.01
+--------------------------------------------------------
+
+- CCRField* findField(int index) const
+- COraParam* (int index) const
+- virtual void getBookmark(void** bookmark)
+- virtual bool moveToBookmark(void* bookmark)
+- void freeBookmark(void* bookmark)
+
+
+05-Feb-01 First release of OCL 1.00
+--------------------------------------------------------

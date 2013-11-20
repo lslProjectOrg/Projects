@@ -12,8 +12,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A5D5FF44-988C-4281-A417-0D85A9381B7B}</ProjectGuid>
-    <RootNamespace>SynchEngineClient</RootNamespace>
-    <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -70,7 +68,7 @@
     <Link>
       <AdditionalDependencies>TA_DataAccess_d.lib;TA_CppSQLiteLib.lib;sqlite3.lib;TA_mcl_d.lib;TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;stracelib.lib;TA_Uuid_d.lib;pthreadVC2.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>../../../../../bin/win32_nd/SynchEngine.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\core\mcl\;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>

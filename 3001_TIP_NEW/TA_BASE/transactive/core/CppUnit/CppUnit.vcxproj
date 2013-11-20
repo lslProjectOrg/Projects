@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>core.CppUnit</ProjectName>
+    <ProjectGuid>{C9DAFC26-093F-441E-BB40-3362B1240B56}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\../../../../build/win32_nd\</OutDir>
+    <IntDir>.\../../../../build/win32_nd/transactive/core/CppUnit\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_LIB;TA_ASSERT_FAIL=2;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\../../../../build/win32_nd/transactive/core/CppUnit/core.CppUnit.TA_CppUnit.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../../build/win32_nd/transactive/core/CppUnit/</AssemblerListingLocation>
+      <ObjectFileName>.\../../../../build/win32_nd/transactive/core/CppUnit/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../../build/win32_nd/transactive/core/CppUnit/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>./;./src;../;../../;../../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>../../../../build/win32_nd\TA_CppUnit_d.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/CppUnit.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Release/CppUnit.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\lib\nt_x86\tstfwk.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/CppUnit.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AssertionFailedError.cpp" />
+    <ClCompile Include="src\ConfigData.cpp" />
+    <ClCompile Include="src\CppUnitException.cpp" />
+    <ClCompile Include="src\Flag.cpp" />
+    <ClCompile Include="src\INIFileException.cpp" />
+    <ClCompile Include="src\INIFileTestCases.cpp" />
+    <ClCompile Include="src\MethodsInputs.cpp" />
+    <ClCompile Include="src\NoSuiteMethodException.cpp" />
+    <ClCompile Include="src\ReadINIFile.cpp" />
+    <ClCompile Include="src\TestCase.cpp" />
+    <ClCompile Include="src\TestFailure.cpp" />
+    <ClCompile Include="src\TestFrameworkBase.cpp" />
+    <ClCompile Include="src\TestResult.cpp" />
+    <ClCompile Include="src\TestRunner.cpp" />
+    <ClCompile Include="src\TestSuite.cpp" />
+    <ClCompile Include="src\TextOutputter.cpp" />
+    <ClCompile Include="src\XmlOutputter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AssertionFailedError.h" />
+    <ClInclude Include="src\ConfigData.h" />
+    <ClInclude Include="src\CppUnitException.h" />
+    <ClInclude Include="src\Flag.h" />
+    <ClInclude Include="src\INIFileException.h" />
+    <ClInclude Include="src\INIFileTestCases.h" />
+    <ClInclude Include="src\MethodsInputs.h" />
+    <ClInclude Include="src\NoSuiteMethodException.h" />
+    <ClInclude Include="src\Outputter.h" />
+    <ClInclude Include="src\ReadINIFile.h" />
+    <ClInclude Include="src\SuiteException.h" />
+    <ClInclude Include="src\Test.h" />
+    <ClInclude Include="src\TestCaller.h" />
+    <ClInclude Include="src\TestCase.h" />
+    <ClInclude Include="src\TestFailure.h" />
+    <ClInclude Include="src\TestFramework.h" />
+    <ClInclude Include="src\TestFrameworkBase.h" />
+    <ClInclude Include="src\TestResult.h" />
+    <ClInclude Include="src\TestRunner.h" />
+    <ClInclude Include="src\TestSuite.h" />
+    <ClInclude Include="src\TextOutputter.h" />
+    <ClInclude Include="src\XmlOutputter.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
