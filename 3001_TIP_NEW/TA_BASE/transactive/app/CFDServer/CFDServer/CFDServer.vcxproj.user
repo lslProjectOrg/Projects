@@ -4,4 +4,7 @@
     <LocalDebuggerWorkingDirectory>C:\LSL\SVNWork\MT\3001_TIP_NEW\bin\win32_nd</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup>
+    <ShowAllFiles>true</ShowAllFiles>
+  </PropertyGroup>
 </Project>

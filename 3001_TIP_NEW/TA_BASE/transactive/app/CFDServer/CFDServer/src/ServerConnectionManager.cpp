@@ -2,6 +2,9 @@
 #include "UtilityFun.h"
 #include "core/utilities/src/RunParams.h"
 #include "core/utilities/src/DebugUtil.h"
+#include "core/synchronisation/src/ThreadGuard.h"
+#include "ServerRequestMonitor.h"
+#include "ConnectionActor.h"
 
 using namespace TA_Base_Core;
 NS_BEGIN(TA_Base_App)
@@ -20,6 +23,7 @@ CServerConnectionManager& CServerConnectionManager::getInstance()
 	if (NULL == m_pInstance)
 	{
 		m_pInstance = new CServerConnectionManager();
+		m_pInstance->start();
 	}
 
 	FUNCTION_EXIT;
@@ -30,19 +34,26 @@ void CServerConnectionManager::removeInstance()
 {
 	FUNCTION_ENTRY("removeInstance");
 
-	DEF_DELETE(m_pInstance);
+	if (NULL != m_pInstance)
+	{
+		m_pInstance->terminateAndWait();
+		DEF_DELETE(m_pInstance);
+	}
 	FUNCTION_EXIT;
 }
 
 
 
 CServerConnectionManager::CServerConnectionManager(void)
+	: m_semaphore(0)
 {
 	FUNCTION_ENTRY("CServerConnectionListener");
 
 	m_nThreadJobState = Job_State_Begin;
 	m_toTerminate = false;
-
+	m_pListConActor = NULL;
+	m_nListConActorSize = 0;
+	_InitListActor();
 
 	FUNCTION_EXIT;
 }
@@ -50,6 +61,9 @@ CServerConnectionManager::CServerConnectionManager(void)
 CServerConnectionManager::~CServerConnectionManager(void)
 {	
 	FUNCTION_ENTRY("~CServerConnectionListener");
+
+	_UnInitListActor();
+
 	FUNCTION_EXIT;
 }
 
@@ -65,7 +79,6 @@ void CServerConnectionManager::run()
    while (false == m_toTerminate)
    {
 	   _ThreadJob();
-	   //Thread::sleep(DEF_INT_NormalThreadSleep);	//m_SetTCPServerSocket.waitForIO(1000)	
    }
 
    _ProcessUserTerminate();
@@ -77,6 +90,7 @@ void CServerConnectionManager::terminate()
 	FUNCTION_ENTRY("terminate");
 
 	m_toTerminate = true; 
+	m_semaphore.post();
 	//LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "end CTCPServer::terminate()");
 	FUNCTION_EXIT;
 }
@@ -89,13 +103,21 @@ int CServerConnectionManager::_ThreadJob()
 	switch (m_nThreadJobState)
 	{
 	case Job_State_Begin:
+		CServerRequestMonitor::getInstance();
+		m_nThreadJobState = Job_State_WaitConActor;
 		break;
-
+	case Job_State_WaitConActor:
+		_Process_WaitConActor();
+		break;
+	case Job_State_ProcessConActor:		
+		_Process_ProcessConActor();
+		break;
 	case Job_State_End:
-		Thread::sleep(DEF_INT_NormalThreadSleep);
+		CServerRequestMonitor::removeInstance();
+		m_semaphore.wait();
 		break;		
 	default:
-		Thread::sleep(DEF_INT_NormalThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
 		break;		
 	}  //switch
 
@@ -109,7 +131,8 @@ int CServerConnectionManager::_ProcessUserTerminate()
 	int nFunRes = 0;
 	//user termin
 	m_nThreadJobState = Job_State_End;
-	
+	CServerRequestMonitor::removeInstance();
+
 	  
 	FUNCTION_EXIT;
 	return nFunRes;
@@ -124,10 +147,109 @@ bool CServerConnectionManager::isFinishWork()
 	{
 		bIsFinishWork = true;
 	}
+	FUNCTION_EXIT;
 	return bIsFinishWork;
+	
+
+}
+
+void  CServerConnectionManager::addActor(CConnectionActor* pActor)
+{
+	FUNCTION_ENTRY("addActor");
+
+	TA_THREADGUARD(m_LockListConActor);
+	m_pListConActor->push_back(pActor);
+	m_nListConActorSize = m_pListConActor->size();
+	m_semaphore.post();
+	FUNCTION_EXIT;
+}
+
+void CServerConnectionManager::_InitListActor()
+{	
+	FUNCTION_ENTRY("_InitListActor");
+
+	TA_THREADGUARD(m_LockListConActor);
+	m_pListConActor = new std::list<CConnectionActor*>();
+	m_pListConActor->clear();
+	m_nListConActorSize = 0;
 	FUNCTION_EXIT;
 
 }
+
+void CServerConnectionManager::_UnInitListActor()
+{	
+	FUNCTION_ENTRY("_UnInitListActor");
+
+	TA_THREADGUARD(m_LockListConActor);
+	CConnectionActor* pActor = NULL;
+	std::list<CConnectionActor*>::iterator iterList;
+	iterList = m_pListConActor->begin();
+	while (iterList != m_pListConActor->end())
+	{
+		pActor = (*iterList);
+		DEF_DELETE(pActor);
+		iterList++;
+	}
+	m_pListConActor->clear();
+	DEF_DELETE(m_pListConActor);
+	m_nListConActorSize = 0;
+	FUNCTION_EXIT;
+
+}
+
+
+int	CServerConnectionManager::_Process_WaitConActor()
+{
+	FUNCTION_ENTRY("_Process_WaitRequest");
+	int nFunRes =0;
+
+	{
+		TA_THREADGUARD(m_LockListConActor);
+		m_nListConActorSize = 0;
+		m_nListConActorSize = m_pListConActor->size();
+	}
+
+	if (m_nListConActorSize == 0)
+	{
+		m_semaphore.wait();//wait  addActor post
+	}
+	m_nThreadJobState = Job_State_ProcessConActor;
+
+	FUNCTION_EXIT;
+	return nFunRes;
+}
+
+int CServerConnectionManager::_Process_ProcessConActor()
+{
+	FUNCTION_ENTRY("_Process_ProcessConActor");
+	int nFunRes = 0;
+	TA_THREADGUARD(m_LockListConActor);
+	std::list<CConnectionActor*>::iterator iterList =  m_pListConActor->begin();
+	CConnectionActor* pActor = NULL;
+	while (iterList != m_pListConActor->end())
+	{
+		pActor = NULL;
+		pActor = (*iterList);
+		
+		//check TCP status
+		if (false == pActor->isHealth())
+		{
+			DEF_DELETE(pActor);
+		}
+
+		//add to Request monitor
+		CServerRequestMonitor::getInstance().addActor(pActor);
+		
+		iterList++;
+	}
+	m_pListConActor->clear();
+
+	m_nThreadJobState = Job_State_WaitConActor;
+
+	FUNCTION_EXIT;
+	return nFunRes;
+}
+
 
 
 NS_END(TA_Base_App)

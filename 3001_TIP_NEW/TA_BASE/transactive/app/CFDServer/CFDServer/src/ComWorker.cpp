@@ -11,18 +11,23 @@ NS_BEGIN(TA_Base_App)
 
    
 
-CComWorker::CComWorker(TA_Base_Core::TcpSocket* pSocket)
+CComWorker::CComWorker(TA_Base_Core::TcpSocket* pSocketRef)
 {
 	FUNCTION_ENTRY("CComWorker");
 
-	m_pSocket = NULL;
-	m_pSocket = pSocket;
+	m_pSocketRef = NULL;
+	m_pSocketRef = pSocketRef;
 	m_pRecvBufferOnce = new CDataBuffer(DEF_INT_BUFFER_LEN_READ);
 	m_pRecvBufferTotal = new CDataBuffer(DEF_INT_BUFFER_LEN_READ);
 	m_pBufferDataTmp = new CDataBuffer(DEF_INT_BUFFER_LEN_READ);
     m_pRecvBufferOnce->clear();
     m_pRecvBufferTotal->clear();
 	m_pBufferDataTmp->clear();
+
+	{
+		TA_THREADGUARD(m_lockSocketRead);
+		m_bIsStillConnected = m_pSocketRef->stillConnected();
+	}
 
     FUNCTION_EXIT;
 }
@@ -33,8 +38,7 @@ CComWorker::~CComWorker()
 
 	TA_THREADGUARD(m_lockSocketRead);
 	TA_THREADGUARD(m_lockSocketWrite);
-	DEF_DELETE(m_pSocket);
-
+	m_pSocketRef = NULL;
 	DEF_DELETE(m_pRecvBufferOnce);
 	DEF_DELETE(m_pRecvBufferTotal);
 	DEF_DELETE(m_pBufferDataTmp);
@@ -56,12 +60,13 @@ int CComWorker::readData()
 	try
 	{  
 		m_pRecvBufferOnce->prepareSize(DEF_INT_BUFFER_LEN_READ);
-		nRcvedRes = m_pSocket->read(m_pRecvBufferOnce->getWritePos(), &nGetLength, m_pRecvBufferOnce->getBlankSize()-1);
+		nRcvedRes = m_pSocketRef->read(m_pRecvBufferOnce->getWritePos(), &nGetLength, m_pRecvBufferOnce->getBlankSize()-1);
 		m_pRecvBufferOnce->moveWritePos(nGetLength);
 		nFunRes = 0;
 	}
 	catch (...)
 	{
+		m_bIsStillConnected = false;
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "Socket read Data Error");
 		m_pRecvBufferOnce->clear();
 		nFunRes = -1;
@@ -71,6 +76,7 @@ int CComWorker::readData()
 
 	if (nGetLength <= 0 || nRcvedRes != 0)
 	{
+		m_bIsStillConnected = false;
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
 			"Read Data Error! GetDatlength = %d, RecvRes = %d", nGetLength, nRcvedRes);
 		m_pRecvBufferOnce->clear();
@@ -166,7 +172,7 @@ int CComWorker::_GetFrameFromBuffer(CDataBuffer* pRecvBufferTotal, lstFrameBuffe
 }
 
 
-int CComWorker::analysisAndProcessData()
+int CComWorker::analysisData()
 {
 	FUNCTION_ENTRY("analysisAndProcessData");
 
@@ -210,7 +216,6 @@ int CComWorker::analysisAndProcessData()
 		}
 	}//while (true == bConninueProceeData)
 	
-	_ProcessRecvFrame();//m_lstRecvFrame
 	FUNCTION_EXIT;
 	return nFunRes;
 	
@@ -218,39 +223,38 @@ int CComWorker::analysisAndProcessData()
 
 
 
-int CComWorker::_ProcessRecvFrame()
+int CComWorker::getRecvFrameCount()
 {
-	FUNCTION_ENTRY("_ProcessRecvFrame");
+	FUNCTION_ENTRY("getRecvFrameCount");
 
 	int nFunRes = 0;
+	nFunRes = m_lstRecvFrame.size();
 
-	if (m_lstRecvFrame.empty())
-	{
-		nFunRes = -1;
-		return nFunRes;
-	}
-
-	
-	//process recv frame
-	lstFrameBufferConIterT iterLst = m_lstRecvFrame.begin();
-	while (iterLst != m_lstRecvFrame.end())
-	{
-		////TODO.
-		//
-		CDataBuffer* pRecvFrame = *iterLst;
-		//print data
-		pRecvFrame->print();
-		DEF_DELETE(pRecvFrame);
-
-		//
-		iterLst++;
-	}//while (iterLst != m_lstRecvFrame.end())
-
-	m_lstRecvFrame.clear();
 	FUNCTION_EXIT;
 	return nFunRes;
 }
 
+
+int CComWorker::getListRecvFrame(lstFrameBufferConT& LstFrameBuffer)
+{
+	FUNCTION_ENTRY("getRecvFrameCount");
+
+	int nFunRes = 0;
+	CDataBuffer* pFrameBuffer = NULL;
+	lstFrameBufferConIterT iterLst;
+	LstFrameBuffer.clear();
+	iterLst = m_lstRecvFrame.begin();
+	while (iterLst != m_lstRecvFrame.end())
+	{
+		pFrameBuffer = (*iterLst);
+		LstFrameBuffer.push_back(pFrameBuffer);
+		iterLst++;
+	}
+	m_lstRecvFrame.clear();
+
+	FUNCTION_EXIT;
+	return nFunRes;
+}
 
 
 
@@ -269,13 +273,13 @@ int CComWorker::writeBuffer(CDataBuffer* pSendBuff)
 
 	try
 	{		
-		nSendRes = m_pSocket->write(pSendPos, nSendLen);
+		nSendRes = m_pSocketRef->write(pSendPos, nSendLen);
 
 		if (nSendRes != nSendLen)
 		{
 			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError,
 				"Write Data Error, DataLen = %d, SendDataLen = %d", nSendLen, nSendRes);
-
+			m_bIsStillConnected = false;
 			nSendRes = -1;
 		}
 		else
@@ -287,13 +291,24 @@ int CComWorker::writeBuffer(CDataBuffer* pSendBuff)
 	catch (...)
 	{
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "Socket Write Data Error");
-
+		m_bIsStillConnected = false;
 		nSendRes = -1;
 	}
 	FUNCTION_EXIT;
 	return nSendRes;
 }
 
+
+bool CComWorker::isStillConnected()
+{
+	
+	if (m_bIsStillConnected)
+	{
+		TA_THREADGUARD(m_lockSocketRead);
+		m_bIsStillConnected = m_pSocketRef->stillConnected();
+	}
+	return m_bIsStillConnected;
+}
 
 NS_END(TA_Base_App)
 

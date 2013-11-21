@@ -6,7 +6,7 @@
 #include "core/utilities/src/RunParams.h"
 #include "core/utilities/src/DebugUtil.h"
 
-
+#include "UtilityFun.h"
 
 
 bool g_b_main_continue = true;
@@ -41,7 +41,11 @@ int main( int argc, char* argv[] )
 #endif
 	bool bSet = TA_Base_Core::RunParams::getInstance().parseCmdLine(argc, argv);
 
+	TA_Base_App::CUtilityFun::getInstance();
 
+
+
+	TA_Base_App::CUtilityFun::removeInstance();
 	
 	return 0;
 }

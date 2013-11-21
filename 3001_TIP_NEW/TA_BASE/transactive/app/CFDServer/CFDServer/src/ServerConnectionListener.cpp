@@ -2,12 +2,13 @@
 #include "UtilityFun.h"
 #include "core/utilities/src/RunParams.h"
 #include "core/utilities/src/DebugUtil.h"
+#include "ConnectionActor.h"
+#include "ServerConnectionManager.h"
 
 using namespace TA_Base_Core;
 NS_BEGIN(TA_Base_App)
 
-
-
+const std::string CServerConnectionListener::STRDEFAULTSOCKETPORT = "2005";
 
 CServerConnectionListener* CServerConnectionListener::m_pInstance = 0;
 TA_Base_Core::NonReEntrantThreadLockable CServerConnectionListener::m_instanceLock;
@@ -20,6 +21,7 @@ CServerConnectionListener& CServerConnectionListener::getInstance()
 	if (NULL == m_pInstance)
 	{
 		m_pInstance = new CServerConnectionListener();
+		m_pInstance->start();
 	}
 
 	FUNCTION_EXIT;
@@ -28,9 +30,14 @@ CServerConnectionListener& CServerConnectionListener::getInstance()
 
 void CServerConnectionListener::removeInstance()
 {
-	FUNCTION_ENTRY("getInstance");
+	FUNCTION_ENTRY("removeInstance");
 
-	DEF_DELETE(m_pInstance);
+	if (NULL != m_pInstance)
+	{
+		m_pInstance->terminateAndWait();
+		DEF_DELETE(m_pInstance);
+	}
+
 	FUNCTION_EXIT;
 
 }
@@ -38,10 +45,16 @@ void CServerConnectionListener::removeInstance()
 
 
 CServerConnectionListener::CServerConnectionListener(void)
+	:m_semaphore(0)
 {
 	FUNCTION_ENTRY("CServerConnectionListener");
+	
+	{
+		TA_THREADGUARD(m_LockSocketPort);
+		m_strListenSocketPort.clear();
+		m_nListenSocketPort = 0;
+	}
 
-	m_strListenSocketPort = "8000";
 	m_nThreadJobState = Job_State_Begin;
 	m_toTerminate = false;
 	m_pTCPServerSocket = NULL;//server listen socket
@@ -71,7 +84,6 @@ void CServerConnectionListener::run()
    while (false == m_toTerminate)
    {
 	   _ThreadJob();
-	   //Thread::sleep(DEF_INT_NormalThreadSleep);	//m_SetTCPServerSocket.waitForIO(1000)	
    }
 
    _ProcessUserTerminate();
@@ -83,6 +95,7 @@ void CServerConnectionListener::terminate()
 	FUNCTION_ENTRY("terminate");
 
 	m_toTerminate = true; 
+	m_semaphore.post();
 	//LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "end CTCPServer::terminate()");
 	FUNCTION_EXIT;
 }
@@ -95,51 +108,27 @@ int CServerConnectionListener::_ThreadJob()
 	switch (m_nThreadJobState)
 	{
 	case Job_State_Begin:
-// 		if (NULL == m_pTCPServerRequestMonitor)
-// 		{
-// 			m_pTCPServerRequestMonitor = new CTCPServerRequestMonitor();	
-// 			m_pTCPServerRequestMonitor->start();
-// 		}
-		m_nThreadJobState = Job_State_CheckParam;
+		CServerConnectionManager::getInstance();
+		m_nThreadJobState = Job_State_WaitListenPort;
 		break;
-	case Job_State_CheckParam:
-		nFunRes = _Process_CheckParam();
-		if (0 == nFunRes)
-		{
-		   m_nThreadJobState = Job_State_CreateListenSocket;
-		}
-		else
-		{
-			m_nThreadJobState = Job_State_End; 
-		}
+	case Job_State_WaitListenPort:
+		nFunRes = _Process_WaitListenPort();
+		break;
+	case Job_State_GetListenPort:
+		nFunRes = _Process_GetListenPort();
 		break;
 	case Job_State_CreateListenSocket:
 		nFunRes = _Process_CreateListenSocket();
-		if (0 == nFunRes)
-		{
-			m_nThreadJobState = Job_State_WaitForNewClient;
-		}
-		else
-		{
-			m_nThreadJobState = Job_State_End; 
-		}
 		break;
 	case Job_State_WaitForNewClient:
 		nFunRes = _Process_WaitForNewClient();
-		if (0 == nFunRes)
-		{
-			m_nThreadJobState = Job_State_WaitForNewClient;
-		}
-		else
-		{
-			m_nThreadJobState = Job_State_End; 
-		}
 		break;
 	case Job_State_End:
-		Thread::sleep(DEF_INT_NormalThreadSleep);
+		CServerConnectionManager::removeInstance();
+		m_semaphore.wait();
 		break;		
 	default:
-		Thread::sleep(DEF_INT_NormalThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
 		break;		
 	}  //switch
 
@@ -152,20 +141,19 @@ int CServerConnectionListener::_ProcessUserTerminate()
 	FUNCTION_ENTRY("_ProcessUserTerminate");
 
 	int nFunRes = 0;
-	//user termin
-	m_nThreadJobState = Job_State_End;
-	
-// 	if (NULL != m_pTCPServerRequestMonitor)
-// 	{
-// 		m_pTCPServerRequestMonitor->terminateAndWait();
-// 		DEF_DELETE(m_pTCPServerRequestMonitor);
-// 	}
+
 
 	if (NULL != m_pTCPServerSocket)
 	{
 		m_SetTCPServerSocket.removeSocket(m_pTCPServerSocket);
 		DEF_DELETE(m_pTCPServerSocket);		
 	}
+
+	CServerConnectionManager::removeInstance();
+
+	//user termin
+	m_nThreadJobState = Job_State_End;
+
 	  
 	FUNCTION_EXIT;
 	return nFunRes;
@@ -189,44 +177,79 @@ bool CServerConnectionListener::isFinishWork()
 int CServerConnectionListener::setListenPort(const std::string& strListenPort)
 {
 	FUNCTION_ENTRY("setListenPort");
+
+	TA_THREADGUARD(m_LockSocketPort);
 	int nFunRes = 0;
 	m_strListenSocketPort = strListenPort;
+	m_semaphore.post();
 	FUNCTION_EXIT;
 	return nFunRes;
 }
 
 
+int CServerConnectionListener::_Process_WaitListenPort()
+{
+	FUNCTION_ENTRY("_Process_WaitListenPort");
+	int nFunRes = 0;
+	std::string strPort;
 
-int CServerConnectionListener::_Process_CheckParam()
+	{
+		TA_THREADGUARD(m_LockSocketPort);
+		strPort = m_strListenSocketPort;
+	}
+
+	if (strPort.empty())
+	{
+		m_semaphore.wait();
+	}
+
+	m_nThreadJobState = Job_State_GetListenPort;
+	return nFunRes;
+}
+
+
+int CServerConnectionListener::_Process_GetListenPort()
 {
 	FUNCTION_ENTRY("_Process_CheckParam");
-
 	int nFunRes = 0;
+	std::string strPort;
 
-	if (m_strListenSocketPort.empty())
 	{
-		nFunRes = -1;
+		TA_THREADGUARD(m_LockSocketPort);
+		strPort = m_strListenSocketPort;
+	}
+
+	if (strPort.empty())
+	{
+		m_nThreadJobState = Job_State_WaitForNewClient;
 		return nFunRes;
 	}
-	m_nListenSocketPort = CUtilityFun::getInstance().mysys_str2Int32(m_strListenSocketPort);
 
+	m_nListenSocketPort = 0;
+	m_nListenSocketPort = CUtilityFun::getInstance().mysys_str2Int32(strPort);
 	if (0 == m_nListenSocketPort || m_nListenSocketPort > INT_MAX/2)
 	{
+		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError,
+			"ListenSocketPort error! strListenSocketPort=%s", strPort.c_str());
+		m_nThreadJobState = Job_State_End; 
 		nFunRes = -1;
-		return nFunRes;
+	}
+	else
+	{
+		m_nThreadJobState = Job_State_CreateListenSocket;
 	}
 
+
 	FUNCTION_EXIT;
-
 	return nFunRes;
-
 }
 
 int CServerConnectionListener::_Process_CreateListenSocket()
 {
 	FUNCTION_ENTRY("_Process_CreateListenSocket");
-
 	int nFunRes = 0;
+	TA_THREADGUARD(m_LockSocketPort);
+
 	try
 	{
 		DEF_DELETE(m_pTCPServerSocket);
@@ -234,18 +257,25 @@ int CServerConnectionListener::_Process_CreateListenSocket()
 		m_pTCPServerSocket->bind();
 		m_pTCPServerSocket->listen(); 
 		m_SetTCPServerSocket.addSocket(m_pTCPServerSocket);
-		nFunRes = 0;
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, 
-			"server port = %s listening", m_strListenSocketPort.c_str());	
-		
+			"server port = %s listening", m_strListenSocketPort.c_str());			
 	}
 	catch (...)
 	{
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError,
 			"bind server port = %s error!", m_strListenSocketPort.c_str());
-
 		DEF_DELETE(m_pTCPServerSocket);
 		nFunRes = -1;
+	}
+
+
+	if (0 == nFunRes)
+	{
+		m_nThreadJobState = Job_State_WaitForNewClient;
+	}
+	else
+	{
+		m_nThreadJobState = Job_State_End; 
 	}
 	
 	FUNCTION_EXIT;
@@ -275,12 +305,7 @@ int CServerConnectionListener::_Process_WaitForNewClient()
 	{
 		nFunRes = _AcceptClient(pTCPServerSocket);
 	}
-
-	if (m_SetTCPServerSocket.getSize() <= 0)
-	{
-		Thread::sleep(DEF_INT_NormalThreadSleep);
-	}
-
+	
 	FUNCTION_EXIT;
 	return nFunRes;
 }
@@ -293,36 +318,26 @@ int CServerConnectionListener::_AcceptClient(TcpServerSocket<TcpSocket>* pTCPSer
 
 	int nFunRes = 0;
 	TcpSocket*	pNewClientSocket = NULL;
-	//CTCPConnectionActor* pActor = NULL;
+	CConnectionActor* pConActor = NULL;
 
 	try
 	{
 		pNewClientSocket = pTCPServerSocket->accept(SERVER_NON_BLOCKING_ACCEPT, false); //SERVER_BLOCKING_ACCEPT
-		nFunRes = 0;		
 	}
 	catch(...)
 	{
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, "ServerSocket accept new Tcp Client error");
-
 		DEF_DELETE(pNewClientSocket);
 		nFunRes = -1;
 		FUNCTION_EXIT;
 		return nFunRes;
 	}
 
-
-// 	try
-// 	{
-// 		pActor = new CTCPConnectionActor(pNewClientSocket);
-// 		pNewClientSocket = NULL;
-// 
-// 	}
-// 	catch (...)
-// 	{
-// 		DEF_DELETE(pActor);
-// 	}
-
-	
+	pConActor = new CConnectionActor();
+	pConActor->setSocketHandle(pNewClientSocket);
+	pNewClientSocket = NULL;
+	CServerConnectionManager::getInstance().addActor(pConActor);
+	pConActor = NULL;
 	FUNCTION_EXIT;
 	return nFunRes;
 }

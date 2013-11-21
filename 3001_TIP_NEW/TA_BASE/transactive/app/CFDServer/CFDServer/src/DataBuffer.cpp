@@ -105,23 +105,24 @@ bool CDataBuffer::write(const void* src, int nLen)
 	const char* byteaddr = (const char*)src;
 	if (nLen <= 0)	
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	
 	pPosTmp = m_pWritePos + nLen;
 	if (pPosTmp > (m_pBuffer + m_nBufferSize))
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 
 	memcpy(m_pWritePos, byteaddr, nLen);
 	m_pWritePos = pPosTmp;
-	
-	getRemainDataLength();
-
 	pPosTmp = NULL;
-	FUNCTION_EXIT;
 
+	getRemainDataLength();
+	
+	FUNCTION_EXIT;
 	return true;
 }
 
@@ -132,23 +133,24 @@ bool CDataBuffer::read(void* dest, int nLen)
 
 	if (nLen <= 0)
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	
 	pPosTmp = m_pReadPos + nLen;
 	if (pPosTmp > m_pWritePos)
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 
 	memcpy(dest, m_pReadPos, nLen);
 	m_pReadPos = pPosTmp;
-	
+	pPosTmp = NULL;
+
 	getRemainDataLength();
 	
-	pPosTmp = NULL;
 	FUNCTION_EXIT;
-
 	return true;
 }
 
@@ -161,19 +163,21 @@ bool CDataBuffer::moveWritePos(int nLen)
 	
 	if (pPosTmp < m_pReadPos)
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	
 	if (pPosTmp > (m_pBuffer + m_nBufferSize))	
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	m_pWritePos = pPosTmp;
+	pPosTmp = NULL;
+
 	getRemainDataLength();
 
-	pPosTmp = NULL;
 	FUNCTION_EXIT;
-
 	return true;
 }
 
@@ -186,18 +190,20 @@ bool CDataBuffer::moveReadPos(int nLen)
 	pPosTmp = m_pReadPos + nLen;
 	if (pPosTmp < m_pBuffer)
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	
 	if (pPosTmp > m_pWritePos)	
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	m_pReadPos = pPosTmp;
-	
+	pPosTmp = NULL;
+
 	getRemainDataLength();
 
-	pPosTmp = NULL;
 	FUNCTION_EXIT;
 	return true;
 }
@@ -249,6 +255,7 @@ bool CDataBuffer::resize(int nsize)
 	nDataLen = m_pWritePos - m_pReadPos;
 	if (nDataLen >= nsize)
 	{
+		FUNCTION_EXIT;
 		return false;
 	}
 	try
@@ -268,7 +275,6 @@ bool CDataBuffer::resize(int nsize)
 	catch (...)
 	{
 		FUNCTION_EXIT;
-
 		return false;
 	}
 	
@@ -326,8 +332,8 @@ void CDataBuffer::prepareSize( int nSize )
 void CDataBuffer::print()
 {
 	FUNCTION_ENTRY("print");
-
-	char* pPrintPos = m_pReadPos;
+	char* pPrintPos = NULL;
+	pPrintPos = m_pReadPos;
 	if (getRemainDataLength() <= 0)
 	{
 		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "[BufferData=%s]", "");

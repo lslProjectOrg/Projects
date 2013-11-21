@@ -1,14 +1,9 @@
 #ifndef __CLASS_DATA_BUFFER__HH__
 #define __CLASS_DATA_BUFFER__HH__
 
-
-
 #include "CommonData.h"
 
 NS_BEGIN(TA_Base_App)
-
-
-
 
 class CDataBuffer  
 {
@@ -39,8 +34,9 @@ public:
 	bool moveReadPos(int nLen);
 
 	void clear();		
-	void trim();		
 
+public:
+	void trim();
 	bool resize(int nSize);
 	bool resizeFitData();
 	void prepareSize(int nSize);	
