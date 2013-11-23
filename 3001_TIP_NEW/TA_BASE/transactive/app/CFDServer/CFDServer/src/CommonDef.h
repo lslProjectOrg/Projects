@@ -117,6 +117,7 @@ enum def_int_Code_Value
 	DEF_INT_SingleLineMaxSize		=			1024*8,
 	DEF_INT_NormalThreadSleep		=			100,
 	DEF_INT_MonitorThreadSleep		=           1000,
+	DEF_INT_LongMonitorThreadSleep		=           1000*30,
 
 	DEF_INT_LIMIT_TCP_TIMEOUT       =			500,
 

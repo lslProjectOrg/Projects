@@ -6,6 +6,7 @@
 
 #include "ConnectionActor.h"
 #include "RequestManager.h"
+#include "ServerConnectionManager.h"
 
 using namespace TA_Base_Core;
 NS_BEGIN(TA_Base_App)
@@ -52,13 +53,12 @@ CServerRequestMonitor::CServerRequestMonitor(void)
 	m_nThreadJobState = Job_State_Begin;
 	m_toTerminate = false;
 	m_pMapSocketConActor = NULL;
-	m_pMapSocketConActorTmp = NULL;
 	m_nListConActorSize = 0;
 
 	m_bTCPRead = true;
 	m_bTCPWrite = true; 
 	m_nTCPSelectRes = 0; 
-	m_timeTCPWait = DEF_INT_MonitorThreadSleep;
+	m_timeTCPWait = DEF_INT_LongMonitorThreadSleep;
 
 	_IniMap();
 
@@ -120,12 +120,15 @@ int CServerRequestMonitor::_ThreadJob()
 	case Job_State_MonitorData:
 		_Process_MonitorData();
 		break;
+	case Job_State_MonitorRequest:
+		_Process_MonitorRequest();
+		break;
 	case Job_State_End:
 		CRequestManager::removeInstance();
 		m_semaphore.wait();
 		break;		
 	default:
-		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_LongMonitorThreadSleep);
 		break;		
 	}  //switch
 
@@ -169,7 +172,7 @@ int CServerRequestMonitor::_Process_MonitorData()
 	TA_Base_Core::TcpSocket* pTcpSocket = NULL;
 	MapSocketConActorIterT iterMap;
 	CConnectionActor* pActor = NULL;
-	m_nListConActorSize = m_pSetSocket.getSize();
+	//m_nListConActorSize = m_pSetSocket.getSize();
 	if (m_nListConActorSize <= 0)
 	{
 		m_nThreadJobState = Job_State_waitConActor;
@@ -179,7 +182,7 @@ int CServerRequestMonitor::_Process_MonitorData()
 
 
 	m_bTCPRead = true;
-	m_bTCPWrite = true; 
+	m_bTCPWrite = false; 
 	m_nTCPSelectRes = -1; 
 	m_nTCPSelectRes = m_pSetSocket.waitForIO( m_bTCPRead, m_bTCPWrite, m_timeTCPWait );//select()
 		
@@ -219,8 +222,7 @@ int CServerRequestMonitor::_Process_MonitorRequest()
 	MapSocketConActorIterT iterMap;
 	TA_Base_Core::TcpSocket* pTcpSocket = NULL;
 	CConnectionActor* pActor = NULL;
-	MapSocketConActorT* pMapTmp = NULL;
-	m_nListConActorSize = m_pMapSocketConActor->size();
+	//m_nListConActorSize = m_pMapSocketConActor->size();
 	if (m_nListConActorSize <= 0)
 	{
 		m_nThreadJobState = Job_State_waitConActor;
@@ -228,33 +230,46 @@ int CServerRequestMonitor::_Process_MonitorRequest()
 		return nFunRes;
 	}
 
-	m_pMapSocketConActorTmp->clear();
 
 	iterMap = m_pMapSocketConActor->begin();
 	while (iterMap != m_pMapSocketConActor->end())
 	{
 		pTcpSocket = (*iterMap).first;
 		pActor = (*iterMap).second;
-		if (pActor->getRequestCount() > 0)
+
+		if (false == pActor->isHealth())
+		{
+			//remove from Monitor SokertSet
+			m_pSetSocket.removeSocket(pTcpSocket);
+			pTcpSocket = NULL;
+
+			m_pMapSocketConActor->erase(iterMap);
+			iterMap = m_pMapSocketConActor->begin();
+
+			m_nListConActorSize = m_pMapSocketConActor->size();
+
+			CServerConnectionManager::getInstance().addActor(pActor);
+			pActor = NULL;
+		}
+		else if (pActor->getRequestCount() > 0 )
 		{
 			//remove from Monitor SokertSet
 			m_pSetSocket.removeSocket(pTcpSocket);
 			//
 			CRequestManager::getInstance().addActor(pActor);
 			pTcpSocket = NULL;
+			m_pMapSocketConActor->erase(iterMap);
+			iterMap = m_pMapSocketConActor->begin();
+			m_nListConActorSize = m_pMapSocketConActor->size();
 		}
 		else
 		{
-			m_pMapSocketConActorTmp->insert(MapSocketConActorValueTypeT(pTcpSocket, pActor));
+			iterMap++;
 		}
-		iterMap++;
+		
 	}//while
 
-	m_pMapSocketConActor->clear();
-	pMapTmp = m_pMapSocketConActor;
-	m_pMapSocketConActor = m_pMapSocketConActorTmp;
-	m_pMapSocketConActorTmp = pMapTmp;
-	pMapTmp = NULL;
+
 
 	m_nThreadJobState = Job_State_MonitorData;
 
@@ -282,7 +297,7 @@ void CServerRequestMonitor::addActor( CConnectionActor* pActor )
 	m_nListConActorSize = m_pMapSocketConActor->size();
 	m_pSetSocket.addSocket(pTcpSocket);
 	pTcpSocket = NULL;
-
+	m_semaphore.post();
 	FUNCTION_EXIT;
 }
 
@@ -295,8 +310,7 @@ void CServerRequestMonitor::_IniMap()
 	m_pMapSocketConActor = new MapSocketConActorT();
 	m_pMapSocketConActor->clear();
 	m_nListConActorSize = 0;
-	m_pMapSocketConActorTmp = new MapSocketConActorT();
-	m_pMapSocketConActorTmp->clear();
+
 	
 	FUNCTION_EXIT;
 
@@ -320,8 +334,7 @@ void CServerRequestMonitor::_UnInitMap()
 	DEF_DELETE(m_pMapSocketConActor);
 	m_nListConActorSize = 0;
 
-	m_pMapSocketConActorTmp->clear();
-	DEF_DELETE(m_pMapSocketConActorTmp);
+
 
 	FUNCTION_EXIT;
 

@@ -53,7 +53,8 @@ CRequestManager::CRequestManager(void)
 	m_toTerminate = false;
 	m_pListProcessConActor = NULL;
 	m_pListMonitorConActor = NULL;
-	m_nListConActorSize = 0;
+	m_nListProcessConActorSize = 0;
+	m_nListMonitorConActorSize = 0;
 
 	m_pThreadPoolManager = NULL;
 	m_nNumberOfThreads = 2;
@@ -125,7 +126,7 @@ int CRequestManager::_ThreadJob()
 		m_semaphore.wait();
 		break;		
 	default:
-		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_LongMonitorThreadSleep);
 		break;		
 	}  //switch
 
@@ -167,7 +168,7 @@ void CRequestManager::addActor( CConnectionActor* pActor )
 	FUNCTION_ENTRY("addActor");
 	TA_THREADGUARD(m_LockListConActor);
 	m_pListProcessConActor->push_back(pActor);
-	m_nListConActorSize = m_pListProcessConActor->size();
+	m_nListProcessConActorSize = m_pListProcessConActor->size();
 	m_semaphore.post();
 	FUNCTION_EXIT;
 }
@@ -190,9 +191,10 @@ void CRequestManager::_InitListActor()
 	TA_THREADGUARD(m_LockListConActor);
 	m_pListProcessConActor = new std::list<CConnectionActor*>();
 	m_pListProcessConActor->clear();
-	m_nListConActorSize = 0;
+	m_nListProcessConActorSize = 0;
 	m_pListMonitorConActor = new std::list<CConnectionActor*>();
 	m_pListMonitorConActor->clear();
+	m_nListMonitorConActorSize = 0;
 	FUNCTION_EXIT;
 
 }
@@ -214,8 +216,7 @@ void CRequestManager::_UnInitListActor()
 	}
 	m_pListMonitorConActor->clear();
 	DEF_DELETE(m_pListMonitorConActor);
-	m_nListConActorSize = 0;
-
+	m_nListMonitorConActorSize = 0;
 
 	iterList = m_pListProcessConActor->begin();
 	while (iterList != m_pListProcessConActor->end())
@@ -226,6 +227,8 @@ void CRequestManager::_UnInitListActor()
 	}
 	m_pListProcessConActor->clear();
 	DEF_DELETE(m_pListProcessConActor);
+	m_nListProcessConActorSize = 0;
+
 	FUNCTION_EXIT;
 
 }
@@ -245,17 +248,13 @@ int	CRequestManager::_Process_ProcessRequest()
 {
 	FUNCTION_ENTRY("_Process_ProcessRequest");
 	int nFunRes =0;
-
-	{
-		TA_THREADGUARD(m_LockListConActor);
-		m_nListConActorSize = 0;
-		m_nListConActorSize = m_pListProcessConActor->size();
-	}
-	if (m_nListConActorSize == 0)
+	
+	if (0 == m_nListProcessConActorSize && 0 == m_nListMonitorConActorSize)
 	{
 		m_semaphore.wait();//wait addActor() post or removeActor  post
 	}
 
+	if (m_nListProcessConActorSize > 0)
 	{
 		TA_THREADGUARD(m_LockListConActor);
 		TA_Base_Core::IThreadPoolExecuteItem* pItem = NULL;
@@ -265,9 +264,16 @@ int	CRequestManager::_Process_ProcessRequest()
 		{
 			pActor = (*iterList);
 			pItem = (TA_Base_Core::IThreadPoolExecuteItem*)(*iterList);
+
 			m_pThreadPoolManager->queueWorkItem(pItem);
+
 			m_pListMonitorConActor->push_back(pActor);
-			iterList++;
+			m_nListMonitorConActorSize = m_pListMonitorConActor->size();
+
+			m_pListProcessConActor->erase(iterList);
+			iterList = m_pListProcessConActor->begin();
+			m_nListProcessConActorSize = m_pListProcessConActor->size();
+
 		}//while
 	}
 
@@ -281,6 +287,7 @@ int	CRequestManager::_Process_MonitorRequest()
 	FUNCTION_ENTRY("_Process_MonitorRequest");
 	int nFunRes =0;
 
+	if (m_nListMonitorConActorSize > 0)
 	{
 		TA_THREADGUARD(m_LockListConActor);
 		TA_Base_Core::IThreadPoolExecuteItem* pItem = NULL;
@@ -301,7 +308,10 @@ int	CRequestManager::_Process_MonitorRequest()
 				pActor = NULL;
 				pItem = NULL;
 				m_pListMonitorConActor->erase(iterList);
+
 				iterList = m_pListMonitorConActor->begin();
+				m_nListMonitorConActorSize = m_pListMonitorConActor->size();
+
 			}
 			else
 			{

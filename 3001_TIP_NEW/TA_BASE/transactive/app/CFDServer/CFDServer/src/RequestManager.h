@@ -76,7 +76,8 @@ private:
 	TA_Base_Core::NonReEntrantThreadLockable	     m_LockListConActor;
 	std::list<CConnectionActor*>* m_pListProcessConActor;
 	std::list<CConnectionActor*>* m_pListMonitorConActor;
-	int m_nListConActorSize;
+	int m_nListProcessConActorSize;
+	int m_nListMonitorConActorSize;
 
 private:
 	TA_Base_Core::LFThreadPoolManager* m_pThreadPoolManager;

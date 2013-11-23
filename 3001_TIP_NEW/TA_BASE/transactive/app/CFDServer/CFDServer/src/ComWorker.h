@@ -23,8 +23,9 @@ public:
 	int			writeBuffer(CDataBuffer* pSendBuff);//TODO.
 	bool		isStillConnected();
 	int			getRecvFrameCount();
-	int getListRecvFrame(lstFrameBufferConT& LstFrameBuffer);
-
+	int			getListRecvFrame(lstFrameBufferConT& LstFrameBuffer);
+	std::string getSockeHostNameAndIP();
+	int			getSocketID();
 private:
 	bool		_HaveFrameInBuffer(CDataBuffer* pRecvBufferTotal);	
 	int			_GetFrameFromBuffer(CDataBuffer* pRecvBufferTotal, lstFrameBufferConT& lstRecvFrame);
@@ -44,6 +45,10 @@ private:
 	TA_Base_Core::ReEntrantThreadLockable m_lockBufferDataTmp;
 	CDataBuffer*	m_pBufferDataTmp;
 	bool            m_bIsStillConnected;
+
+private:
+	std::string		m_strHostName;
+	int             m_nSocketID;
 
 };
 

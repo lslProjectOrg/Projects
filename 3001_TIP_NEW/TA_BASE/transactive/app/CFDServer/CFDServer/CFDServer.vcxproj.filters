@@ -39,6 +39,7 @@
     <ClCompile Include="src\ComWorker.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\WorkTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\ReadMe.txt" />
@@ -77,5 +78,6 @@
     <ClInclude Include="src\ComWorker.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\WorkTime.h" />
   </ItemGroup>
 </Project>

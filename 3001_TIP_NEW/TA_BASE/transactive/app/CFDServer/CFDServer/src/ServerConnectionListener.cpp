@@ -61,7 +61,7 @@ CServerConnectionListener::CServerConnectionListener(void)
 	m_bTCPRead = true;
 	m_bTCPWrite = true; 
 	m_nTCPSelectRes = 0; 
-	m_timeTCPWait = DEF_INT_MonitorThreadSleep;
+	m_timeTCPWait = DEF_INT_LongMonitorThreadSleep;
 
 	FUNCTION_EXIT;
 }
@@ -128,7 +128,7 @@ int CServerConnectionListener::_ThreadJob()
 		m_semaphore.wait();
 		break;		
 	default:
-		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_LongMonitorThreadSleep);
 		break;		
 	}  //switch
 

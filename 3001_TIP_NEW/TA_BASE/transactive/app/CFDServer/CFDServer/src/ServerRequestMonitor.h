@@ -76,7 +76,6 @@ private:
 private:
 	TA_Base_Core::NonReEntrantThreadLockable	     m_LockMapSocketConActor;
 	MapSocketConActorT* m_pMapSocketConActor;
-	MapSocketConActorT* m_pMapSocketConActorTmp;
 
 	int m_nListConActorSize;
 

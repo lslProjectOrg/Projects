@@ -23,11 +23,16 @@ CComWorker::CComWorker(TA_Base_Core::TcpSocket* pSocketRef)
     m_pRecvBufferOnce->clear();
     m_pRecvBufferTotal->clear();
 	m_pBufferDataTmp->clear();
+	m_strHostName.clear();
+	m_nSocketID = 0;
 
 	{
 		TA_THREADGUARD(m_lockSocketRead);
 		m_bIsStillConnected = m_pSocketRef->stillConnected();
 	}
+	
+	getSockeHostNameAndIP();
+	getSocketID();
 
     FUNCTION_EXIT;
 }
@@ -43,6 +48,54 @@ CComWorker::~CComWorker()
 	DEF_DELETE(m_pRecvBufferTotal);
 	DEF_DELETE(m_pBufferDataTmp);
 	FUNCTION_EXIT;
+}
+
+
+int CComWorker::getSocketID()
+{
+	FUNCTION_ENTRY("~CComWorker");
+	if (m_nSocketID != 0)
+	{
+		FUNCTION_EXIT;
+		return m_nSocketID;
+	}
+
+	try
+	{
+		m_nSocketID = m_pSocketRef->getSocketId();
+	}
+	catch (...)
+	{
+		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
+			"Error: get Socket info error!");
+	}
+
+	FUNCTION_EXIT;
+	return m_nSocketID;
+}
+
+
+std::string CComWorker::getSockeHostNameAndIP()
+{
+	FUNCTION_ENTRY("getSockeHostNameAndIP");
+	if (false == m_strHostName.empty())
+	{
+		FUNCTION_EXIT;
+		return m_strHostName;
+	}
+
+	try
+	{
+		m_strHostName = m_pSocketRef->getClientName();
+	}
+	catch (...)
+	{
+		LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugError, 
+			"Error: get Socket info error!");
+	}
+
+	FUNCTION_EXIT;
+	return m_strHostName;
 }
 
 int CComWorker::readData()

@@ -18,15 +18,15 @@
 *
 */
 
-#if defined ( SOLARIS ) || defined ( LINUX )
-//#include <pthread.h>
-#else
-//#include <windows.h>
-#endif
-
-//use
-#include "pthread.h"
-  
+// #if defined ( SOLARIS ) || defined ( LINUX )
+// //#include <pthread.h>
+// #else
+// //#include <windows.h>
+// #endif
+// 
+// //use
+// #include "pthread.h"
+#include "core/threads/src/Thread.h"  
 
 namespace TA_Base_Core
 {
@@ -36,7 +36,8 @@ class ThreadIdWrapper
 public: 
 	ThreadIdWrapper() 
 	  {
-		  m_threadId = pthread_self();//use
+		  //m_threadId = pthread_self();//use
+		  m_threadId = TA_Base_Core::Thread::getCurrentThreadId();
 	  }
 
 	  /** 
@@ -48,15 +49,7 @@ public:
 	  void setCurrentThreadId()
 	  {
 	  
-#if defined ( SOLARIS ) || defined ( LINUX ) 
-//		  m_threadId = pthread_self();
-#else
-//		  m_threadId = GetCurrentThreadId();
-#endif  
-
-
-		  m_threadId = pthread_self();//use
-
+		  m_threadId = TA_Base_Core::Thread::getCurrentThreadId();
 
 		  return;
 	  }
@@ -72,21 +65,29 @@ public:
 	  */
 	  bool isCurrentThreadId()
 	  {
-#if defined ( SOLARIS ) || defined ( LINUX )
-//		  return ( 0 != pthread_equal( pthread_self(), m_threadId ) ); 
-#else
-//		  return ( GetCurrentThreadId() == m_threadId );
-#endif  
+// #if defined ( SOLARIS ) || defined ( LINUX )
+// //		  return ( 0 != pthread_equal( pthread_self(), m_threadId ) ); 
+// #else
+// //		  return ( GetCurrentThreadId() == m_threadId );
+// #endif  
+// 
+// 		  return ( 0 != pthread_equal( pthread_self(), m_threadId ) );//use
 
-		  return ( 0 != pthread_equal( pthread_self(), m_threadId ) );//use
+		  unsigned int nCurrentThreadID = 0;
 
+		  nCurrentThreadID = TA_Base_Core::Thread::getCurrentThreadId();
+
+		  if (m_threadId == nCurrentThreadID)
+		  {
+			  return true;
+		  }
 		  return false;
 	  }
 
 
 	  unsigned int getCurrentThreadId()
 	  {
-		  return (unsigned int) m_threadId.x;
+		  return TA_Base_Core::Thread::getCurrentThreadId();
 	  }
 
 private:
@@ -98,7 +99,7 @@ private:
 
 
 private:
-	pthread_t m_threadId;  //use
+	unsigned int m_threadId;  //use
 
 
 };

@@ -117,7 +117,7 @@ int CServerConnectionManager::_ThreadJob()
 		m_semaphore.wait();
 		break;		
 	default:
-		TA_Base_Core::Thread::sleep(DEF_INT_MonitorThreadSleep);
+		TA_Base_Core::Thread::sleep(DEF_INT_LongMonitorThreadSleep);
 		break;		
 	}  //switch
 

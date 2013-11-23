@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{766BF5EC-BF82-4150-86E0-CFC941984AE4}</ProjectGuid>
+    <ProjectGuid>{A5D5FF44-988C-4281-A417-0D85A9381B7B}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -40,7 +40,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\../../../../../bin/win32_nd\</OutDir>
-    <IntDir>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer\</IntDir>
+    <IntDir>.\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseODBCMysql\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\COTS\GnuWin32\include;..\..\..\..\COTS\boost\boost_1_55_0;..\..\..\..\COTS\boost\boost_1_55_0\boost;..\..\..\..\COTS\mcl\1.1.0;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\Visual_Leak_Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\COTS\GnuWin32\include;..\..\..\..\COTS\boost\boost_1_55_0;..\..\..\..\COTS\boost\boost_1_55_0\boost;..\..\..\..\COTS\oracle\10.2.0\winnt\inc;..\..\..\..\COTS\Visual_Leak_Detector\include;..\..\..\core\ocl\src;..\..\..\core\CppUnit\src;..\..\..\core\mcl\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=5;_WIN32_WINNT=0x500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -60,19 +60,19 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4996;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PrecompiledHeaderOutputFile>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/app.CFDServer.CFDServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</AssemblerListingLocation>
-      <ObjectFileName>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../../../../build/win32_nd/transactive/app/CFDServer/CFDServer/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseODBCMysql/app.TestCase.TestCaseOCL.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseODBCMysql/</AssemblerListingLocation>
+      <ObjectFileName>.\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseODBCMysql/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseODBCMysql/</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;TA_Uuid_d.lib;pthreadVC2.lib;stracelib.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../../../../../bin/win32_nd/CFDServer.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>myodbc5w.lib;TA_Sockets_d.lib;TA_Thread_d.lib;TA_Utilities_d.lib;TA_Exceptions_d.lib;TA_Synchronisation_d.lib;TA_Version_d.lib;stracelib.lib;TA_Uuid_d.lib;pthreadVC2.lib;Rpcrt4.lib;TA_CppUnit_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../../../bin/win32_nd/TestCaseODBCMysql.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\COTS\GnuWin32\lib;..\..\..\..\cots\boost\boost_1_55_0\stage\lib;..\..\..\..\cots\ACE\6_0_4\ACE_wrappers\lib\;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\WinStackTrace\build\Debug;..\..\..\..\cots\oracle\10.2.0\winnt\lib;..\..\..\..\cots\Visual_Leak_Detector\lib\x86;..\..\..\..\cots\SQLite\lib\x86;..\..\..\..\cots\ODBC\Mysql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <ProgramDatabaseFile>.\../../../../../bin/win32_nd/CFDServer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\../../../../../bin/win32_nd/TestCaseODBCMysql.pdb</ProgramDatabaseFile>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
@@ -87,8 +87,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>omniORB416_rt.lib;omniDynamic416_rt.lib;omnithread34_rt.lib;TA_mcl.lib;TA_Sockets.lib;TA_Thread.lib;TA_Utilities.lib;TA_Exceptions.lib;TA_Synchronisation.lib;TA_Version.lib;TA_MAQ.lib;TA_Uuid.lib;stracelib.lib;zlib.lib;ocilib.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../../../../../bin/win32_nr/CFDServer.exe</OutputFile>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../../../bin/win32_nr/TestCaseODBCMysql.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\..\..\build\win32_nr;..\..\..\..\cots\boost\boost_1_39_0\stage\lib;..\..\..\..\cots\omniORB\omniORB_4.1.6\lib\x86_win32\;..\..\..\..\cots\WinStackTrace\build\Release;..\..\..\..\cots\mcl\1.1.0\lib\winnt;..\..\..\..\cots\ZipArchive\zlib;..\..\..\..\cots\ZipArchive\zlib\Release;..\..\..\..\cots\ocilib\3.9.3\lib\winnt;..\..\..\..\cots\oracle\10.2.0\winnt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -98,35 +98,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CFDRequestHelper.cpp" />
-    <ClCompile Include="src\ComWorker.cpp" />
-    <ClCompile Include="src\ConnectionActor.cpp" />
-    <ClCompile Include="src\DataBuffer.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RequestManager.cpp" />
-    <ClCompile Include="src\ServerConnectionListener.cpp" />
-    <ClCompile Include="src\ServerConnectionManager.cpp" />
-    <ClCompile Include="src\ServerRequestMonitor.cpp" />
-    <ClCompile Include="src\UtilityFun.cpp" />
-    <ClCompile Include="src\VersionGen.cpp" />
-    <ClCompile Include="src\WorkTime.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="src\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CFDRequestHelper.h" />
-    <ClInclude Include="src\CommonData.h" />
-    <ClInclude Include="src\CommonDef.h" />
-    <ClInclude Include="src\ComWorker.h" />
-    <ClInclude Include="src\ConnectionActor.h" />
-    <ClInclude Include="src\DataBuffer.h" />
-    <ClInclude Include="src\RequestManager.h" />
-    <ClInclude Include="src\ServerConnectionListener.h" />
-    <ClInclude Include="src\ServerConnectionManager.h" />
-    <ClInclude Include="src\ServerRequestMonitor.h" />
-    <ClInclude Include="src\UtilityFun.h" />
-    <ClInclude Include="src\WorkTime.h" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

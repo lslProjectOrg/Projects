@@ -24,12 +24,13 @@ CDataBuffer::CDataBuffer(int nBufferSize)
 	{
 		nBufferSize = DEF_INT_BUFFER_LEN_MAX;
 	}
-	m_pBuffer = new char[nBufferSize];
-	memset(m_pBuffer, 0, nBufferSize);
+	m_nBufferSize = nBufferSize;
+	m_pBuffer = new char[m_nBufferSize];
+	memset(m_pBuffer, 0, m_nBufferSize);
 
 	m_pWritePos = m_pBuffer;
 	m_pReadPos = m_pBuffer;
-	m_nBufferSize = nBufferSize;
+
 	m_nRemainDataLen = m_pWritePos - m_pReadPos;
 	FUNCTION_EXIT;
 }
@@ -214,6 +215,8 @@ void CDataBuffer::clear()
 
 	m_pWritePos = m_pBuffer;
 	m_pReadPos = m_pBuffer;
+	memset(m_pBuffer, 0, m_nBufferSize);
+
 	getRemainDataLength();
 	FUNCTION_EXIT;
 }
@@ -260,8 +263,10 @@ bool CDataBuffer::resize(int nsize)
 	}
 	try
 	{
-		pszTmp = new char[nsize];
-		memset(pszTmp, 0, nsize);
+		m_nBufferSize = nsize;
+
+		pszTmp = new char[m_nBufferSize];
+		memset(pszTmp, 0, m_nBufferSize);
 		memcpy(pszTmp, m_pReadPos, nDataLen);
 		delete[] m_pBuffer;
 		m_pBuffer = NULL;
@@ -270,7 +275,6 @@ bool CDataBuffer::resize(int nsize)
 		pszTmp = NULL;
 		m_pReadPos = m_pBuffer;
 		m_pWritePos = m_pBuffer + nDataLen;
-		m_nBufferSize = nsize;
 	}
 	catch (...)
 	{
@@ -293,9 +297,11 @@ bool CDataBuffer::resizeFitData()
 	int nBufferSize = nDataLen + DEF_INT_BUFFER_LEN_ADDEX;
 	try
 	{
-		pszTmp = new char[nBufferSize];
-		memset(pszTmp, 0, nBufferSize);
-		if (nDataLen < nBufferSize)
+		m_nBufferSize = nBufferSize;
+
+		pszTmp = new char[m_nBufferSize];
+		memset(pszTmp, 0, m_nBufferSize);
+		if (nDataLen < m_nBufferSize)
 		{
 			memcpy(pszTmp, m_pReadPos, nDataLen);
 		}
@@ -306,7 +312,6 @@ bool CDataBuffer::resizeFitData()
 		pszTmp = NULL;
 		m_pReadPos = m_pBuffer;
 		m_pWritePos = m_pBuffer + nDataLen;
-		m_nBufferSize = nBufferSize;
 	}
 	catch (...)
 	{
@@ -347,15 +352,15 @@ void CDataBuffer::print()
 		char chPos = *pPrintPos;
 		if (0x20 <= chPos && chPos <= 0x7E)	  //32 <=chpso <= 126
 		{
-			LOGMORE(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "%c", chPos);
+			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "%c", chPos);
 		}
 		else
 		{
-			LOGMORE(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "%02X", chPos);
+			LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "%02X", chPos);
 		}
 		
 	}
-	LOGMORE(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "]");
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug, "]");
 	FUNCTION_EXIT;
 }
 

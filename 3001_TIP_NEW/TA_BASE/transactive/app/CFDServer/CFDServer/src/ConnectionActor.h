@@ -12,7 +12,8 @@ NS_BEGIN(TA_Base_App)
 
 
 class CComWorker;
-
+class CWorkTimeNoLock;
+class CWorkTimeLock;
 
 class CConnectionActor :public TA_Base_Core::IThreadPoolExecuteItem
 {
@@ -33,6 +34,14 @@ private:
 		Actor_State_FinishProcessRequest,
 
 		Actor_State_End,
+	};
+
+
+	enum ETIMEID
+	{
+		TIME_ID_MonitorConnection, 
+		TIME_ID_MonitorRequest, 
+
 	};
 	
 public:
@@ -59,6 +68,10 @@ private:
 	TA_Base_Core::TcpSocket* m_pSocket;
 	CComWorker* m_pComWorker;
 	bool m_bIsHealth;
+
+private:
+	CWorkTimeNoLock* m_pTimeMonitorConnection; 
+	CWorkTimeLock* m_pTimeMonitorRequest;
 };
 
 

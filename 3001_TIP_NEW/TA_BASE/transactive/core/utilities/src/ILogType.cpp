@@ -30,7 +30,7 @@
 #include "TAAssert.h"
 #include "core/exceptions/src/DebugMsgConstructionException.h"
 #include "core/exceptions/src/AssertException.h"
-
+#include "core/threads/src/Thread.h"
 	
 namespace TA_Base_Core
 {
@@ -72,14 +72,11 @@ namespace TA_Base_Core
 		// Retrieve Thread Id
 		char buff2[100];
 		std::string threadId ( "" );
-	#if defined ( SOLARIS ) || defined ( LINUX )
-		sprintf ( buff2, "[Thrd: %d]", pthread_self() );
+		unsigned int unThreadID = 0;
+		unThreadID = TA_Base_Core::Thread::getCurrentThreadId();
+		
+		sprintf ( buff2, "[Thrd: %d]", unThreadID ); 
 		threadId = buff2;
-	#endif
-	#if defined( WIN32 )
-		sprintf ( buff2, "[Thrd: %d]", GetCurrentThreadId() ); 
-		threadId = buff2;
-	#endif
 
 		// Convert line to string
 

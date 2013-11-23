@@ -5,6 +5,7 @@
 #include "core/synchronisation/src/ThreadGuard.h"
 #include "RequestManager.h"
 #include "ComWorker.h"
+#include "WorkTime.h"
 
 NS_BEGIN(TA_Base_App)
 
@@ -18,6 +19,8 @@ CConnectionActor::CConnectionActor()
 	m_pComWorker = NULL;
 	m_bIsHealth = true;
 	m_nActorState = Actor_State_WaitTCPHandle;
+	m_pTimeMonitorConnection = new CWorkTimeNoLock(TIME_ID_MonitorConnection);
+	m_pTimeMonitorRequest = new CWorkTimeLock(TIME_ID_MonitorRequest);
 	FUNCTION_EXIT;
 }
 
@@ -25,7 +28,18 @@ CConnectionActor::~CConnectionActor()
 {
 	FUNCTION_ENTRY("~CConnectionActor");
 	DEF_DELETE(m_pSocket);
+
+	m_pTimeMonitorConnection->workEnd();
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug,
+		"destroy one client: IP=%s, socketID=%d, time=%s, totalTime=%llu ms", 
+		m_pComWorker->getSockeHostNameAndIP().c_str(),
+		m_pComWorker->getSocketID(),
+		m_pTimeMonitorConnection->getEndTime().c_str(),
+		m_pTimeMonitorConnection->getWorkTime());
+
 	DEF_DELETE(m_pComWorker);
+	DEF_DELETE(m_pTimeMonitorConnection);
+	DEF_DELETE(m_pTimeMonitorRequest);
 
 	FUNCTION_EXIT;
 
@@ -66,6 +80,12 @@ void CConnectionActor::setSocketHandle( TA_Base_Core::TcpSocket* pSocket )
 	m_nActorState = Actor_State_GetTCPHandle;
 	m_nActorState = Actor_State_WaitData;
 	m_bIsHealth =  m_pComWorker->isStillConnected();
+	m_pTimeMonitorConnection->workBegin();
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug,
+		"new client: IP=%s, socketID=%d, time=%s", 
+		m_pComWorker->getSockeHostNameAndIP().c_str(),
+		m_pComWorker->getSocketID(),
+		m_pTimeMonitorConnection->getBeginTime().c_str());
 	FUNCTION_EXIT;
 }
 
@@ -138,7 +158,12 @@ int CConnectionActor::setRequestStatusNew()
 
 	TA_THREADGUARD(m_lockActorState);
 	m_nActorState = Actor_State_NewRequest;
-
+	m_pTimeMonitorRequest->workBegin();
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug,
+		"recv one Request from client: IP=%s, socketID=%d, time=%s", 
+		m_pComWorker->getSockeHostNameAndIP().c_str(),
+		m_pComWorker->getSocketID(),
+		m_pTimeMonitorRequest->getBeginTime().c_str());
 
 	FUNCTION_EXIT;
 	return nFunRes;
@@ -164,7 +189,13 @@ int CConnectionActor::setRequestStatusProcessed()
 
 	TA_THREADGUARD(m_lockActorState);
 	m_nActorState = Actor_State_FinishProcessRequest;
-
+	m_pTimeMonitorRequest->workEnd();
+	LOG_GENERIC(SourceInfo, TA_Base_Core::DebugUtil::DebugDebug,
+		"FinishProcess one Request from client: IP=%s, socketID=%d, time=%s, WorkTime=%llu ms", 
+		m_pComWorker->getSockeHostNameAndIP().c_str(),
+		m_pComWorker->getSocketID(),
+		m_pTimeMonitorRequest->getEndTime().c_str(),
+		m_pTimeMonitorRequest->getWorkTime());
 
 	FUNCTION_EXIT;
 	return nFunRes;

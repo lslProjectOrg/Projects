@@ -53,8 +53,10 @@ namespace TA_Base_Core
 		//printf("[nFunRes=%d]   pthread_mutex_init()\n", nFunRes);
 
 		m_numTimesThreadAcquiredLock = 0;
+		m_threadLockableHolderVerifier = NULL;
 		m_threadLockableHolderVerifier = new ThreadIdWrapper();
 		m_previousNumTimesThreadAcquiredLock = 0;
+		m_previousThreadLockableHolderVerifier = NULL;
 		m_previousThreadLockableHolderVerifier = new ThreadIdWrapper();
 
 
