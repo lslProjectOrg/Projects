@@ -1,9 +1,9 @@
 #include "ServerManage.h"
-#include "Logger.h"
 #include "HelpClass.h"
 #include "WorkTime.h"
 
-
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 //extern boost::condition_variable g_conditionMainRun;
 
@@ -23,8 +23,7 @@ extern int g_n_TotalClientSendFrameNUM;
 //////////////////////////////////////////////////////////////////////////
 CServerManager::CServerManager(void)
 {	
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::CServerManager");
-	
+	BOOST_LOG_FUNCTION();	
 	m_nHandleConnections = 0;
 	m_nRecvMsgCount =0;
 	m_nSendMsgCount = 0;
@@ -37,7 +36,8 @@ CServerManager::CServerManager(void)
 
 CServerManager::~CServerManager(void)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::~CClientManager");
+	BOOST_LOG_FUNCTION();
+
 	delete m_pRecvWorkTime;
 	m_pRecvWorkTime = NULL;
 
@@ -48,9 +48,9 @@ CServerManager::~CServerManager(void)
 
 void CServerManager::handleDisconnected(const SessionInfo &stSessionInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::handleDisconnected");
+	BOOST_LOG_FUNCTION();
 	std::string strLogInfo;
-	strLogInfo = "handleDisconnected:";
+	strLogInfo = "CServerManager::handleDisconnected:";
 	m_pHelpClass->log_SeeionINfo(stSessionInfo, strLogInfo);
 
 }
@@ -58,26 +58,30 @@ void CServerManager::handleDisconnected(const SessionInfo &stSessionInfo)
 
 void CServerManager::handleDeliverFailure(Message::Ptr pGetMessage)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::handleDeliverFailure");
+	BOOST_LOG_FUNCTION();
+	std::string strLogInfo;
+	strLogInfo = "CServerManager::handleDeliverFailure:";
+	LOG_DEBUG<<strLogInfo;
 
 }
 
 void CServerManager::handleConnected(const SessionInfo &stSessionInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::handleConnected");
+	BOOST_LOG_FUNCTION();
 
 	std::string strLogInfo;
 
 	m_nHandleConnections++;
-	strLogInfo = g_string_strServerAddress + "handle handleConnected:";
+	strLogInfo = g_string_strServerAddress + " handleConnected: ";
 	m_pHelpClass->log_SeeionINfo(stSessionInfo, strLogInfo);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager m_nHandleConnections =%d", m_nHandleConnections);
 
-
+	LOG_DEBUG<<"CServerManager m_nHandleConnections="<<m_nHandleConnections;
 }
 
 void CServerManager::handleReceivedMessage(Message::Ptr pGetMessage)
 {
+	BOOST_LOG_FUNCTION();
+
 	int nFunRes = 0;
 
 	if (0 == m_nRecvMsgCount)
@@ -94,15 +98,16 @@ void CServerManager::handleReceivedMessage(Message::Ptr pGetMessage)
 	nFunRes = TestFrame.checkFrameData();
 	if (0 != nFunRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, 
-			"m_nHandleConnections=%d, m_nRecvMsgCount=%d, nFrameLength=%d, checkFrameData Error!!", 
-			m_nHandleConnections, m_nRecvMsgCount, pGetMessage->length());
+		LOG_ERROR<<"m_nHandleConnections="<<m_nHandleConnections
+			<<" "<<"m_nRecvMsgCount="<<m_nRecvMsgCount
+			<<" "<<"nFrameLength="<<pGetMessage->length()
+			<<" "<<"checkFrameData Error!!";
 	}
 	//log
 	if (m_nRecvMsgCount % 10000 == 0)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugInfo, "m_nHandleConnections=%d, m_nRecvMsgCount=%d,", 
-			m_nHandleConnections, m_nRecvMsgCount);
+		LOG_INFO<<"m_nHandleConnections="<<m_nHandleConnections
+			<<" "<<"m_nRecvMsgCount="<<m_nRecvMsgCount;
 	}
 	//
 	if (g_n_TotalClientSendFrameNUM == m_nRecvMsgCount)
@@ -110,32 +115,32 @@ void CServerManager::handleReceivedMessage(Message::Ptr pGetMessage)
 		BigInt64 nTotal = 0;//m_pRecvWorkTime->getWorkTime();
 		nTotal = m_pRecvWorkTime->workEnd();
 
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugInfo, 
-			"m_nRecvMsgCount=%d, messages recv and verified successfully, m_pRecvWorkTime=%I64d  ms", 
-			m_nRecvMsgCount, nTotal);
+		LOG_INFO<<"m_nHandleConnections="<<m_nHandleConnections
+			<<" "<<"m_nRecvMsgCount="<<m_nRecvMsgCount
+			<<" "<<"messages recv and verified successfully,"
+			<<" "<<"m_pRecvWorkTime="<<nTotal;
 	}
 	
 }
 
 void CServerManager::_InitServer()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::initServer");
+	BOOST_LOG_FUNCTION();
 
 	m_brokerServer.onConnected = boost::bind(&TA_Base_Test::CServerManager::handleConnected, this, _1);//static boost::arg<1> _1;
 	m_brokerServer.onDisconnected = boost::bind(&TA_Base_Test::CServerManager::handleDisconnected, this, _1);//static boost::arg<1> _1;
 	m_brokerServer.onReceived = boost::bind(&TA_Base_Test::CServerManager::handleReceivedMessage, this, _1);//static boost::arg<1> _1;
 	m_brokerServer.onDeliverFailure = boost::bind(&TA_Base_Test::CServerManager::handleDeliverFailure, this, _1);//static boost::arg<1> _1;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "begin listen m_strServerAddress : %s", g_string_strServerAddress.c_str());
+	LOG_DEBUG<< "begin listen m_strServerAddress="<<g_string_strServerAddress;
 	m_brokerServer.listen(g_string_strServerAddress);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "end listen m_strServerAddress : %s", g_string_strServerAddress.c_str());
 
 }
 
 
 void CServerManager::runTestCase()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CServerManager::runTestCase");
+	BOOST_LOG_FUNCTION();
 	_InitServer();
 }
 

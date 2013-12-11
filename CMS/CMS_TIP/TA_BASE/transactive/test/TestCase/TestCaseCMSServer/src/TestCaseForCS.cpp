@@ -2,14 +2,14 @@
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 
-//#include "boost/mpl/bind.hpp"
-
 #include "TestCaseForCS.h"
 #include "CommonData.h"
-#include "Logger.h"
 #include "SysTypes.h"
 #include "ServerManage.h"
 #include "ClientManager.h"
+
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 namespace boost 
 {
@@ -105,16 +105,13 @@ int DEF_CMS_MAX_STESTRING_LEN;//       255
 
 TestCaseForCS::TestCaseForCS(void)
 {
-	m_pUtilityFun = new CUtilityFun();
-
 	_InitGlobalData();
 	_InitMaxLenString();
 }
 
 TestCaseForCS::~TestCaseForCS(void)
 {
-	delete m_pUtilityFun;
-	m_pUtilityFun = NULL;
+
 }
 
 
@@ -191,7 +188,7 @@ void TestCaseForCS::_InitGlobalData()
 
 void TestCaseForCS::_InitMaxLenString()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "TestCaseForCS::_initMaxLenString");
+	BOOST_LOG_FUNCTION();
 
 	//1024*64
 	std::string strTemp1024;
@@ -206,8 +203,7 @@ void TestCaseForCS::_InitMaxLenString()
 	g_TestData_max_strStringValue.clear();
 	g_TestData_max_strStringValue += strTemp1024;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "g_TestData_max_strStringValue=%s", g_TestData_max_strStringValue.c_str());
-
+	LOG_DEBUG<<"g_TestData_max_strStringValue="<<g_TestData_max_strStringValue;
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -216,7 +212,7 @@ void TestCaseForCS::_InitMaxLenString()
 
 void TestCaseForCS::runTestCase_ForClient()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "TestCaseForCS::runTestCase_ForClient");
+	BOOST_LOG_FUNCTION();
 
 	TA_Base_Test::CClientManager* pTEST_TestCaseCMSClient = new TA_Base_Test::CClientManager();
 	pTEST_TestCaseCMSClient->start();
@@ -228,8 +224,7 @@ void TestCaseForCS::runTestCase_ForClient()
 
 void TestCaseForCS::runTestCase_ForServer()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "TestCaseForCS::runTestCase_ForServer");
-
+	BOOST_LOG_FUNCTION();
 	TA_Base_Test::CServerManager* pTEST_ServerManager = new TA_Base_Test::CServerManager();
 	pTEST_ServerManager->runTestCase();
 

@@ -1,8 +1,9 @@
 #include "ClientManager.h"
-#include "Logger.h"
 #include "TestClientThread.h"
 #include "HelpClass.h"
 
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 
 //extern boost::condition_variable g_conditionMainRun;
@@ -21,27 +22,30 @@ extern int g_n_TotalClientSendFrameNUM;
 //////////////////////////////////////////////////////////////////////////
 CClientManager::CClientManager(void)
 {	
-	boost::mutex::scoped_lock lock(m_mutexMapClients);
+	BOOST_LOG_FUNCTION();
 
-	m_mapClients.clear();
-	m_nClientCount = 0;
-	m_nCurrentClientIndex = 0;
+	{
+		boost::mutex::scoped_lock lock(m_mutexMapClients);
+		m_mapClients.clear();
+		m_nClientCount = 0;
+		m_nCurrentClientIndex = 0;
+	}
+
 	m_nThreadJobState = JobState_Begin;
 	m_toTerminate = false;
 	
 }
 
 CClientManager::~CClientManager(void)
-{
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CClientManager::~CClientManager");
-
+{	
+	BOOST_LOG_FUNCTION();
 	
 }
 
 
 void CClientManager::_CreateALLClient()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CClientManager::_CreateALLClient");
+	BOOST_LOG_FUNCTION();
 
 	boost::mutex::scoped_lock lock(m_mutexMapClients);
 
@@ -56,9 +60,9 @@ void CClientManager::_CreateALLClient()
 		m_nCurrentClientIndex++;
 		m_nClientCount++;
 
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-			"CClientManager new CTestClientThread m_nCurrentClientIndex=%d, m_nClientCount=%d", 
-			m_nClientCount);
+		LOG_DEBUG<<"CClientManager new CTestClientThread"
+			<<" "<<"m_nCurrentClientIndex="<<m_nCurrentClientIndex
+			<<" "<<"m_nClientCount=%d"<<m_nClientCount;
 	}//for
 
 }
@@ -66,7 +70,7 @@ void CClientManager::_CreateALLClient()
 
 void CClientManager::_MonitorALLClient()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CClientManager::_MonitorALLClient");
+	BOOST_LOG_FUNCTION();
 	
 	boost::mutex::scoped_lock lock(m_mutexMapClients);
 
@@ -88,9 +92,10 @@ void CClientManager::_MonitorALLClient()
 			pClient = NULL;
 
 			m_nClientCount--;
-			_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-				"delete one client nClientIndex=%d, connected m_nClientCount=%d",
-				nClientIndex, m_nClientCount);
+
+			LOG_DEBUG<<"delete one client"
+				<<" "<<"nClientIndex="<<nClientIndex
+				<<" "<<"still connected m_nClientCount="<<m_nClientCount;
 
 			m_mapClients.erase(iterMap);
 			iterMap = m_mapClients.begin();
@@ -112,7 +117,7 @@ void CClientManager::_MonitorALLClient()
 
 void CClientManager::_DestoryAllClient()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CClientManager::_DestoryAllClient");
+	BOOST_LOG_FUNCTION();
 
 	boost::mutex::scoped_lock lock(m_mutexMapClients);
 
@@ -132,9 +137,10 @@ void CClientManager::_DestoryAllClient()
 		pClient = NULL;
 
 		m_nClientCount--;
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-			"delete one client nClientIndex=%d, connected m_nClientCount=%d",
-			nClientIndex, m_nClientCount);
+
+		LOG_DEBUG<<"delete one client"
+			<<" "<<"nClientIndex="<<nClientIndex
+			<<" "<<"still connected m_nClientCount="<<m_nClientCount;
 
 		iterMap++;
 	}//while
@@ -144,6 +150,8 @@ void CClientManager::_DestoryAllClient()
 
 void CClientManager::run()
 {
+	BOOST_LOG_FUNCTION();
+
 	m_nThreadJobState = JobState_Begin;
 
 
@@ -159,12 +167,16 @@ void CClientManager::run()
 
 void CClientManager::terminate()
 {
+	BOOST_LOG_FUNCTION();
+
 	m_toTerminate = true;
 }
 
 
 int CClientManager::_ProcessUserTerminate()
 {
+	BOOST_LOG_FUNCTION();
+
 	int nFunRes = 0;
 	_DestoryAllClient();
 	m_nThreadJobState = JobState_End;
@@ -173,6 +185,8 @@ int CClientManager::_ProcessUserTerminate()
 
 bool CClientManager::isFinishWork()
 {
+	BOOST_LOG_FUNCTION();
+
 	bool bFinishWork = false;
 	if (JobState_End == m_nThreadJobState)
 	{
@@ -184,6 +198,8 @@ bool CClientManager::isFinishWork()
 
 void CClientManager::_ThreadJob()
 {
+	BOOST_LOG_FUNCTION();
+
 
 	switch (m_nThreadJobState)
 	{

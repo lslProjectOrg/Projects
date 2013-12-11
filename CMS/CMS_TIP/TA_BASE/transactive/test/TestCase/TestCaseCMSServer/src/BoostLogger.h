@@ -4,11 +4,7 @@
 
 #include "UtilityFun.h"
 
-
-
-
 #include <iostream>
-
 
 #include <boost/filesystem.hpp>
 #include <boost/log/core.hpp>
@@ -63,32 +59,37 @@ using boost::shared_ptr;
 #define  LOG_FATAL         BOOST_LOG_SEV(g_logHandleFile, trivial::fatal)<<SourceFLInfo
 
 
-src::severity_logger< trivial::severity_level > g_logHandleFile;
-
+#define  USING_BOOST_LOG   extern boost::log::sources::severity_logger< boost::log::trivial::severity_level > g_logHandleFile;
 
 NS_BEGIN(TA_Base_Test)
 
 
 class CBoostLogger
 {
-private:
-	//! Trivial severity levels
-// 	enum severity_level
-// 	{
-// 		trace,
-// 		debug,
-// 		info,
-// 		warning,
-// 		error,
-// 		fatal
-// 	};
 public:
 	CBoostLogger(void);	
 	~CBoostLogger(void);
 
-public:
-	int testBoostLogFun();
-	int g_LOGINIT();
+private:
+	int _BoostLogInit();
+	int _TestBoostLog();
+
+private:
+
+#if 0
+	//! Trivial severity levels
+	// 	enum severity_level
+	// 	{
+	// 		trace,
+	// 		debug,
+	// 		info,
+	// 		warning,
+	// 		error,
+	// 		fatal
+	// 	};
+#endif
+
+
 
 };//class
 

@@ -1,4 +1,3 @@
-
 #ifndef __DEF__UTILITY_FUN_H__
 #define __DEF__UTILITY_FUN_H__ 
 

@@ -22,8 +22,6 @@ private:
 	void _InitGlobalData();
 	void _InitMaxLenString();
 
-private:
-	CUtilityFun*			m_pUtilityFun;
 
 };
 

@@ -1,8 +1,9 @@
 #include "BoostThread.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
-#include "Logger.h"
+
 #include "BoostLogger.h"
+USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_Test) 
 
@@ -35,7 +36,7 @@ void CBoostThread::runThread(void* ptr)
 	// printf("&i = %p\n", &i)	// printf Thread address
 	myThread->m_nThreadID = TA_Base_Test::CBoostThread::getCurrentThreadId();
 
-	LOG_DEBUG<<"runThread(): [Thrd: "<<myThread->m_nThreadID<<"%d] begin  call run()",  
+	LOG_DEBUG<<"runThread(): [Thrd: "<<myThread->m_nThreadID<<"] begin  call run()";
 
 	try
 	{
@@ -45,18 +46,16 @@ void CBoostThread::runThread(void* ptr)
 	{
 		std::string msg( "runThread(): " );
 		msg.append( e.what() );
-		LOG_DEBUG<<"runThread(): [Thrd: "<<myThread->m_nThreadID<<"%d] begin  call run()",  
-
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "runThread(): std::exception  msg=%s", msg.c_str());
+		LOG_ERROR<<"runThread(): std::exception  msg="<<msg;
 		return;
 	}
 	catch (...)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "runThread(): Unknown exception");
+		LOG_ERROR<<"runThread(): Unknown exception";		
 		return;
 	}
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "runThread(): [Thrd: %d] end  call run()", myThread->m_nThreadID );
+	LOG_DEBUG<<"runThread(): [Thrd: "<<myThread->m_nThreadID<<"] end  call run()";
 
 	myThread->m_ThreadState = THREAD_STATE_FINISH; 
 	return;
@@ -66,13 +65,13 @@ void CBoostThread::runThread(void* ptr)
 
 void CBoostThread::start()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "start");
-
+	BOOST_LOG_FUNCTION();
+	
 	int status = 0;		 
 	if (THREAD_STATE_RUNNING ==	m_ThreadState
 		|| THREAD_STATE_FINISH == m_ThreadState)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugWarn, "start(): [Thrd: %d] is already running", this->m_nThreadID );
+		LOG_WARNING<<"start(): [Thrd: "<<this->m_nThreadID<<"] is already running";
 		return;
 	}
 	//CTestClientThread* pClient = NULL;	
@@ -80,29 +79,32 @@ void CBoostThread::start()
 	//pThread = new boost::thread(boost::bind(&CTestClientThread::loop, pClient, 100));
 
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "start(): [Thrd: %d] begin start", this->m_nThreadID );
+	LOG_DEBUG<<"start(): [Thrd: "<<this->m_nThreadID<<"] begin start";
+
 	//m_thread = new boost::thread(runThread, this);
 	m_thread = new boost::thread(boost::bind(&CBoostThread::runThread, this, this));
 	m_ThreadState = THREAD_STATE_NEW;
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "start(): [Thrd: %d] end start", this->m_nThreadID );
+	LOG_DEBUG<<"start(): [Thrd: "<<this->m_nThreadID<<"] end start";
 
 }
 
 
 void CBoostThread::terminateAndWait()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "terminateAndWait");
+	BOOST_LOG_FUNCTION();
 
 	int status = 0; 
 
 	if (NULL != m_thread)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "terminateAndWait(): [Thrd: %d] begin call terminate()", this->m_nThreadID );
+		LOG_DEBUG<<"terminateAndWait(): [Thrd: "<<this->m_nThreadID<<"] begin call terminate()";
 
 		terminate();
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "terminateAndWait(): [Thrd: %d] end call terminate()", this->m_nThreadID );
 
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "terminateAndWait(): [Thrd: %d] begin begin wait end", this->m_nThreadID );
+		LOG_DEBUG<<"terminateAndWait(): [Thrd: "<<this->m_nThreadID<<"] end call terminate()";
+
+
+		LOG_DEBUG<<"terminateAndWait(): [Thrd: "<<this->m_nThreadID<<"] begin  join";
 
         m_thread->join();
 
@@ -110,7 +112,8 @@ void CBoostThread::terminateAndWait()
 		m_ThreadState = THREAD_STATE_FINISH;
 		delete m_thread;
 		m_thread = NULL;
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "terminateAndWait(): [Thrd: %d] begin end wait end", this->m_nThreadID );
+
+		LOG_DEBUG<<"terminateAndWait(): [Thrd: "<<this->m_nThreadID<<"] end  join";
 
 	}
 }
@@ -118,7 +121,7 @@ void CBoostThread::terminateAndWait()
 
 void CBoostThread::sleep(unsigned int milliSeconds)
 {  
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "sleep");
+	BOOST_LOG_FUNCTION();
 
 	boost::xtime timeTmp;
 	boost::xtime_get(&timeTmp, boost::TIME_UTC_);
@@ -131,14 +134,14 @@ void CBoostThread::sleep(unsigned int milliSeconds)
 
 unsigned int CBoostThread::getId() const
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "getId");
+	BOOST_LOG_FUNCTION();
 
 	return (m_thread != NULL) ? m_nThreadID : static_cast< unsigned int >( -1 );
 }
 
 unsigned int CBoostThread::getCurrentThreadId()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "getCurrentThreadId");
+	BOOST_LOG_FUNCTION();
 
 	std::string threadId = boost::lexical_cast<std::string>(boost::this_thread::get_id());
 	unsigned int threadNumber = 0;
@@ -147,7 +150,7 @@ unsigned int CBoostThread::getCurrentThreadId()
 }
 EThreadState CBoostThread::getCurrentState() const
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "getCurrentState");
+	BOOST_LOG_FUNCTION();
 
 	return m_ThreadState;
 }

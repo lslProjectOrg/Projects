@@ -1,9 +1,9 @@
 #include "HelpClass.h"
 #include "CommonData.h"
-#include "Logger.h"
 #include "TestFrame.h"
 
-
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 // extern boost::condition_variable g_conditionMainRun;
 
@@ -24,17 +24,14 @@ CHelpClass::~CHelpClass(void)
 
 void CHelpClass::log_SeeionINfo(const SessionInfo &stSessionInfo, const std::string& strLogInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "TestCaseCMSServer::_LOG_SeeionINfo");
+	BOOST_LOG_FUNCTION();
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, localAddress=%s, peerAddress=%s, clientID=%d, sessionID=%d, sessionMasks=%lld",
-		strLogInfo.c_str(),
-		stSessionInfo.localAddress.c_str(),
-		stSessionInfo.peerAddress.c_str(),
-		stSessionInfo.clientID,
-		stSessionInfo.sessionID,
-		stSessionInfo.sessionMasks);
-
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"localAddress="<<stSessionInfo.localAddress
+		<<" "<<"peerAddress="<<stSessionInfo.peerAddress
+		<<" "<<"clientID="<<stSessionInfo.clientID
+		<<" "<<"sessionID="<<stSessionInfo.sessionID
+		<<" "<<"sessionMasks="<<stSessionInfo.sessionMasks;
 }
 
 

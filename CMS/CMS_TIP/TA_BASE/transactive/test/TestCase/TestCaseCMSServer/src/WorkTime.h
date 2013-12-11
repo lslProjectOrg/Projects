@@ -79,7 +79,7 @@ protected:
 class CWorkTimeLock	: public  CAWorkTime
 {
 public:
-	CWorkTimeLock(int nWorkTimeCode);
+	CWorkTimeLock(int nWorkTimeCode=1);
 	~CWorkTimeLock(void); 
 public:	
 	virtual void workBegin(); 
@@ -94,7 +94,7 @@ private:
 class CWorkTimeNoLock	: public  CAWorkTime
 {
 public:
-	CWorkTimeNoLock(int nWorkTimeCode);
+	CWorkTimeNoLock(int nWorkTimeCode=1);
 	~CWorkTimeNoLock(void); 
 public:	
 	virtual void workBegin(); 

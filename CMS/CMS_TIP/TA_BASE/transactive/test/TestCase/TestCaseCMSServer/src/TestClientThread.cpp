@@ -1,9 +1,10 @@
 #include "TestClientThread.h"
-#include "Logger.h"
 #include "TestFrame.h"
 #include "HelpClass.h"
 #include "ClientManager.h"
 
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 //extern boost::condition_variable g_conditionMainRun;
 
@@ -20,6 +21,8 @@ extern int g_n_TotalClientSendFrameNUM;
 
 CTestClientThread::CTestClientThread(int nClientIndex)
 {
+	BOOST_LOG_FUNCTION();
+
 	m_nClientIndex = nClientIndex;
 	m_pSendWorkTime = new CWorkTimeLock(1);
 
@@ -33,6 +36,8 @@ CTestClientThread::CTestClientThread(int nClientIndex)
 
 CTestClientThread::~CTestClientThread(void)
 {
+	BOOST_LOG_FUNCTION();
+
 	delete m_pSendWorkTime;
 	m_pSendWorkTime = NULL;
 
@@ -44,6 +49,8 @@ CTestClientThread::~CTestClientThread(void)
 
 void CTestClientThread::run()
 {
+	BOOST_LOG_FUNCTION();
+
 	m_nThreadJobState = JobState_Begin;
 
 
@@ -60,6 +67,8 @@ void CTestClientThread::run()
 
 void CTestClientThread::_ThreadJob()
 {
+	BOOST_LOG_FUNCTION();
+
 	switch (m_nThreadJobState)
 	{
 	case JobState_Begin:
@@ -99,7 +108,7 @@ void CTestClientThread::_ThreadJob()
 
 void CTestClientThread::terminate(void)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::terminate");
+	BOOST_LOG_FUNCTION();
 
 	m_toTerminate = true;
 }
@@ -108,7 +117,7 @@ void CTestClientThread::terminate(void)
 
 void CTestClientThread::_SetSessionInfo( const SessionInfo &stSessionInfo )
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::setSessionInfo");
+	BOOST_LOG_FUNCTION();
 
 	m_clientSessionInfo.clientID = stSessionInfo.clientID;
 	m_clientSessionInfo.sessionData = stSessionInfo.sessionData;
@@ -154,26 +163,26 @@ void CTestClientThread::_Process_DoClientWork()
 /////////////////////////////////////////////////////////////////////////
 void CTestClientThread::handleDisconnected(const SessionInfo &stSessionInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::handleDisconnected");
+	BOOST_LOG_FUNCTION();
 
 }
 
 
 void CTestClientThread::handleDeliverFailure(Message::Ptr pGetMessage)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::handleDeliverFailure");
+	BOOST_LOG_FUNCTION();
 
 }
 
 void CTestClientThread::handleConnected(const SessionInfo &stSessionInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::handleConnected");
+	BOOST_LOG_FUNCTION();
 	_SetSessionInfo(stSessionInfo);
 }
 
 void CTestClientThread::handleReceivedMessage(Message::Ptr pGetMessage)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::handleReceivedMessage");
+	BOOST_LOG_FUNCTION();
 
 
 }
@@ -181,7 +190,7 @@ void CTestClientThread::handleReceivedMessage(Message::Ptr pGetMessage)
 
 void CTestClientThread::_SendMsg(CTestFrame* pTestFrame, SessionID destSessionID)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::_sendMsg");
+	BOOST_LOG_FUNCTION();
 
 	Message::Ptr message(new Message());
 	message->write(pTestFrame->m_nFrameType);
@@ -215,10 +224,10 @@ void CTestClientThread::_SendMsg(CTestFrame* pTestFrame, SessionID destSessionID
 
 void CTestClientThread::_SendTestMsg(int nFrameType)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::sendTestMsg");
+	BOOST_LOG_FUNCTION();
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "sendTestMsg  nFrameType=%d", nFrameType);
-
+	LOG_DEBUG<<"sendTestMsg  nFrameType="<<nFrameType;
+	
 	CTestFrame TestFrame;
 	switch (nFrameType)
 	{
@@ -249,7 +258,8 @@ void CTestClientThread::_SendTestMsg(int nFrameType)
 
 void CTestClientThread::_RunTestCase()
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugTrace, "CTestClientThread::runTestCase");
+	BOOST_LOG_FUNCTION();
+
 	int nFrameType = 0;
 	m_pSendWorkTime->workBegin();
 	if (true == m_bClientConnected)
@@ -263,15 +273,19 @@ void CTestClientThread::_RunTestCase()
 	}
 
 	m_pSendWorkTime->workEnd();
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugInfo, 
-		"m_nSendMsgCount=%d, messages send and verified successfully, m_pSendWorkTime=%lld  ms", 
-		m_nSendMsgCount, m_pSendWorkTime->getWorkTime());
+
+	LOG_DEBUG<<"m_nSendMsgCount="<<m_nSendMsgCount
+		<<"messages send and verified successfully"
+		<<" "<<"m_pSendWorkTime="<<m_pSendWorkTime->getWorkTime();
+
 
 }
 
 
 int CTestClientThread::_ProcessUserTerminate()
 {
+	BOOST_LOG_FUNCTION();
+
 	int nFunRes = 0;
 	m_nThreadJobState = JobState_End;
 	return nFunRes;
@@ -279,6 +293,8 @@ int CTestClientThread::_ProcessUserTerminate()
 
 bool CTestClientThread::isFinishWork()
 {
+	BOOST_LOG_FUNCTION();
+
 	bool bFinishWork = false;
 	if (JobState_End == m_nThreadJobState)
 	{

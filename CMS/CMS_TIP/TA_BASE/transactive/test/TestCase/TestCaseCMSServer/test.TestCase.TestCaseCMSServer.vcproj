@@ -244,6 +244,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CTOSReqUserLoginFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqUserLoginFrame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\HelpClass.cpp"
 				>
 			</File>

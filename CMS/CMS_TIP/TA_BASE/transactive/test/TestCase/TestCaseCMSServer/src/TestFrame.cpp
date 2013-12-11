@@ -1,6 +1,8 @@
 #include "TestFrame.h"
 #include "CommonData.h"
-#include "Logger.h"
+
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 // extern boost::condition_variable g_conditionMainRun;
 
@@ -115,42 +117,48 @@ CTestFrame::~CTestFrame(void)
 
 void CTestFrame::logFrameInfo(const std::string& strLogInfo)
 {
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nFrameType = %d", strLogInfo.c_str(), m_nFrameType);
+	BOOST_LOG_FUNCTION();
 
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nFrameType="<<m_nFrameType;
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nSessionIDSrc="<<m_nSessionIDSrc;
 	
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, m_nSessionIDSrc = %u", strLogInfo.c_str(), m_nSessionIDSrc);
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nCharValue="<<m_nCharValue;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nCharValue = %d", strLogInfo.c_str(), m_nCharValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nUCharValue = %u", strLogInfo.c_str(), m_nUCharValue);
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nUCharValue="<<m_nUCharValue;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nShortValue = %hd", strLogInfo.c_str(), m_nShortValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nUShortValue = %u", strLogInfo.c_str(), m_nUShortValue);
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nShortValue="<<m_nShortValue;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nIntValue = %d", strLogInfo.c_str(), m_nIntValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nUIntValue = %u", strLogInfo.c_str(), m_nUIntValue);
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nUShortValue="<<m_nUShortValue;
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nBitIntValue = %lld", strLogInfo.c_str(), m_nBitIntValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, nUBitIntValue = %llu", strLogInfo.c_str(), m_nUBitIntValue);
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nIntValue="<<m_nIntValue;
 
-	//_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-	//	"m_nRecvMsgCount=%d, fGetFloatValue = %lf", m_nRecvMsgCount, fGetFloatValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, fFloatValue = %e", strLogInfo.c_str(), m_fFloatValue);
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, fDoubleValue = %e", strLogInfo.c_str(), m_fDoubleValue);
 
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, 
-		"strLogInfo=%s, strStringValue = %s", strLogInfo.c_str(), m_strStringValue.c_str());
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nUIntValue="<<m_nUIntValue;
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nBitIntValue="<<m_nBitIntValue;
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_nUBitIntValue="<<m_nUBitIntValue;
+
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_fFloatValue="<<m_fFloatValue;
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_fDoubleValue="<<m_fDoubleValue;
+
+	LOG_DEBUG<<"strLogInfo="<<strLogInfo
+		<<" "<<"m_strStringValue="<<m_strStringValue;
 
 }
 
@@ -238,8 +246,9 @@ int CTestFrame::setDataWithMessage(Message::Ptr pMessage)
 	}
 	else
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, 
-			"DebugError: not support Frame nGetFrameType=%d", m_nFrameType);
+
+		LOG_ERROR<<"Error: not support Frame"
+			<<" "<<"m_nFrameType="<<m_nFrameType;
 		nFunRes = -1;
 	}
 
@@ -253,7 +262,7 @@ int CTestFrame::_CheckFrameDataNomal()
 
 	if (ComFrameType_TestNomalData != m_nFrameType)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: ComFrameType_TestNomalData != nFrameType");
+		LOG_ERROR<<"Error: ComFrameType_TestNomalData != nFrameType";
 		nFunRes = -1;
 		return nFunRes;
 	}
@@ -262,7 +271,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nCharValue == g_TestData_nomal_nCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error! nCharValue=%d, g_TestData_nomal_nCharValue=%d", m_nCharValue, g_TestData_nomal_nCharValue);
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -271,7 +280,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nUCharValue == g_TestData_nomal_nUCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -280,7 +289,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nShortValue == g_TestData_nomal_nShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -289,7 +298,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nUShortValue == g_TestData_nomal_nUShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -298,7 +307,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nIntValue == g_TestData_nomal_nIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -307,7 +316,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nUIntValue == g_TestData_nomal_nUIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -316,7 +325,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nBitIntValue == g_TestData_nomal_nBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -325,7 +334,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_nUBitIntValue == g_TestData_nomal_nUBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -334,7 +343,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = ((m_fFloatValue - g_TestData_nomal_fFloatValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -343,7 +352,7 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = ((m_fDoubleValue - g_TestData_nomal_fDoubleValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -352,15 +361,13 @@ int CTestFrame::_CheckFrameDataNomal()
 	bCheckDataRes = (m_strStringValue == g_TestData_nomal_strStringValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"Error: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
 	}
 
-
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "check one frame ok! type = ComFrameType_TestNomalData");
-
+	LOG_DEBUG<<"check one frame ok! type = ComFrameType_TestNomalData";
 
 
 	return nFunRes;
@@ -372,7 +379,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bool bCheckDataRes = false;
 	if (ComFrameType_TestMinData != m_nFrameType)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError:Frame Type Error! ComFrameType_TestMinData != m_nFrameType");
+		LOG_ERROR<<"DebugError:Frame Type Error! ComFrameType_TestMinData != m_nFrameType";	
 		nFunRes = -1;
 		return nFunRes;
 	}
@@ -381,7 +388,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nCharValue == g_TestData_min_nCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -390,7 +397,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nUCharValue == g_TestData_min_nUCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -399,7 +406,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nShortValue == g_TestData_min_nShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -408,7 +415,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nUShortValue == g_TestData_min_nUShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -417,7 +424,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nIntValue == g_TestData_min_nIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -426,7 +433,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nUIntValue == g_TestData_min_nUIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -435,7 +442,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nBitIntValue == g_TestData_min_nBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -444,7 +451,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_nUBitIntValue == g_TestData_min_nUBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -453,7 +460,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = ((m_fFloatValue - g_TestData_min_fFloatValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -462,7 +469,7 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = ((m_fDoubleValue - g_TestData_min_fDoubleValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -471,13 +478,13 @@ int CTestFrame::_CheckFrameDataMin()
 	bCheckDataRes = (m_strStringValue == g_TestData_min_strStringValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
 	}
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "check one frame ok! type = ComFrameType_TestMinData");
 
+	LOG_DEBUG<<"check one frame ok! type = ComFrameType_TestMinData";
 
 
 
@@ -492,7 +499,7 @@ int CTestFrame::_CheckFrameDataMax()
 
 	if (ComFrameType_TestMaxData != m_nFrameType)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: Frame Type Error! ComFrameType_TestMaxData != m_nFrameType");
+		LOG_ERROR<<"DebugError: Frame Type Error! ComFrameType_TestMaxData != m_nFrameType";
 		nFunRes = -1;
 		return nFunRes;
 	}
@@ -501,7 +508,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nCharValue == g_TestData_max_nCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -510,7 +517,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nUCharValue == g_TestData_max_nUCharValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -519,7 +526,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nShortValue == g_TestData_max_nShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -528,7 +535,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nUShortValue == g_TestData_max_nUShortIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -537,7 +544,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nIntValue == g_TestData_max_nIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -546,7 +553,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nUIntValue == g_TestData_max_nUIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -555,7 +562,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nBitIntValue == g_TestData_max_nBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -564,7 +571,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_nUBitIntValue == g_TestData_max_nUBitIntValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -573,7 +580,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = ((m_fFloatValue - g_TestData_max_fFloatValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -582,7 +589,7 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = ((m_fDoubleValue - g_TestData_max_fDoubleValue) < 0.0001);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
@@ -591,14 +598,13 @@ int CTestFrame::_CheckFrameDataMax()
 	bCheckDataRes = (m_strStringValue == g_TestData_max_strStringValue);// = 'A';
 	if (!bCheckDataRes)
 	{
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: check Data Error");
+		LOG_ERROR<<"DebugError: check Data Error";
 		nFunRes = -1;
 		return nFunRes;
 
 	}
-	_SysLog(LogSourceFLInfo, TA_Base_Test::DebugDebug, "check one frame ok! type = ComFrameType_TestMaxData");
 
-
+	LOG_DEBUG<<"check one frame ok! type = ComFrameType_TestMaxData";
 
 	return nFunRes;
 }
@@ -620,11 +626,10 @@ int CTestFrame::checkFrameData()
 		nFunRes = _CheckFrameDataMax();
 		break;
 	case ComFrameType_NULL:
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, "DebugError: FrameType Error! nFrameType=ComFrameType_NULL");
+		LOG_ERROR<<"DebugError: FrameType Error! nFrameType=ComFrameType_NULL";
 		break;
 	default:
-		_SysLog(LogSourceFLInfo, TA_Base_Test::DebugError, 
-			"DebugError: not support check Frame nFrameType=%d", m_nFrameType);
+		LOG_ERROR<<"DebugError: not support check Frame nFrameType="<<m_nFrameType;
 		nFunRes = -1;
 		break;
 	}

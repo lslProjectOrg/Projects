@@ -1,7 +1,7 @@
 #include "BoostLogger.h"
 
 
-//src::severity_logger< trivial::severity_level > g_logHandleFile;
+boost::log::sources::severity_logger< boost::log::trivial::severity_level > g_logHandleFile;
 
 
 NS_BEGIN(TA_Base_Test)
@@ -9,7 +9,7 @@ NS_BEGIN(TA_Base_Test)
 
 CBoostLogger::CBoostLogger( void )
 {
-
+	_BoostLogInit();
 }
 
 CBoostLogger::~CBoostLogger( void )
@@ -21,7 +21,7 @@ CBoostLogger::~CBoostLogger( void )
 
 
 
-int CBoostLogger::g_LOGINIT()
+int CBoostLogger::_BoostLogInit()
 {
 	//2013-11-27, 16:18:22.148378 [int __cdecl main(int,char *[]) (c:\lsl\svnwork\cms\cms_tip\ta_base\transactive\test\testcase\testcasecmsserver\src\main.cpp:102)] <   normal> :A normal severity message, will not pass to the file
 
@@ -59,7 +59,10 @@ int CBoostLogger::g_LOGINIT()
 		keywords::min_free_space=100*1024*1024  //min free size
 		));
 
-	file_sink->set_filter(expr::attr< trivial::severity_level >("Severity") >= trivial::trace);   //log level trivial::debug
+
+	//logging::core::get()->set_filter(expr::attr< trivial::severity_level >("Severity") >= trivial::debug);//TODO, Test this
+
+	file_sink->set_filter(expr::attr< trivial::severity_level >("Severity") >= trivial::debug);   //log level trivial::debug
 	file_sink->locked_backend()->scan_for_files();
 	file_sink->locked_backend()->auto_flush(true);
 
@@ -73,7 +76,7 @@ int CBoostLogger::g_LOGINIT()
 	// Also let's add some commonly used attributes, like timestamp and record counter.
 	logging::add_common_attributes();
 
-	BOOST_LOG_FUNCTION();//[int __cdecl main(int,char *[]) (c:\lsl\svnwork\cms\cms_tip\ta_base\transactive\test\testcase\testcasecmsserver\src\main.cpp:102)]
+	BOOST_LOG_FUNCTION();//
 
 	// Now, let's try logging with severity
 	//src::severity_logger< trivial::severity_level > g_logHandleFile;
@@ -81,20 +84,15 @@ int CBoostLogger::g_LOGINIT()
 	// Let's pretend we also want to profile our code, so add a special timer attribute.
 	g_logHandleFile.add_attribute("Uptime", attrs::timer());
 
-
-// 	BOOST_LOG_SEV(g_logHandleFile, trivial::trace)<<SourceFLInfo<<"A normal severity message, will not pass to the file";
-// 	BOOST_LOG_SEV(g_logHandleFile, trivial::warning)<<SourceFLInfo<<"A warning severity message, will pass to the file";
-// 	BOOST_LOG_SEV(g_logHandleFile, trivial::error) <<SourceFLInfo<<"An error severity message, will pass to the file";
-
-	testBoostLogFun();
+	//Test
+	_TestBoostLog();
 
 	return 0;
 }
-int CBoostLogger::testBoostLogFun()
+int CBoostLogger::_TestBoostLog()
 {
-	BOOST_LOG_FUNCTION(); // 这里会在Scope属性中加入“testFun”
-	BOOST_LOG_SEV(g_logHandleFile, trivial::trace)<<SourceFLInfo<<" testFun is being called";
-	//LOG_INFO<<"Test LOG_INFO int value="<<1000;
+	BOOST_LOG_FUNCTION(); //
+
 	LOG_TRACE<<"Test LOG_TRACE";
 	LOG_DEBUG<<"Test LOG_DEBUG";
 	LOG_INFO<<"Test LOG_INFO";
