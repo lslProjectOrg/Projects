@@ -236,6 +236,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ClientSessionActor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientSessionActor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CommonData.h"
 				>
 			</File>
@@ -272,11 +280,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ProcessReqHelperForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessReqHelperForTest.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\ServerManage.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\ServerManage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerWorkerForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerWorkerForTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLoginFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLoginFrame.h"
 				>
 			</File>
 			<File

@@ -225,8 +225,8 @@ void TestCaseForCS::runTestCase_ForClient()
 void TestCaseForCS::runTestCase_ForServer()
 {
 	BOOST_LOG_FUNCTION();
-	TA_Base_Test::CServerManager* pTEST_ServerManager = new TA_Base_Test::CServerManager();
-	pTEST_ServerManager->runTestCase();
+	TA_Base_Test::CServerManager::getInstance();
+	
 
 }
 

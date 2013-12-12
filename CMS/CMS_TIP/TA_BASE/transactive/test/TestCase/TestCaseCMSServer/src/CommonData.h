@@ -122,7 +122,7 @@ enum def_int_Code_Value
 
 
 //==============================================================
-enum  ECOMFRAMETYPE
+enum  enComFrameTypeForTest
 {
 	ComFrameType_TestNomalData = 1,
 	ComFrameType_TestMinData,
@@ -131,7 +131,8 @@ enum  ECOMFRAMETYPE
 };
 
 
-enum  EFRAMETYPE_CLIENT_SERVER
+//==============================================================
+typedef enum  enClientServerCommunicationFrameType
 {
 	FRAME_TYPE_CLIENT_SERVER_BEGIN = 0,
 
@@ -153,7 +154,18 @@ enum  EFRAMETYPE_CLIENT_SERVER
 	S_TO_C_ACK_USER_LOGOUT,
 
 	FRAME_TYPE_CLIENT_SERVER_END,
-};
+}FrameType;
+
+
+typedef enum  enClientIdentity
+{
+	ClientIdentity_BEGIN = 0,
+
+	ClientIdentity_TestClient,
+
+	ClientIdentity_END,
+}ClientIdentity;
+
 
 
 

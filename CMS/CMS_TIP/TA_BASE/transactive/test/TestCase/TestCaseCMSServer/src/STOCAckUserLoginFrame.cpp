@@ -1,4 +1,4 @@
-#include "CTOSReqUserLoginFrame.h"
+#include "STOCAckUserLoginFrame.h"
 
 
 #include "BoostLogger.h"
@@ -10,27 +10,27 @@ NS_BEGIN(TA_Base_Test)
 
 
 
-CTOSReqUserLoginFrame::CTOSReqUserLoginFrame(void)
+STOCAckUserLoginFrame::STOCAckUserLoginFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_nFrameType_SampleValue = C_TO_S_REQ_USER_LOGIN;
+	m_nFrameType_SampleValue = S_TO_C_ACK_USER_LOGIN;
 	m_nClientType_SampleValue = ClientIdentity_TestClient;
 	m_strUserName_SampleValue = "m_strUserName";
 	m_strPwd_SampleValue = "m_strPwd";
-	m_strReqInfo_SampleValue = "C_TO_S_REQ_USER_LOGIN ClientIdentity_TestClient login";
+	m_strACKInfo_SampleValue = "login ok!";
 
 	setSampleValue();
 }
 
-CTOSReqUserLoginFrame::~CTOSReqUserLoginFrame(void)
+STOCAckUserLoginFrame::~STOCAckUserLoginFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
 }
 
 
-int CTOSReqUserLoginFrame::setSampleValue()
+int STOCAckUserLoginFrame::setSampleValue()
 {
 	int nFunRes = 0;
 
@@ -38,13 +38,13 @@ int CTOSReqUserLoginFrame::setSampleValue()
 	m_nClientType = m_nClientType_SampleValue;
 	m_strUserName = m_strUserName_SampleValue;
 	m_strPwd = m_strPwd_SampleValue;
-	m_strReqInfo = m_strReqInfo_SampleValue;
+	m_strACKInfo = m_strACKInfo_SampleValue;
 
 	return nFunRes;
 }
 
 
-int CTOSReqUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Ptr pMessage)
+int STOCAckUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Ptr pMessage)
 {
 	int nFunRes = 0;
 
@@ -56,7 +56,7 @@ int CTOSReqUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Pt
 		pMessage->read(m_strUserName);
 
 		pMessage->read(m_strPwd);
-		pMessage->read(m_strReqInfo);
+		pMessage->read(m_strACKInfo);
 	}
 	else
 	{
@@ -70,7 +70,7 @@ int CTOSReqUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Pt
 }
 
 
-int CTOSReqUserLoginFrame::checkValue()
+int STOCAckUserLoginFrame::checkValue()
 {
 	int nFunRes = 0;
 
@@ -102,7 +102,7 @@ int CTOSReqUserLoginFrame::checkValue()
 		return nFunRes;
 	}
 
-	if (m_strReqInfo_SampleValue != m_strReqInfo)
+	if (m_strACKInfo_SampleValue != m_strACKInfo)
 	{
 		LOG_ERROR<<"checkValue Error!";
 		nFunRes = -1;
