@@ -4,7 +4,7 @@
 #include <boost/thread.hpp>
 
 
-#include "TestCaseForCS.h"
+#include "TestCase.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -20,8 +20,8 @@ int main( int argc, char* argv[] )
 	BOOST_LOG_FUNCTION();
 
 
-	TA_Base_Test::TestCaseForCS* pTEST_TestCaseCS = new TA_Base_Test::TestCaseForCS();
-	pTEST_TestCaseCS->runTestCase_ForServer();
+	TA_Base_Test::CTestCase* pTestCase = new TA_Base_Test::CTestCase();
+	pTestCase->runTestCase_ForServer();
 	//pTEST_TestCaseCS->runTestCase_ForClient();
 
 	//sleep
@@ -30,8 +30,8 @@ int main( int argc, char* argv[] )
 		g_conditionMainRun.wait(lock);
 	}
 
-	delete pTEST_TestCaseCS;
-	pTEST_TestCaseCS = NULL;
+	delete pTestCase;
+	pTestCase = NULL;
 
 
 	return 0;

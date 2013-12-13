@@ -1,5 +1,5 @@
-#ifndef __CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
-#define __CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
+#ifndef __CLIENT_TO_SERVER_REQ_USER_LOGOUT_FRAME__HH__
+#define __CLIENT_TO_SERVER_REQ_USER_LOGOUT_FRAME__HH__
 
 #include "UtilityFun.h"
 #include "Message.h"
@@ -7,11 +7,11 @@
 NS_BEGIN(TA_Base_Test) 
 
 
-class CTOSReqUserLoginFrame
+class CTOSReqUserLogOutFrame
 {
 public:
-	CTOSReqUserLoginFrame(void);
-	~CTOSReqUserLoginFrame(void);
+	CTOSReqUserLogOutFrame(void);
+	~CTOSReqUserLogOutFrame(void);
 
 public:
 	cms::Message::Ptr getMessage();
@@ -36,6 +36,6 @@ private:
 NS_END(TA_Base_Test) 
 
 
-#endif //__CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
+#endif //__CLIENT_TO_SERVER_REQ_USER_LOGOUT_FRAME__HH__
 
 

@@ -1,4 +1,4 @@
-#include "CTOSReqUserLoginFrame.h"
+#include "CTOSReqUserLogOutFrame.h"
 
 
 #include "BoostLogger.h"
@@ -10,27 +10,27 @@ NS_BEGIN(TA_Base_Test)
 
 
 
-CTOSReqUserLoginFrame::CTOSReqUserLoginFrame(void)
+CTOSReqUserLogOutFrame::CTOSReqUserLogOutFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_nFrameType_SampleValue = C_TO_S_REQ_USER_LOGIN;
+	m_nFrameType_SampleValue = C_TO_S_REQ_USER_LOGOUT;
 	m_nClientType_SampleValue = ClientIdentity_TestClient;
 	m_strUserName_SampleValue = "m_strUserName";
 	m_strPwd_SampleValue = "m_strPwd";
-	m_strReqInfo_SampleValue = "I want to login!";
+	m_strReqInfo_SampleValue = "I want to logOut!";
 
 	setSampleValue();
 }
 
-CTOSReqUserLoginFrame::~CTOSReqUserLoginFrame(void)
+CTOSReqUserLogOutFrame::~CTOSReqUserLogOutFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
 }
 
 
-int CTOSReqUserLoginFrame::setSampleValue()
+int CTOSReqUserLogOutFrame::setSampleValue()
 {
 	int nFunRes = 0;
 
@@ -44,7 +44,7 @@ int CTOSReqUserLoginFrame::setSampleValue()
 }
 
 
-int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
+int CTOSReqUserLogOutFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 {
 	int nFunRes = 0;
 
@@ -62,7 +62,7 @@ int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 }
 
 
-int CTOSReqUserLoginFrame::checkValue()
+int CTOSReqUserLogOutFrame::checkValue()
 {
 	int nFunRes = 0;
 
@@ -105,7 +105,7 @@ int CTOSReqUserLoginFrame::checkValue()
 }
 
 
-cms::Message::Ptr CTOSReqUserLoginFrame::getMessage()
+cms::Message::Ptr CTOSReqUserLogOutFrame::getMessage()
 {
 	cms::Message::Ptr pMessage(new cms::Message());
 	pMessage->write(m_nFrameType);

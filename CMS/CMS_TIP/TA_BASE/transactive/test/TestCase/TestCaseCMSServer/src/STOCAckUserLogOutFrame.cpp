@@ -1,4 +1,4 @@
-#include "CTOSReqUserLoginFrame.h"
+#include "STOCAckUserLogOutFrame.h"
 
 
 #include "BoostLogger.h"
@@ -10,27 +10,27 @@ NS_BEGIN(TA_Base_Test)
 
 
 
-CTOSReqUserLoginFrame::CTOSReqUserLoginFrame(void)
+STOCAckUserLogOutFrame::STOCAckUserLogOutFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_nFrameType_SampleValue = C_TO_S_REQ_USER_LOGIN;
+	m_nFrameType_SampleValue = S_TO_C_ACK_USER_LOGOUT;
 	m_nClientType_SampleValue = ClientIdentity_TestClient;
 	m_strUserName_SampleValue = "m_strUserName";
 	m_strPwd_SampleValue = "m_strPwd";
-	m_strReqInfo_SampleValue = "I want to login!";
+	m_strAckInfo_SampleValue = "you can to logOut Now!";
 
 	setSampleValue();
 }
 
-CTOSReqUserLoginFrame::~CTOSReqUserLoginFrame(void)
+STOCAckUserLogOutFrame::~STOCAckUserLogOutFrame(void)
 {
 	BOOST_LOG_FUNCTION();
 
 }
 
 
-int CTOSReqUserLoginFrame::setSampleValue()
+int STOCAckUserLogOutFrame::setSampleValue()
 {
 	int nFunRes = 0;
 
@@ -38,13 +38,13 @@ int CTOSReqUserLoginFrame::setSampleValue()
 	m_nClientType = m_nClientType_SampleValue;
 	m_strUserName = m_strUserName_SampleValue;
 	m_strPwd = m_strPwd_SampleValue;
-	m_strReqInfo = m_strReqInfo_SampleValue;
+	m_strAckInfo = m_strAckInfo_SampleValue;
 
 	return nFunRes;
 }
 
 
-int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
+int STOCAckUserLogOutFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 {
 	int nFunRes = 0;
 
@@ -55,14 +55,14 @@ int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 		pMessage->read(m_strUserName);
 
 		pMessage->read(m_strPwd);
-		pMessage->read(m_strReqInfo);
+		pMessage->read(m_strAckInfo);
 	}
 
 	return nFunRes;
 }
 
 
-int CTOSReqUserLoginFrame::checkValue()
+int STOCAckUserLogOutFrame::checkValue()
 {
 	int nFunRes = 0;
 
@@ -94,7 +94,7 @@ int CTOSReqUserLoginFrame::checkValue()
 		return nFunRes;
 	}
 
-	if (m_strReqInfo_SampleValue != m_strReqInfo)
+	if (m_strAckInfo_SampleValue != m_strAckInfo)
 	{
 		LOG_ERROR<<"checkValue Error!";
 		nFunRes = -1;
@@ -105,14 +105,14 @@ int CTOSReqUserLoginFrame::checkValue()
 }
 
 
-cms::Message::Ptr CTOSReqUserLoginFrame::getMessage()
+cms::Message::Ptr STOCAckUserLogOutFrame::getMessage()
 {
 	cms::Message::Ptr pMessage(new cms::Message());
 	pMessage->write(m_nFrameType);
 	pMessage->write(m_nClientType);
 	pMessage->write(m_strUserName);
 	pMessage->write(m_strPwd);
-	pMessage->write(m_strReqInfo);
+	pMessage->write(m_strAckInfo);
 	return pMessage;
 }
 

@@ -1,5 +1,5 @@
-#ifndef __CLASS_PROCESS_REQ_HELPER_FOR_TEST__HH__
-#define __CLASS_PROCESS_REQ_HELPER_FOR_TEST__HH__
+#ifndef __CLASS_PROCESS_CLIENT_REQ_HELPER_FOR_TEST__HH__
+#define __CLASS_PROCESS_CLIENT_REQ_HELPER_FOR_TEST__HH__
 
 #include "UtilityFun.h"
 #include "Message.h"
@@ -7,14 +7,15 @@
 NS_BEGIN(TA_Base_Test) 
 
 
-class CProcessReqHelperForTest
+class CProcessClientReqHelperForTest
 {
 public:
-	CProcessReqHelperForTest(void);
-	~CProcessReqHelperForTest(void);
+	CProcessClientReqHelperForTest(void);
+	~CProcessClientReqHelperForTest(void);
 
 public:
 	int processMessage(cms::Message::Ptr pMessage);
+
 
 
 private:
@@ -23,12 +24,11 @@ private:
 	int _ProcessCTOSReqDoTest(cms::Message::Ptr pMessage );
 	int _ProcessCTOSReqEndTest(cms::Message::Ptr pMessage );
 	int _ProcessCTOSReqUserLogout(cms::Message::Ptr pMessage );
-
 };
 
 NS_END(TA_Base_Test) 
 
 
-#endif //__CLASS_PROCESS_REQ_HELPER_FOR_TEST__HH__
+#endif //__CLASS_PROCESS_CLIENT_REQ_HELPER_FOR_TEST__HH__
 
 

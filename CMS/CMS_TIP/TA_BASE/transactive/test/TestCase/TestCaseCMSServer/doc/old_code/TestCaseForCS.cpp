@@ -6,7 +6,7 @@
 #include "CommonData.h"
 #include "SysTypes.h"
 #include "ServerManage.h"
-#include "ClientManager.h"
+#include "ClientsManagerWorker.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -213,20 +213,14 @@ void TestCaseForCS::_InitMaxLenString()
 void TestCaseForCS::runTestCase_ForClient()
 {
 	BOOST_LOG_FUNCTION();
-
-	TA_Base_Test::CClientManager* pTEST_TestCaseCMSClient = new TA_Base_Test::CClientManager();
-	pTEST_TestCaseCMSClient->start();
-
-
-
+	CClientsManagerWorker* pClientsManagerWorker = new CClientsManagerWorker();
 }
 
 
 void TestCaseForCS::runTestCase_ForServer()
 {
 	BOOST_LOG_FUNCTION();
-	TA_Base_Test::CServerManager::getInstance();
-	
+	CServerManager::getInstance();
 
 }
 
