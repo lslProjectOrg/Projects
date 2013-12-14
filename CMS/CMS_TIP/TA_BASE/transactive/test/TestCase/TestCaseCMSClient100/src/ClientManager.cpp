@@ -11,7 +11,7 @@ using namespace TA_Base_Test;
 NS_BEGIN(TA_Base_Test) 
 
 
-int g_n_ClientNUM = 1;
+int g_n_ClientNUM = 500;
 
 
 //////////////////////////////////////////////////////////////////////////

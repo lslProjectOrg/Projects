@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.TestCase.TestCaseCMSServer", "TestCase\TestCaseCMSServer\test.TestCase.TestCaseCMSServer.vcproj", "{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.TestCase.TestCaseCMSClient100", "TestCase\TestCaseCMSClient100\test.TestCase.TestCaseCMSClient100.vcproj", "{720ECCAC-00A6-4A59-BFE2-B8B5C47DE755}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test.TestCase.TestCaseCMSClient", "TestCase\TestCaseCMSClient\test.TestCase.TestCaseCMSClient.vcproj", "{A0C6908E-1FF0-4044-BCA5-75E5EC2E4B5B}"
 EndProject
 Global
@@ -9,6 +13,14 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}.Debug|Win32.Build.0 = Debug|Win32
+		{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}.Release|Win32.ActiveCfg = Release|Win32
+		{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}.Release|Win32.Build.0 = Release|Win32
+		{720ECCAC-00A6-4A59-BFE2-B8B5C47DE755}.Debug|Win32.ActiveCfg = Debug|Win32
+		{720ECCAC-00A6-4A59-BFE2-B8B5C47DE755}.Debug|Win32.Build.0 = Debug|Win32
+		{720ECCAC-00A6-4A59-BFE2-B8B5C47DE755}.Release|Win32.ActiveCfg = Release|Win32
+		{720ECCAC-00A6-4A59-BFE2-B8B5C47DE755}.Release|Win32.Build.0 = Release|Win32
 		{A0C6908E-1FF0-4044-BCA5-75E5EC2E4B5B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A0C6908E-1FF0-4044-BCA5-75E5EC2E4B5B}.Debug|Win32.Build.0 = Debug|Win32
 		{A0C6908E-1FF0-4044-BCA5-75E5EC2E4B5B}.Release|Win32.ActiveCfg = Release|Win32
