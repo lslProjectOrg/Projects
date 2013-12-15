@@ -76,7 +76,7 @@ private:
 
 
 private:
-	int			m_nTotalRecvMsgCount;
+	BigInt64			m_nTotalRecvMsgCount;
 
 
 private:
