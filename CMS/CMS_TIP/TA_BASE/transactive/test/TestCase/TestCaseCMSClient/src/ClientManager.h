@@ -37,7 +37,7 @@ private:
 	boost::mutex m_mutexBrokerClient;
 	MessageBroker m_BrokerClient;
 	CClientWorkerForTest* m_pClientWorkerForTest;
-
+	int m_nClientIndex;
 };
 
 NS_END(TA_Base_Test) 

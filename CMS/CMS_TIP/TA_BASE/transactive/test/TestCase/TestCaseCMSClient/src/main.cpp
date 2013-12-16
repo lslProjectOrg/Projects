@@ -12,8 +12,8 @@ USING_BOOST_LOG;
 boost::mutex g_mutexMainRun;
 boost::condition_variable g_conditionMainRun;
 
-int g_runAsServer = 1;
-int g_runAsClient = 0;
+int g_runAsServer = 0;
+int g_runAsClient = 1;
 
 int main( int argc, char* argv[] )
 {

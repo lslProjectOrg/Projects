@@ -227,19 +227,63 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CommonData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CommonDef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HelpClass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HelpClass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Logger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Logger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SysTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UtilityFun.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UtilityFun.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WorkTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WorkTime.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="client"
+			>
+			<File
 				RelativePath=".\src\ClientManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\ClientManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ClientSessionActor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ClientSessionActor.h"
 				>
 			</File>
 			<File
@@ -259,17 +303,53 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\cms.h"
+				RelativePath=".\src\ProcessServerAckHelperForTest.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CommonData.h"
+				RelativePath=".\src\ProcessServerAckHelperForTest.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="server"
+			>
+			<File
+				RelativePath=".\src\ClientSessionActor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CommonDef.h"
+				RelativePath=".\src\ClientSessionActor.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\ProcessClientReqHelperForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessClientReqHelperForTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerManage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerManage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerWorkerForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ServerWorkerForTest.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="frame"
+			>
 			<File
 				RelativePath=".\src\CTOSReqBeginTestFrame.cpp"
 				>
@@ -308,58 +388,6 @@
 			</File>
 			<File
 				RelativePath=".\src\CTOSReqUserLogOutFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\HelpClass.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\HelpClass.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Logger.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Logger.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ProcessClientReqHelperForTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ProcessClientReqHelperForTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ProcessServerAckHelperForTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ProcessServerAckHelperForTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ServerManage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ServerManage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ServerWorkerForTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ServerWorkerForTest.h"
 				>
 			</File>
 			<File
@@ -402,32 +430,16 @@
 				RelativePath=".\src\STOCAckUserLogOutFrame.h"
 				>
 			</File>
-			<File
-				RelativePath=".\src\SysTypes.h"
-				>
-			</File>
+		</Filter>
+		<Filter
+			Name="testcase"
+			>
 			<File
 				RelativePath=".\src\TestCase.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\TestCase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\UtilityFun.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\UtilityFun.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WorkTime.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WorkTime.h"
 				>
 			</File>
 		</Filter>

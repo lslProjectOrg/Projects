@@ -21,6 +21,7 @@ CClientManager::CClientManager( int nClientIndex )
 	m_pClientWorkerForTest = new CClientWorkerForTest(nClientIndex);
 	m_pClientWorkerForTest->setClientManagerHandle(this);
 	m_pClientWorkerForTest->start();
+	m_nClientIndex = nClientIndex;
 }
 
 CClientManager::~CClientManager( void )
@@ -37,23 +38,31 @@ CClientManager::~CClientManager( void )
 
 void CClientManager::handleConnected( const SessionInfo &stSessionInfo )
 {
+	LOG_DEBUG<<"m_nClientIndex="<<m_nClientIndex<< "handleConnected";
+
 	m_pClientWorkerForTest->handleConnected(stSessionInfo);
 }
 
 void CClientManager::handleDisconnected( const SessionInfo &stSessionInfo )
 {
+	LOG_DEBUG<<"m_nClientIndex="<<m_nClientIndex<< "handleDisconnected";
+
 	m_pClientWorkerForTest->handleDisconnected(stSessionInfo);
 
 }
 
 void CClientManager::handleReceivedMessage( Message::Ptr pGetMessage )
 {
+	LOG_DEBUG<<"m_nClientIndex="<<m_nClientIndex<< "handleReceivedMessage";
+
 	m_pClientWorkerForTest->handleReceivedMessage(pGetMessage);
 
 }
 
 void CClientManager::handleDeliverFailure( Message::Ptr pGetMessage )
 {
+	LOG_DEBUG<<"m_nClientIndex="<<m_nClientIndex<< "handleDeliverFailure";
+
 	m_pClientWorkerForTest->handleDeliverFailure(pGetMessage);
 
 }
@@ -92,7 +101,7 @@ int CClientManager::connectToServer()
 	{
 		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
 
-		LOG_DEBUG<< "begin connect to g_string_strServerAddress="<<g_string_strServerAddress;
+		LOG_DEBUG<<"m_nClientIndex="<<m_nClientIndex<< "begin connect to g_string_strServerAddress="<<g_string_strServerAddress;
 		m_BrokerClient.connect(g_string_strServerAddress);
 	}
 
@@ -120,7 +129,7 @@ int CClientManager::disConnectToServer(const cms::SessionID& destSessionID)
 	{
 		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
 
-		LOG_DEBUG<< "begin connect to g_string_strServerAddress="<<g_string_strServerAddress;
+		LOG_DEBUG<< "begin disConnectToServer to g_string_strServerAddress="<<g_string_strServerAddress;
 		m_BrokerClient.closeSession(destSessionID);
 	}
 
