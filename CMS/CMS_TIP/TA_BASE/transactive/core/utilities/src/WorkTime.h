@@ -1,13 +1,6 @@
 #ifndef __CLASS_WORK_TIME__HH__
 #define __CLASS_WORK_TIME__HH__
 
-// #include <iostream>
-// #include <fstream>
-// #include <list> 
-//  
-// #include <stdio.h>
-// #include <sys/timeb.h>
-// #include <stdlib.h>
 #include "SysTypes.h"
 #include "CommonDef.h"
 #include "CommonData.h"

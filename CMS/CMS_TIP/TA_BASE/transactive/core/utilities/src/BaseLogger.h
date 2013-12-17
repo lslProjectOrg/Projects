@@ -16,8 +16,6 @@
 #define _BaseLog			    TA_Base_Core::CBaseLogger::getInstance().log
 
 
-#define  DEF_INT_BUFFSIZE        512
-#define  DEF_INT_MAXLINELEN      1024*1024
 #define  defSQLFilename_OUT_ERRORREPORT   "BASE_LOG.log"
 
 
@@ -99,4 +97,7 @@ public:
 #endif // __CLASS_BASE_LOGGER_HH__
 
 NS_END(TA_Base_Core)
+
+
+
 

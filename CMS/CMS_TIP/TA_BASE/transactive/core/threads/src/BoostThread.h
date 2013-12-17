@@ -65,3 +65,6 @@ public:
 NS_END(TA_Base_Core) 
 
 #endif  // __CLASS_BOOST_THREAD__HH__
+
+
+

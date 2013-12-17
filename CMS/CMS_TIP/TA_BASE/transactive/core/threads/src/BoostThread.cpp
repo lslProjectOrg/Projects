@@ -4,8 +4,6 @@
 
 
 #include "core/utilities/src/BoostLogger.h"
-
-
 USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_Core) 
