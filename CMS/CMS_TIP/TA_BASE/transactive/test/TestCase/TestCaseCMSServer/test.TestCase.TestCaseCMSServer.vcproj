@@ -80,7 +80,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\CMS\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../../../../bin/win32_nd/AlarmAgent.pdb"
+				ProgramDatabaseFile=".\../../../../../bin/win32_nd/TestCaseCMSServer.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

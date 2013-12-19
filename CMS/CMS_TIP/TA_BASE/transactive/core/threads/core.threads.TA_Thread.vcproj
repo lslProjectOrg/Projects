@@ -181,6 +181,14 @@
 				RelativePath=".\src\BoostThread.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\ThreadsCommonData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ThreadsCommonDef.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -5,30 +5,8 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include "core/utilities/src/BoostUtilityFun.h"
-
+#include "core/threads/src/ThreadsCommonData.h"
 NS_BEGIN(TA_Base_Core) 
-
-enum EThreadState
-{
-	THREAD_STATE_NEW,
-
-	THREAD_STATE_RUNNING,
-	THREAD_STATE_TERMINATED,
-
-	THREAD_STATE_FINISH,
-	THREAD_STATE_UNKNOWN                                     
-};
-
-/*
-enum STATE {
-uninitialized,
-starting,
-started,
-stopping,
-stopped
-};
-
-*/
 
 
 class CBoostThread

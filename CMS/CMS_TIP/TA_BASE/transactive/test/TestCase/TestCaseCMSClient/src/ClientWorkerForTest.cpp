@@ -158,7 +158,7 @@ void CClientWorkerForTest::_ThreadJob()
 		break;
 	case JobState_UnInitClient:
 		_LogClientInfo();
-		m_pClientManager->disConnectToServer(m_clientSessionInfo.sessionID);
+		//m_pClientManager->disConnectToServer(m_clientSessionInfo.sessionID);
 		m_nThreadJobState = JobState_End;
 			break;
 	case JobState_End:

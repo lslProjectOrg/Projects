@@ -2,7 +2,7 @@
 #define __CLASS_CppSQLite3_DATABASE_H__
 
 
-#include "core/CppSQLiteLib/src/ProCommonDef.h"
+#include "core/CppSQLiteLib/src/CppSQLiteLibCommonData.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Query.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Statement.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Table.h"

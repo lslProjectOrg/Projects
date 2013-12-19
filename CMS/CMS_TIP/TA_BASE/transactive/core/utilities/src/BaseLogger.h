@@ -1,8 +1,7 @@
 #ifndef __CLASS_BASE_LOGGER_HH__
 #define __CLASS_BASE_LOGGER_HH__
 
-#include "CommonDef.h"
-#include "CommonData.h"
+#include "core/utilities/src/UtilitiesCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>

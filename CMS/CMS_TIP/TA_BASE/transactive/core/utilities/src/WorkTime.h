@@ -1,9 +1,6 @@
 #ifndef __CLASS_WORK_TIME__HH__
 #define __CLASS_WORK_TIME__HH__
 
-#include "SysTypes.h"
-#include "CommonDef.h"
-#include "CommonData.h"
 #include "BoostUtilityFun.h"
 
 NS_BEGIN(TA_Base_Core)

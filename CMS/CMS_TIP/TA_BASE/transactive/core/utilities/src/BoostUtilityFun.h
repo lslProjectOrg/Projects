@@ -2,9 +2,7 @@
 #define __CLASS_BOOST_UTILITY_FUN_H__ 
 
 
-#include "SysTypes.h"
-#include "CommonDef.h"
-#include "CommonData.h"
+#include "core/utilities/src/UtilitiesCommonData.h"
 
 
 

@@ -1,4 +1,3 @@
-
 #ifndef __CLASS_BOOST_LOGGER_HH__
 #define __CLASS_BOOST_LOGGER_HH__ 
 
@@ -28,7 +27,7 @@
 #include <boost/log/detail/default_attribute_names.hpp>
 
 
-#include "CommonDef.h"
+#include "core/utilities/src/UtilitiesCommonData.h"
 
 
 //////////////////////////////////////////////////////////////////////////

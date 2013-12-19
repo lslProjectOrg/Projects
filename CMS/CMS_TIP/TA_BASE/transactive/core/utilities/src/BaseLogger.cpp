@@ -1,14 +1,6 @@
 #include "BaseLogger.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
-#include <cstdlib>
-#include <iostream>
-#include <time.h>
-#include <stdio.h>
-
-#include "CommonDef.h"
-#include "CommonData.h"
-
 
 NS_BEGIN(TA_Base_Core)
 

@@ -95,19 +95,19 @@ int CBoostLogger::_BoostLogInit()
 
 int CBoostLogger::_BoostLogInit_ex()
 {
-	std::string strLogPath = "ALL_Server_LOG";
-	std::string strLogFileName = "Server_LOG_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
+	std::string strLogPath = "ALL_Server_LOG_2";
+	std::string strLogFileName = "Server_LOG_2_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
 
 
 	if (1 == g_runAsServer)
 	{
-		strLogPath = "ALL_Server_LOG";
-		strLogFileName = "Server_LOG_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
+		strLogPath = "ALL_Server_LOG_2";
+		strLogFileName = "Server_LOG_2_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
 	}
 	else //if (1 == g_runAsClient)
 	{
-		strLogPath = "ALL_Client_LOG";
-		strLogFileName = "Client_LOG_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
+		strLogPath = "ALL_Client_LOG_2";
+		strLogFileName = "Client_LOG_2_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
 	}
 
 	//2013-11-27, 16:18:22.148378 [int __cdecl main(int,char *[]) (c:\lsl\svnwork\cms\cms_tip\ta_base\transactive\test\testcase\testcasecmsserver\src\main.cpp:102)] <   normal> :A normal severity message, will not pass to the file

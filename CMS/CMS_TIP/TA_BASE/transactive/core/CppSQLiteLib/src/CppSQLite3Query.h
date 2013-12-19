@@ -1,7 +1,7 @@
 #ifndef __CLASS_CppSQLite3_QUERY_H__
 #define __CLASS_CppSQLite3_QUERY_H__
 
-#include "core/CppSQLiteLib/src/ProCommonDef.h"
+#include "core/CppSQLiteLib/src/CppSQLiteLibCommonData.h"
 
 
 NS_BEGIN(TA_Base_Core)

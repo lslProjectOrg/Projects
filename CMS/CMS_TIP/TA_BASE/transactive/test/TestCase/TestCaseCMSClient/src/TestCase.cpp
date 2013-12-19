@@ -23,7 +23,7 @@ namespace boost
 
 NS_BEGIN(TA_Base_Test) 
 std::string g_string_strServerAddress = "tcp://127.0.0.1:5555";
-int g_n_ClientNUM = 500;
+int g_n_ClientNUM = 250;
 
 
 

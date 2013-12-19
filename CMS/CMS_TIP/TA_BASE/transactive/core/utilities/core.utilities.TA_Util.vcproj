@@ -201,15 +201,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CommonData.h"
+				RelativePath=".\src\UtilitiesCommonData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CommonDef.h"
+				RelativePath=".\src\UtilitiesCommonDef.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\SysTypes.h"
+				RelativePath=".\src\UtilitiesSysTypes.h"
 				>
 			</File>
 			<File

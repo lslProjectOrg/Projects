@@ -143,7 +143,7 @@ private:
 	boost::mutex		m_mutexLstPorcessingMessages;
 	LstMessageT         m_lstPorcessingMessages; 
 	int					m_nPorcessingMsgCount;
-	BigInt64                 m_nTotalRecvMsgCount;
+	int                 m_nTotalRecvMsgCount;
 private:
 	SessionInfo m_clientSessionInfo;
 	int    m_nSendMsgCount;
