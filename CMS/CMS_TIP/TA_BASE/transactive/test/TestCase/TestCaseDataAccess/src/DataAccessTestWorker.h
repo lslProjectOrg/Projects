@@ -18,6 +18,10 @@ private:
 	enum EThreadJobState
 	{
 		JobState_Begin,
+		JobState_DO_LogTest,
+		JobState_DO_ThreadTest,
+		JobState_DO_SQliteTest,
+		JobState_DO_DataAccessTest,
 		JobState_End,
 	};
 
@@ -31,7 +35,13 @@ public:
 	bool  isFinishWork();
 private:
 	void _ThreadJob();
-	int	 _ProcessUserTerminate();  
+	int	 _ProcessUserTerminate(); 
+
+private:
+	void _Process_JobState_DO_LogTest();
+	void _Process_JobState_DO_ThreadTest();
+	void _Process_JobState_DO_SQliteTest();
+	void _Process_JobState_DO_DataAccessTest();
 private:
 	bool	m_toTerminate;
 	EThreadJobState  m_nThreadJobState;

@@ -3,6 +3,7 @@
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
+NS_BEGIN(TA_Base_Core)
 
 SQLStatement::SQLStatement()
 {
@@ -34,4 +35,8 @@ void  SQLStatement::logInfo()
 		<<" "<<"strSQLiteSQL="<<strSQLiteSQL<<std::endl;
 	
 }
+
+NS_END(TA_Base_Core)
+
+
 

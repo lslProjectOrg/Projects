@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="test.TestCase.TestCaseDataAccess"
+	Name="test.TestCase.TestQtCppConsole"
 	ProjectGUID="{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}"
-	RootNamespace="test.TestCase.TestCaseDataAccess"
+	RootNamespace="test.TestCase.TestQtCppConsole"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nd"
-			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseDataAccess"
+			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/test/TestCase/TestQtCppConsole"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -39,22 +39,22 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nd/test.TestCase.TestCaseDataAccess.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nd/test.TestCase.TestQtCppConsole.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="_DEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseDataAccess/test.TestCase.TestCaseDataAccess.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseDataAccess/"
-				ObjectFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseDataAccess/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseDataAccess/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestQtCppConsole/test.TestCase.TestQtCppConsole.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/test/TestCase/TestQtCppConsole/"
+				ObjectFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestQtCppConsole/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactive/test/TestCase/TestQtCppConsole/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -74,13 +74,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib sqlite3.lib TA_Utilities_d.lib TA_Thread_d.lib TA_DataAccess_d.lib TA_CppSQLiteLib_d.lib"
-				OutputFile="../../../../../bin/win32_nd/TestCaseDataAccess.exe"
+				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib"
+				OutputFile="../../../../../bin/win32_nd/TestQtCppConsole.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib"
+				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../../../../bin/win32_nd/TestCaseDataAccess.pdb"
+				ProgramDatabaseFile=".\../../../../../bin/win32_nd/TestQtCppConsole.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -98,7 +98,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nd/test.TestCase.TestCaseDataAccess.bsc"
+				OutputFile=".\../../../../../bin/win32_nd/test.TestCase.TestQtCppConsole.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -113,7 +113,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nr"
-			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseDataAccess"
+			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/test/TestCase/TestQtCppConsole"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nr/test.TestCase.TestCaseDataAccess.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nr/test.TestCase.TestQtCppConsole.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -147,10 +147,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseDataAccess/test.TestCase.TestCaseDataAccess.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseDataAccess/"
-				ObjectFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseDataAccess/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseDataAccess/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestQtCppConsole/test.TestCase.TestQtCppConsole.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/test/TestCase/TestQtCppConsole/"
+				ObjectFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestQtCppConsole/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/test/TestCase/TestQtCppConsole/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4251"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="CMS.lib ace.lib"
-				OutputFile="../../../../../bin/win32_nr/TestCaseDataAccess.exe"
+				OutputFile="../../../../../bin/win32_nr/TestQtCppConsole.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\CMS\lib"
@@ -191,7 +191,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nr/test.TestCase.TestCaseDataAccess.bsc"
+				OutputFile=".\../../../../../bin/win32_nr/test.TestCase.TestQtCppConsole.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -211,23 +211,15 @@
 			Name="src"
 			>
 			<File
-				RelativePath=".\src\DataAccessTestManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\DataAccessTestManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\DataAccessTestWorker.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\DataAccessTestWorker.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Security.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Security.h"
 				>
 			</File>
 		</Filter>

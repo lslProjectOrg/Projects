@@ -1,4 +1,7 @@
 #include "DataAccessTestWorker.h"
+
+
+
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
@@ -13,7 +16,8 @@ NS_BEGIN(TA_Base_Test)
 CDataAccesssTestWorker::CDataAccesssTestWorker(void)
 {	
 	BOOST_LOG_FUNCTION();	
-
+	m_toTerminate = false;
+	m_nThreadJobState = JobState_Begin;
 
 }
 
@@ -34,8 +38,7 @@ void CDataAccesssTestWorker::run()
 	while (false == m_toTerminate)
 	{
 		_ThreadJob();
-		//TA_Base_Test::CBoostThread::sleep(DEF_INT_MonitorThreadSleep);
-
+		TA_Base_Core::CBoostThread::sleep(1000);
 	}
 
 	_ProcessUserTerminate();
@@ -54,6 +57,7 @@ int CDataAccesssTestWorker::_ProcessUserTerminate()
 	BOOST_LOG_FUNCTION();
 
 	int nFunRes = 0;
+	m_toTerminate = true;
 	m_nThreadJobState = JobState_End;
 	return nFunRes;
 }
@@ -79,11 +83,10 @@ void CDataAccesssTestWorker::_ThreadJob()
 	{
 	case JobState_Begin:
 		break;
-
 	case JobState_End:
 		break;
 	default:
-		TA_Base_Test::CBoostThread::sleep(1000);
+		TA_Base_Core::CBoostThread::sleep(1000);
 		break;
 
 	}//switch

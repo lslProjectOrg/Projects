@@ -3,13 +3,9 @@
 
 #include "core/utilities/src/UtilitiesCommonData.h"
 
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
-
-
-
 NS_BEGIN(TA_Base_Test) 
+
+class CDataAccesssTestWorker;
 
 class CDataAccessTestManager 
 {
@@ -17,7 +13,8 @@ public:
 	CDataAccessTestManager(void);
 	~CDataAccessTestManager(void);
 
-
+public:
+	CDataAccesssTestWorker* m_pWorker;
 };
 
 NS_END(TA_Base_Test) 

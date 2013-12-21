@@ -2,6 +2,9 @@
 #define _CLASS_SQL_STETEMENT_H__
 
 #include <iostream>
+#include "core/DataAccess/src/DataAccessCommonData.h"
+
+NS_BEGIN(TA_Base_Core)
 
 class SQLStatement
 {
@@ -21,5 +24,9 @@ public:
 	void logInfo();
 };//class SQLStatement
 
+NS_END(TA_Base_Core)
 
 #endif //_CLASS_SQL_STETEMENT_H__
+
+
+

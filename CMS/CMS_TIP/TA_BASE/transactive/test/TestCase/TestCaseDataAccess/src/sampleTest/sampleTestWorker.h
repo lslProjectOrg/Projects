@@ -6,7 +6,6 @@
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include "BoostThread.h"
 
 
 NS_BEGIN(TA_Base_Test) 

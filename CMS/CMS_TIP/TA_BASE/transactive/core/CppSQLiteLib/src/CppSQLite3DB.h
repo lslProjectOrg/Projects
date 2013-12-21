@@ -1,8 +1,11 @@
 #ifndef __CLASS_CppSQLite3_DATABASE_H__
 #define __CLASS_CppSQLite3_DATABASE_H__
 
-
+#include "core/CppSQLiteLib/src/CppSQLiteLibCommonDef.h"
 #include "core/CppSQLiteLib/src/CppSQLiteLibCommonData.h"
+#include "core/CppSQLiteLib/src/CppSQLite3Binary.h"
+#include "core/CppSQLiteLib/src/CppSQLite3Buffer.h"
+#include "core/CppSQLiteLib/src/CppSQLite3Execption.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Query.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Statement.h"
 #include "core/CppSQLiteLib/src/CppSQLite3Table.h"

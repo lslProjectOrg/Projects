@@ -1,0 +1,12 @@
+include:
+.\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include
+
+lib path:
+..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib
+
+
+lib file:
+aced.lib sqlite3.lib TA_Utilities_d.lib TA_Thread_d.lib TA_DataAccess_d.lib TA_CppSQLiteLib_d.lib
+
+
+

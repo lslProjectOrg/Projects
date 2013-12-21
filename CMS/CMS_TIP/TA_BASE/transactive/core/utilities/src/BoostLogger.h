@@ -66,30 +66,49 @@ using boost::shared_ptr;
 NS_BEGIN(TA_Base_Core)
 
 
+#if 0
+//! Trivial severity levels
+// 	enum severity_level
+// 	{
+// 		trace,
+// 		debug,
+// 		info,
+// 		warning,
+// 		error,
+// 		fatal
+// 	};
+#endif
+
+
 class CBoostLogger
 {
 public:
+	static CBoostLogger& getInstance();
+	static void removeInstance();
+
+private:
+	static CBoostLogger* m_pInstance;
+	static boost::mutex m_mutexInstance;
+
+private:
 	CBoostLogger(void);	
 	~CBoostLogger(void);
 
 private:
-	int _TestBoostLog();
-	int _BoostLogInit();
+	int _BoostLogInit_old();
+
+public:
+	void setLogPath(const std::string& strLogPath);
+	void setLogFileName(const std::string& strLogFileName);
+	void setLogLevel(const boost::log::trivial::severity_level& nLogLevel);
+
+	int logInit();
+	int testBoostLog();
+
 private:
-
-#if 0
-	//! Trivial severity levels
-	// 	enum severity_level
-	// 	{
-	// 		trace,
-	// 		debug,
-	// 		info,
-	// 		warning,
-	// 		error,
-	// 		fatal
-	// 	};
-#endif
-
+	std::string m_strLogPath;// = "ALL_LOG_PATH";
+	std::string m_strLogFileName;// = "Sample_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
+	boost::log::trivial::severity_level m_nLogLevel;
 
 
 };//class

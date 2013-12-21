@@ -3,10 +3,14 @@
 
 #include "core/DataAccess/src/ProjectSQLDef.h"
 #include "core/DataAccess/src/ProjectSQLMacroDef.h"
+#include "core/DataAccess/src/DataAccessCommonDef.h"
 #include "core/DataAccess/src/DataAccessCommonData.h"
-#include "core/DataAccess/src/SQLVarParms.h"
+#include "core/DataAccess/src/DataAccessException.h"
+#include "core/DataAccess/src/DataAccessUtilityFun.h"
+#include "core/DataAccess/src/SQLFileHelper.h"
 #include "core/DataAccess/src/SQLStatement.h"
 #include "core/DataAccess/src/SQLTypeAdapter.h"
+#include "core/DataAccess/src/SQLVarParms.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
@@ -19,9 +23,6 @@ class SQLFileHelper;
 class SQLCode
 {
 public:
-	// the destructor of the class
-	~SQLCode();
-
 	// get the only instance of the class
 	static SQLCode& getInstance();	
 	static void removeInstance();
@@ -54,6 +55,7 @@ private:
 private:
 	SQLCode();
 	SQLCode(const SQLCode&);
+	~SQLCode();
 
 private:
 	static boost::mutex m_mutexInstance;
