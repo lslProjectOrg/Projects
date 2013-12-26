@@ -91,7 +91,7 @@ int CBoostLogger::logInit()
 		sinks::file::make_collector(
 		keywords::target=strLogPath,   //path  		
 		//keywords::target="ALL_Server_LOG",   //path     
-		keywords::max_size=100*1024*1024,    //maxth log size
+		keywords::max_size=10*1024*1024*1024,    //maxth log size 10GB
 		keywords::min_free_space=100*1024*1024  //min free size
 		));
 
