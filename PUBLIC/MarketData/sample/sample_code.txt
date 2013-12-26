@@ -1,0 +1,19 @@
+ºô½Ð Jake Zhong£¨21:12£¬ÐÇÆÚÒ» £©
+Jake Zhong Î´Ó¦´ðºô½Ð£¨21:12£¬ÐÇÆÚÒ» £©
+Jake: std::ifstream priceFile(filename.c_str());
+
+while (!priceFile.eof())
+{
+MarketData price(0);
+priceFile >> price;
+//process price ....
+
+
+}
+shenglong: >> ?
+getAskPx?
+getPrice(
+LAST_TRADED_PRICE,
+Jake: LAST_TRADED_PRICE
+shenglong: LAST_TRADED_VOLUME,
+Jake: LAST_TRADED_VOLUME

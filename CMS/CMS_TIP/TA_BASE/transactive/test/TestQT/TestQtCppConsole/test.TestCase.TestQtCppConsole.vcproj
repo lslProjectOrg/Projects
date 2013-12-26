@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;C:\Qt\4.8.5\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="_DEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib"
+				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib"
 				OutputFile="../../../../../bin/win32_nd/TestQtCppConsole.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;C:\Qt\4.8.5\lib"
+				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../../../../../bin/win32_nd/TestQtCppConsole.pdb"
 				SubSystem="1"
@@ -214,12 +214,24 @@
 				RelativePath=".\src\main.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="MarketData"
+			>
 			<File
-				RelativePath=".\src\Security.cpp"
+				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\BarCalculator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Security.h"
+				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketDataAPI.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketDataFeed.h"
 				>
 			</File>
 		</Filter>
