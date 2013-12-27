@@ -1,14 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <list> 
-
-#include <stdio.h>
-#include <sys/timeb.h>
-#include <stdlib.h>
 #include <time.h>
 
-#include <sstream>
-#include <fstream>
+
 #include <boost/foreach.hpp>
 #include <boost/test/unit_test.hpp>
 #include "MarketData.h"
@@ -18,173 +14,131 @@
 USING_BOOST_LOG;
 
 
-Bar minBar;
-Bar fiveMinBar;
-unsigned int timestamp = 1000 * 300;
+Bar* g_pNewBarFor_60_Seconds = NULL;
+Bar* g_pNewBarFor_300_Seconds = NULL;
 
 std::string getTimeString(unsigned int nTimeValue);
 
+void logBarInfo(const std::string& strInfo, const Bar &bar)
+{
+	std::string strBarTime;
 
+	strBarTime = getTimeString(bar.Time);
+	LOG_DEBUG<<strInfo<<" "<<"bar.Time="<<bar.Time;
+	LOG_DEBUG<<strInfo<<" "<<"strBarTime="<<strBarTime;
+	LOG_DEBUG<<strInfo<<" "<<"bar.Open="<<bar.Open;
+	LOG_DEBUG<<strInfo<<" "<<"bar.Close="<<bar.Close;
+	LOG_DEBUG<<strInfo<<" "<<"bar.High="<<bar.High;
+	LOG_DEBUG<<strInfo<<" "<<"bar.Low="<<bar.Low;
+	LOG_DEBUG<<strInfo<<" "<<"bar.Volume="<<bar.Volume;
+
+
+}
 void HandleUpdateBar(int interval, const Bar &bar)
 {
+	std::ostringstream sreaamTmp;
+	std::string strLogInfo;
+	sreaamTmp.str("");
+	sreaamTmp<<"UpdateBar interval="<<interval;
+	strLogInfo = sreaamTmp.str();
+
 	if (interval == 60)
 	{
-		minBar = bar;
+		if (NULL != g_pNewBarFor_60_Seconds)
+		{
+			//update bar
+			(*g_pNewBarFor_60_Seconds) = bar;
+			logBarInfo(strLogInfo, *g_pNewBarFor_60_Seconds);
+		}
 	}
 	else if (interval == 300) 
 	{
-		fiveMinBar = bar;
+		if (NULL != g_pNewBarFor_300_Seconds)
+		{
+			//update bar
+			(*g_pNewBarFor_300_Seconds) = bar;
+			logBarInfo(strLogInfo, *g_pNewBarFor_300_Seconds);
+		}
 	}
-	std::string strBarTime;
-	strBarTime = getTimeString(bar.Time);
-	LOG_DEBUG<<"---updateBar interval="<<interval;
-	LOG_DEBUG<<"HandleUpdateBar bar.Time="<<bar.Time;
-	LOG_DEBUG<<"HandleUpdateBar interval="<<interval<<" "<<"strBarTime="<<strBarTime;
-	LOG_DEBUG<<"HandleUpdateBar bar.Open="<<bar.Open;
-	LOG_DEBUG<<"HandleUpdateBar bar.Close="<<bar.Close;
-	LOG_DEBUG<<"HandleUpdateBar bar.High="<<bar.High;
-	LOG_DEBUG<<"HandleUpdateBar bar.Low="<<bar.Low;
-	LOG_DEBUG<<"HandleUpdateBar interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
 }
 
 void HandleNewBar(int interval, const Bar &bar)
 {
+	std::ostringstream sreaamTmp;
+	std::string strLogInfo;
+
 	if (interval == 60)
 	{
-		minBar = bar;
+		if (NULL != g_pNewBarFor_60_Seconds)
+		{
+			//save bar
+			sreaamTmp.str("");
+			sreaamTmp<<"save old bar interval="<<interval;
+			strLogInfo = sreaamTmp.str();
+			logBarInfo(strLogInfo, *g_pNewBarFor_60_Seconds);
+
+			//freee bar
+			delete g_pNewBarFor_60_Seconds;
+			g_pNewBarFor_60_Seconds = NULL;
+		}
+		g_pNewBarFor_60_Seconds = new Bar();
+		g_pNewBarFor_60_Seconds->update(0, 0, 0);
+		(*g_pNewBarFor_60_Seconds) = bar;
+
+		sreaamTmp.str("");
+		sreaamTmp<<"new bar interval="<<interval;
+		strLogInfo = sreaamTmp.str();
+		logBarInfo(strLogInfo, *g_pNewBarFor_60_Seconds);
+
 	}
 	else if (interval == 300) 
 	{
-		fiveMinBar = bar;
+		if (NULL != g_pNewBarFor_300_Seconds)
+		{
+			//save bar
+			sreaamTmp.str("");
+			sreaamTmp<<"save old bar interval="<<interval;
+			strLogInfo = sreaamTmp.str();
+
+			logBarInfo(strLogInfo, *g_pNewBarFor_300_Seconds);
+
+			//freee bar
+			delete g_pNewBarFor_300_Seconds;
+			g_pNewBarFor_300_Seconds = NULL;
+		}
+		g_pNewBarFor_300_Seconds = new Bar();
+		g_pNewBarFor_300_Seconds->update(0, 0, 0);
+		(*g_pNewBarFor_300_Seconds) = bar;
+
+		sreaamTmp.str("");
+		sreaamTmp<<"new bar interval="<<interval;
+		strLogInfo = sreaamTmp.str();
+		logBarInfo(strLogInfo, *g_pNewBarFor_300_Seconds);
+
 	}
-	std::string strBarTime;
-	strBarTime = getTimeString(bar.Time);
-	LOG_DEBUG<<"---HandleNewBar interval="<<interval;
-	LOG_DEBUG<<"HandleNewBar bar.Time="<<bar.Time;
-	LOG_DEBUG<<"HandleNewBar interval="<<interval<<" "<<"strBarTime="<<strBarTime;
-	LOG_DEBUG<<"HandleNewBar bar.Open="<<bar.Open;
-	LOG_DEBUG<<"HandleNewBar bar.Close="<<bar.Close;
-	LOG_DEBUG<<"HandleNewBar bar.High="<<bar.High;
-	LOG_DEBUG<<"HandleNewBar bar.Low="<<bar.Low;
-	LOG_DEBUG<<"HandleNewBar interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
 }
 
 
 
 void Test_BarTest()
 {
-	{
-		minBar.update(timestamp, 100, 5);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 100);
-		//BOOST_CHECK(minBar.High == 100);
-		//BOOST_CHECK(minBar.Low == 100);
-		//BOOST_CHECK(minBar.Volume == 5);
-		//BOOST_CHECK(minBar.Time == timestamp);
 
-		minBar.update(timestamp, 99, 7);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 99);
-		//BOOST_CHECK(minBar.High == 100);
-		//BOOST_CHECK(minBar.Low == 99);
-		//BOOST_CHECK(minBar.Volume == 12);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
-		minBar.update(timestamp, 101, 4);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 101);
-		//BOOST_CHECK(minBar.High == 101);
-		//BOOST_CHECK(minBar.Low == 99);
-		//BOOST_CHECK(minBar.Volume == 16);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
-		timestamp += 60;
-		minBar.update(timestamp, 102, 1);
-		//BOOST_CHECK(minBar.Open == 102);
-		//BOOST_CHECK(minBar.Close == 102);
-		//BOOST_CHECK(minBar.High == 102);
-		//BOOST_CHECK(minBar.Low == 102);
-		//BOOST_CHECK(minBar.Volume == 1);
-		//BOOST_CHECK(minBar.Time == timestamp);
-	}
+	unsigned int timestamp = 1000 * 300;
 
 	{
-		minBar.update(0, 0, 0);
-		BarCalculator barCalc(1);
+		BarCalculator barCalc(3620);
 		barCalc.onNewBar = HandleNewBar;
 		barCalc.onBarUpdate = HandleUpdateBar;
-		barCalc.addBar(30); // 30 seconds
-
 		barCalc.addBar(60); // One minute
 		//strBarTime=[1970-01-04 19:21:00] strBarTime=[1970-01-04 19:22:00]
-		barCalc.addBar(300); // Five Minute
+		//barCalc.addBar(300); // Five Minute
 		//strBarTime=[1970-01-04 19:20:00] strBarTime=[1970-01-04 19:25:00]
 
 		barCalc.onMarketDataUpdate(timestamp, 100, 5);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 100);
-		//BOOST_CHECK(minBar.High == 100);
-		//BOOST_CHECK(minBar.Low == 100);
-		//BOOST_CHECK(minBar.Volume == 5);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
 		barCalc.onMarketDataUpdate(timestamp, 99, 7);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 99);
-		//BOOST_CHECK(minBar.High == 100);
-		//BOOST_CHECK(minBar.Low == 99);
-		//BOOST_CHECK(minBar.Volume == 12);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
 		barCalc.onMarketDataUpdate(timestamp, 101, 4);
-		//BOOST_CHECK(minBar.Open == 100);
-		//BOOST_CHECK(minBar.Close == 101);
-		//BOOST_CHECK(minBar.High == 101);
-		//BOOST_CHECK(minBar.Low == 99);
-		//BOOST_CHECK(minBar.Volume == 16);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
 		timestamp += 60;
 		barCalc.onMarketDataUpdate(timestamp, 102, 1);
-		//BOOST_CHECK(minBar.Open == 102);
-		//BOOST_CHECK(minBar.Close == 102);
-		//BOOST_CHECK(minBar.High == 102);
-		//BOOST_CHECK(minBar.Low == 102);
-		//BOOST_CHECK(minBar.Volume == 1);
-		//BOOST_CHECK(minBar.Time == timestamp);
-
-		//BOOST_CHECK(fiveMinBar.Open == 100);
-		//BOOST_CHECK(fiveMinBar.Close == 102);
-		//BOOST_CHECK(fiveMinBar.High == 102);
-		//BOOST_CHECK(fiveMinBar.Low == 99);
-		//BOOST_CHECK(fiveMinBar.Volume == 17);
-
-
-		timestamp += 29;
-		barCalc.onMarketDataUpdate(timestamp, 102.1, 1);
-		timestamp += 1;
-		barCalc.onMarketDataUpdate(timestamp, 102.1, 1);
-		timestamp += 1;
-		barCalc.onMarketDataUpdate(timestamp, 102.2, 1);
-		timestamp += 30;
-		barCalc.onMarketDataUpdate(timestamp, 102.3, 1);
-
-
-		timestamp += 60;
-		barCalc.onMarketDataUpdate(timestamp, 103, 1);
-
-		timestamp += 60;
-		barCalc.onMarketDataUpdate(timestamp, 104, 1);
-
-		timestamp += 60;
-		barCalc.onMarketDataUpdate(timestamp, 105, 1);
-
-		timestamp += 60;
-		barCalc.onMarketDataUpdate(timestamp, 106, 1);
-
-		timestamp += 60;
-		barCalc.onMarketDataUpdate(timestamp, 107, 1);
-
 	}
 }
 
@@ -240,9 +194,8 @@ int main(int argc, char * * argv)
 {
 	logInit();
 
-	Test_BarTest();
-	return 0;
-	std::string filename = "G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\sample\\sample.csv";
+	//C:\LSL\SVNWork\CMS\PUBLIC\MarketData\sample
+	std::string filename = "C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample\\sample.csv";
 	std::ifstream priceFile(filename.c_str());
 
 	//
@@ -269,11 +222,9 @@ int main(int argc, char * * argv)
 	barCalc.onNewBar = HandleNewBar;
 	barCalc.onBarUpdate = HandleUpdateBar;
 
-	minBar.update(0, 0, 0);
-	fiveMinBar.update(0, 0 ,0);
 
 	barCalc.addBar(60); // One minute
-	barCalc.addBar(300); // Five Minute
+	//barCalc.addBar(300); // Five Minute
 
 	while (!priceFile.eof())
 	{
@@ -283,24 +234,25 @@ int main(int argc, char * * argv)
 
 		//
 		SecurityID_Value = marketDataTmp.getSecurityID();
-		LOG_DEBUG<<"SecurityID_Value="<<SecurityID_Value;
 		MarkerStatus_Value = (MarketData::MarketStatus)(marketDataTmp.getMarketStatus());
-		LOG_DEBUG<<"MarkerStatus_Value="<<MarkerStatus_Value;
 		Time_Value = marketDataTmp.getTime();
-		LOG_DEBUG<<"Time_Value="<<Time_Value;
 		strTime_Value = getTimeString(Time_Value);
-		LOG_DEBUG<<"strTime_Value="<<strTime_Value;
 		Volume_Value = marketDataTmp.getVolume(nVolumeType);
-		LOG_DEBUG<<"Volume_Value="<<Volume_Value;
 		BidVol_Value = marketDataTmp.getBidVol(0);
 		AskVol_Value = marketDataTmp.getAskVol(0);
 		Price_Value = marketDataTmp.getPrice(nPriceType);
-		LOG_DEBUG<<"Price_Value="<<Price_Value;
 		BidPx_Value = marketDataTmp.getBidPx(0);
 		AskPx_Value = marketDataTmp.getAskPx(0);
 		DataBits_Value = marketDataTmp.getDataBits();
 		ChangeBits_Value = marketDataTmp.getChangeBits();
 		//
+		LOG_DEBUG<<"SecurityID_Value="<<SecurityID_Value;
+		LOG_DEBUG<<"MarkerStatus_Value="<<MarkerStatus_Value;
+		LOG_DEBUG<<"Time_Value="<<Time_Value;
+		LOG_DEBUG<<"strTime_Value="<<strTime_Value;
+		LOG_DEBUG<<"Volume_Value="<<Volume_Value;
+		LOG_DEBUG<<"Price_Value="<<Price_Value;
+
 
 
 		barCalc.onMarketDataUpdate(marketDataTmp);

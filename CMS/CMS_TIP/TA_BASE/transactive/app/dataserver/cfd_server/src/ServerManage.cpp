@@ -1,20 +1,14 @@
 #include "ServerManage.h"
-#include "ServerWorkerForTest.h"
 
-#include "BoostLogger.h"
+#include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
 //extern boost::condition_variable g_conditionMainRun;
 
-using namespace TA_Base_Test;
 
-NS_BEGIN(TA_Base_Test) 
+NS_BEGIN(TA_Base_App) 
 
 extern std::string g_string_strServerAddress;
-
-
-
-
 
 
 CServerManager* CServerManager::m_pInstance = 0;
@@ -55,10 +49,10 @@ CServerManager::CServerManager(void)
 
 	_InitServer();
 	
-	m_pServerWorkerForTest = NULL;
-	
-	m_pServerWorkerForTest = new CServerWorkerForTest();
-	m_pServerWorkerForTest->start();
+// 	m_pServerWorkerForTest = NULL;
+// 	
+// 	m_pServerWorkerForTest = new CServerWorkerForTest();
+// 	m_pServerWorkerForTest->start();
 	
 }
 
@@ -66,12 +60,12 @@ CServerManager::~CServerManager(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	if (NULL != m_pServerWorkerForTest)
-	{
-		m_pServerWorkerForTest->terminateAndWait();
-		delete m_pServerWorkerForTest;
-		m_pServerWorkerForTest = NULL;
-	}
+// 	if (NULL != m_pServerWorkerForTest)
+// 	{
+// 		m_pServerWorkerForTest->terminateAndWait();
+// 		delete m_pServerWorkerForTest;
+// 		m_pServerWorkerForTest = NULL;
+// 	}
 
 
 }
@@ -81,14 +75,14 @@ void CServerManager::handleDisconnected(const SessionInfo &stSessionInfo)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_pServerWorkerForTest->handleDisconnected(stSessionInfo);
+	//m_pServerWorkerForTest->handleDisconnected(stSessionInfo);
 }
 
 
 void CServerManager::handleDeliverFailure(Message::Ptr pGetMessage)
 {
 	BOOST_LOG_FUNCTION();
-	m_pServerWorkerForTest->handleReceivedMessage(pGetMessage);
+	//m_pServerWorkerForTest->handleReceivedMessage(pGetMessage);
 	
 
 }
@@ -97,14 +91,14 @@ void CServerManager::handleConnected(const SessionInfo &stSessionInfo)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_pServerWorkerForTest->handleDisconnected(stSessionInfo);
+	//m_pServerWorkerForTest->handleDisconnected(stSessionInfo);
 	
 }
 
 void CServerManager::handleReceivedMessage(Message::Ptr pGetMessage)
 {
 	BOOST_LOG_FUNCTION();
-	m_pServerWorkerForTest->handleReceivedMessage(pGetMessage);
+	//m_pServerWorkerForTest->handleReceivedMessage(pGetMessage);
 	
 }
 
@@ -122,10 +116,10 @@ int CServerManager::_InitServer()
 
 	{
 		boost::mutex::scoped_lock lock(m_mutexBrokerServer);
-		m_brokerServer.onConnected = boost::bind(&TA_Base_Test::CServerManager::handleConnected, this, _1);//static boost::arg<1> _1;
-		m_brokerServer.onDisconnected = boost::bind(&TA_Base_Test::CServerManager::handleDisconnected, this, _1);//static boost::arg<1> _1;
-		m_brokerServer.onReceived = boost::bind(&TA_Base_Test::CServerManager::handleReceivedMessage, this, _1);//static boost::arg<1> _1;
-		m_brokerServer.onDeliverFailure = boost::bind(&TA_Base_Test::CServerManager::handleDeliverFailure, this, _1);//static boost::arg<1> _1;
+		m_brokerServer.onConnected = boost::bind(&TA_Base_App::CServerManager::handleConnected, this, _1);//static boost::arg<1> _1;
+		m_brokerServer.onDisconnected = boost::bind(&TA_Base_App::CServerManager::handleDisconnected, this, _1);//static boost::arg<1> _1;
+		m_brokerServer.onReceived = boost::bind(&TA_Base_App::CServerManager::handleReceivedMessage, this, _1);//static boost::arg<1> _1;
+		m_brokerServer.onDeliverFailure = boost::bind(&TA_Base_App::CServerManager::handleDeliverFailure, this, _1);//static boost::arg<1> _1;
 
 		LOG_DEBUG<< "begin listen g_string_strServerAddress="<<g_string_strServerAddress;
 		m_brokerServer.listen(g_string_strServerAddress);
@@ -138,19 +132,15 @@ int CServerManager::_InitServer()
 
 int CServerManager::sendData( const cms::SessionID& destSessionID, cms::Message::Ptr pMessage )
 {
+	boost::mutex::scoped_lock lock(m_mutexBrokerServer);
 	int nFunRes = 0;
-
-	{
-		boost::mutex::scoped_lock lock(m_mutexBrokerServer);
-		m_brokerServer.sendToSession(destSessionID, pMessage);
-	}
-
+	m_brokerServer.sendToSession(destSessionID, pMessage);
 	return nFunRes;
 }
 
 
 
-NS_END(TA_Base_Test) 
+NS_END(TA_Base_App) 
 
 
 

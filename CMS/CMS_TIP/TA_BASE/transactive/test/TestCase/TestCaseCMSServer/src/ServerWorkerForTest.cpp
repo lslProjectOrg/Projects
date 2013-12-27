@@ -2,7 +2,7 @@
 #include "HelpClass.h"
 #include "WorkTime.h"
 #include "ClientSessionActor.h"
-#include "ProcessClientReqHelperForTest.h"
+#include "ProcessReqHelperForTest.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -48,7 +48,7 @@ CServerWorkerForTest::CServerWorkerForTest(void)
 	m_pRecvWorkTime = new CWorkTimeLock();
 	m_pHelpClass = new CHelpClass();
 
-	m_pProcessReqHelper = new CProcessClientReqHelperForTest();
+	m_pProcessReqHelper = new CProcessReqHelperForTest();
 
 }
 
@@ -342,7 +342,7 @@ void CServerWorkerForTest::_AddClient(const SessionInfo &stSessionInfo)
 	std::string strLogInfo;
 	strLogInfo = g_string_strServerAddress + " accept new client: ";
 	m_pHelpClass->log_SeeionINfo(stSessionInfo, strLogInfo);
-	LOG_DEBUG<<"m_nClientsCount="<<m_nClientsCount;
+	LOG_DEBUG<<"CServerManager m_nClientsCount="<<m_nClientsCount;
 }
 
 

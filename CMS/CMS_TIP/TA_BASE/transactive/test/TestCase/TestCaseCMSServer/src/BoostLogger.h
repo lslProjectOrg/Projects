@@ -73,7 +73,7 @@ public:
 private:
 	int _BoostLogInit();
 	int _TestBoostLog();
-	int _BoostLogInit_ex();
+
 private:
 
 #if 0

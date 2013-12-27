@@ -219,19 +219,19 @@
 			Name="MarketData"
 			>
 			<File
-				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\BarCalculator.h"
+				RelativePath="..\..\..\..\PUBLIC\MarketData\include\BarCalculator.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketData.h"
+				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketData.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketDataAPI.h"
+				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketDataAPI.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\..\..\PUBLIC\MarketData\include\MarketDataFeed.h"
+				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketDataFeed.h"
 				>
 			</File>
 		</Filter>

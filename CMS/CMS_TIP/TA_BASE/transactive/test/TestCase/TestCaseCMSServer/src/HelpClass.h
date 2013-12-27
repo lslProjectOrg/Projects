@@ -4,6 +4,7 @@
 #include "UtilityFun.h"
 
 #include "MessageBroker.h"
+#include "TestFrame.h"
 
 NS_BEGIN(TA_Base_Test) 
 

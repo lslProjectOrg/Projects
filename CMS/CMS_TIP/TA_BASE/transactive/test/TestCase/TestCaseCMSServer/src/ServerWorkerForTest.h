@@ -16,7 +16,7 @@ NS_BEGIN(TA_Base_Test)
 
 class CWorkTimeLock;
 class CClientSessionActor;
-class CProcessClientReqHelperForTest;
+class CProcessReqHelperForTest;
 
 
 class CServerWorkerForTest : public TA_Base_Test::CBoostThread
@@ -104,7 +104,7 @@ private:
 	boost::condition_variable m_conditionWait;
 
 private:
-	CProcessClientReqHelperForTest* m_pProcessReqHelper;
+	CProcessReqHelperForTest* m_pProcessReqHelper;
 
 };
 

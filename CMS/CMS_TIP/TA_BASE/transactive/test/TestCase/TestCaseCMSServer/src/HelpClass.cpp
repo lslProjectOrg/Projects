@@ -1,5 +1,6 @@
 #include "HelpClass.h"
 #include "CommonData.h"
+#include "TestFrame.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;

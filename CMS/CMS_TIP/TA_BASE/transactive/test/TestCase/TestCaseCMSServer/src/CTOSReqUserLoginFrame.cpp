@@ -18,7 +18,7 @@ CTOSReqUserLoginFrame::CTOSReqUserLoginFrame(void)
 	m_nClientType_SampleValue = ClientIdentity_TestClient;
 	m_strUserName_SampleValue = "m_strUserName";
 	m_strPwd_SampleValue = "m_strPwd";
-	m_strReqInfo_SampleValue = "Client want to login!";
+	m_strReqInfo_SampleValue = "C_TO_S_REQ_USER_LOGIN ClientIdentity_TestClient login";
 
 	setSampleValue();
 }
@@ -44,10 +44,11 @@ int CTOSReqUserLoginFrame::setSampleValue()
 }
 
 
-int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
+int CTOSReqUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Ptr pMessage)
 {
 	int nFunRes = 0;
 
+	if (m_nFrameType_SampleValue == nFrameType)
 	{
 		m_nFrameType = m_nFrameType_SampleValue;
 
@@ -56,6 +57,13 @@ int CTOSReqUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 
 		pMessage->read(m_strPwd);
 		pMessage->read(m_strReqInfo);
+	}
+	else
+	{
+
+		LOG_ERROR<<"Error: not support Frame"
+			<<" "<<"nFrameType="<<nFrameType;
+		nFunRes = -1;
 	}
 
 	return nFunRes;
@@ -103,31 +111,6 @@ int CTOSReqUserLoginFrame::checkValue()
 
 	return nFunRes;
 }
-
-
-cms::Message::Ptr CTOSReqUserLoginFrame::getMessage()
-{
-	cms::Message::Ptr pMessage(new cms::Message());
-	pMessage->write(m_nFrameType);
-	pMessage->write(m_nClientType);
-	pMessage->write(m_strUserName);
-	pMessage->write(m_strPwd);
-	pMessage->write(m_strReqInfo);
-	return pMessage;
-}
-
-
-void CTOSReqUserLoginFrame::logFrameInfo()
-{
-	LOG_TRACE<<"FrameInfo:"
-		<<" "<<"m_nFrameType="<<m_nFrameType
-		<<" "<<"m_nClientType="<<m_nClientType
-		<<" "<<"m_strUserName="<<m_strUserName
-		<<" "<<"m_strPwd="<<m_strPwd
-		<<" "<<"m_strReqInfo="<<m_strReqInfo;
-		
-}
-
 
 NS_END(TA_Base_Test) 
 
