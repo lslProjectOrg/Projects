@@ -5,8 +5,13 @@
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
+#include "MarketDataPathManager.h"
+
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
+
+using namespace TA_Base_App;
+using namespace TA_Base_Core;
 
 std::string g_string_strServerAddress = "tcp://127.0.0.1:5555";
 
@@ -63,15 +68,23 @@ int main( int argc, char* argv[])
 	logInit();
 	BOOST_LOG_FUNCTION();
 
+	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\sample\\";
+	CMarketDataPathManager* pMarketDataPathManager = NULL;
+	pMarketDataPathManager = new CMarketDataPathManager();
+	pMarketDataPathManager->setPathName(strPathName);
+	pMarketDataPathManager->analieAllFiles();
+
 
 
 
 	//sleep
 	{	
 		boost::mutex::scoped_lock lock(g_mutexMainRun);
-		g_conditionMainRun.wait(lock);
+		//g_conditionMainRun.wait(lock);
 	}
 
+	delete pMarketDataPathManager;
+	pMarketDataPathManager = NULL;
 	logUnInit();
 
 	return 0;

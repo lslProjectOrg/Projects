@@ -4,6 +4,8 @@
 
 #include "UtilityFun.h"
 
+
+
 #include <iostream>
 
 #include <boost/filesystem.hpp>
@@ -73,7 +75,7 @@ public:
 private:
 	int _BoostLogInit();
 	int _TestBoostLog();
-
+	int _BoostLogInit_ex();
 private:
 
 #if 0

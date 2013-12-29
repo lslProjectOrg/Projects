@@ -1,5 +1,5 @@
-#ifndef __SERVER_TO_CLIENT_ACK_USER_LOGIN__HH__
-#define __SERVER_TO_CLIENT_ACK_USER_LOGIN__HH__
+#ifndef __SERVER_TO_CLIENT_ACK_USER_LOGIN_FRAME__HH__
+#define __SERVER_TO_CLIENT_ACK_USER_LOGIN_FRAME__HH__
 
 #include "UtilityFun.h"
 #include "Message.h"
@@ -14,9 +14,11 @@ public:
 	~STOCAckUserLoginFrame(void);
 
 public:
-	int setDataWithMessage(Message::Ptr pMessage);
+	cms::Message::Ptr getMessage();
+	int setDataWithMessage(cms::Message::Ptr pMessage);
 	int setSampleValue();
 	int checkValue();
+	void logFrameInfo();
 public:
 	int m_nFrameType;//frame type  //enClientServerCommunicationFrameType//FrameType
 	int m_nClientType;//client type //ClientIdentity
@@ -35,6 +37,6 @@ private:
 NS_END(TA_Base_Test) 
 
 
-#endif //__SERVER_TO_CLIENT_ACK_USER_LOGIN__HH__
+#endif //__SERVER_TO_CLIENT_ACK_USER_LOGIN_FRAME__HH__
 
 

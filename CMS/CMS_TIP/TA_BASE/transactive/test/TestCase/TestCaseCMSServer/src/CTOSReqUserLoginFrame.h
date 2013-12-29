@@ -1,5 +1,5 @@
-#ifndef __CLIENT_TO_SERVER_REQ_USER_LOGIN__HH__
-#define __CLIENT_TO_SERVER_REQ_USER_LOGIN__HH__
+#ifndef __CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
+#define __CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
 
 #include "UtilityFun.h"
 #include "Message.h"
@@ -14,9 +14,11 @@ public:
 	~CTOSReqUserLoginFrame(void);
 
 public:
-	int setDataWithMessage(Message::Ptr pMessage);
+	cms::Message::Ptr getMessage();
+	int setDataWithMessage(cms::Message::Ptr pMessage);
 	int setSampleValue();
 	int checkValue();
+	void logFrameInfo();
 public:
 	int m_nFrameType;//frame type  //enClientServerCommunicationFrameType//FrameType
 	int m_nClientType;//client type //ClientIdentity
@@ -35,6 +37,6 @@ private:
 NS_END(TA_Base_Test) 
 
 
-#endif //__CLIENT_TO_SERVER_REQ_USER_LOGIN__HH__
+#endif //__CLIENT_TO_SERVER_REQ_USER_LOGIN_FRAME__HH__
 
 

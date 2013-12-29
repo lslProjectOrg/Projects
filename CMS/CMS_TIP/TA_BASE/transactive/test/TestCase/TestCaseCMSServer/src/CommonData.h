@@ -168,6 +168,17 @@ typedef enum  enClientIdentity
 
 
 
+typedef enum  enDoTestType
+{
+	DoTestType_BEGIN = 0,
+
+	DoTestType_TestStable,
+
+	DoTestType_END,
+}DoTestType;
+
+
+
 
 
 NS_END(TA_Base_Test)

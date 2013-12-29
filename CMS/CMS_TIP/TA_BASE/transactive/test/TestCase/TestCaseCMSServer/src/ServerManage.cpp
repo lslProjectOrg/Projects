@@ -97,7 +97,7 @@ void CServerManager::handleConnected(const SessionInfo &stSessionInfo)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_pServerWorkerForTest->handleDisconnected(stSessionInfo);
+	m_pServerWorkerForTest->handleConnected(stSessionInfo);
 	
 }
 

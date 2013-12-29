@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="app.TestCase.TestCaseCMSServer"
+	Name="test.TestCase.TestCaseCMSServer"
 	ProjectGUID="{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}"
-	RootNamespace="app.TestCase.TestCaseCMSServer"
+	RootNamespace="test.TestCase.TestCaseCMSServer"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nd"
-			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseCMSServer"
+			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseCMSServer"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -39,7 +39,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nd/app.TestCase.TestCaseCMSServer.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nd/test.TestCase.TestCaseCMSServer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -51,10 +51,10 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseCMSServer/app.TestCase.TestCaseCMSServer.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseCMSServer/"
-				ObjectFile=".\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseCMSServer/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactive/app/TestCase/TestCaseCMSServer/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseCMSServer/test.TestCase.TestCaseCMSServer.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseCMSServer/"
+				ObjectFile=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseCMSServer/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactive/test/TestCase/TestCaseCMSServer/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -75,12 +75,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="CMS.lib aced.lib"
-				OutputFile="../../../../../bin/win32_nd/app_TestCaseCMSServer.exe"
+				OutputFile="../../../../../bin/win32_nd/TestCaseCMSServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\CMS\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../../../../bin/win32_nd/AlarmAgent.pdb"
+				ProgramDatabaseFile=".\../../../../../bin/win32_nd/TestCaseCMSServer.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -98,7 +98,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nd/app.TestCase.TestCaseCMSServer.bsc"
+				OutputFile=".\../../../../../bin/win32_nd/test.TestCase.TestCaseCMSServer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -113,7 +113,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nr"
-			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/app/TestCase/TestCaseCMSServer"
+			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseCMSServer"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nr/app.TestCase.TestCaseCMSServer.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nr/test.TestCase.TestCaseCMSServer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -147,10 +147,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/app/TestCase/TestCaseCMSServer/app.TestCase.TestCaseCMSServer.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/app/TestCase/TestCaseCMSServer/"
-				ObjectFile=".\../../../../../build/win32_nr/transactive/app/TestCase/TestCaseCMSServer/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/app/TestCase/TestCaseCMSServer/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseCMSServer/test.TestCase.TestCaseCMSServer.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseCMSServer/"
+				ObjectFile=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseCMSServer/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/test/TestCase/TestCaseCMSServer/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4251"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="CMS.lib ace.lib"
-				OutputFile="../../../../../bin/win32_nr/app_TestCaseCMSServer.exe"
+				OutputFile="../../../../../bin/win32_nr/TestCaseCMSServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\CMS\lib"
@@ -191,7 +191,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nr/app.TestCase.TestCaseCMSServer.bsc"
+				OutputFile=".\../../../../../bin/win32_nr/test.TestCase.TestCaseCMSServer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -228,35 +228,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ClientManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ClientManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ClientSessionActor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ClientSessionActor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\CommonData.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\CommonDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CTOSReqUserLoginFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CTOSReqUserLoginFrame.h"
 				>
 			</File>
 			<File
@@ -268,23 +244,167 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Logger.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Logger.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ProcessReqHelperForTest.cpp"
+				RelativePath=".\src\SysTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ProcessReqHelperForTest.h"
+				RelativePath=".\src\UtilityFun.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UtilityFun.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WorkTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WorkTime.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="frame"
+			>
+			<File
+				RelativePath=".\src\CTOSReqBeginTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqBeginTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqDoTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqDoTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqEndTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqEndTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqUserLoginFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqUserLoginFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqUserLogOutFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CTOSReqUserLogOutFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckBeginTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckBeginTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckDoTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckDoTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckEndTestFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckEndTestFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLoginFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLoginFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLogOutFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\STOCAckUserLogOutFrame.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="client"
+			>
+			<File
+				RelativePath=".\src\ClientManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientsManagerWorker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientsManagerWorker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientWorkerForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientWorkerForTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessServerAckHelperForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessServerAckHelperForTest.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="server"
+			>
+			<File
+				RelativePath=".\src\ClientSessionActor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ClientSessionActor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessClientReqHelperForTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProcessClientReqHelperForTest.h"
 				>
 			</File>
 			<File
@@ -303,56 +423,16 @@
 				RelativePath=".\src\ServerWorkerForTest.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="test"
+			>
 			<File
-				RelativePath=".\src\STOCAckUserLoginFrame.cpp"
+				RelativePath=".\src\TestCase.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\STOCAckUserLoginFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\SysTypes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestCaseForCS.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestCaseForCS.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestClientThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestClientThread.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TestFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\UtilityFun.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\UtilityFun.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WorkTime.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WorkTime.h"
+				RelativePath=".\src\TestCase.h"
 				>
 			</File>
 		</Filter>

@@ -1,226 +1,141 @@
 #include "ClientManager.h"
-#include "TestClientThread.h"
+#include "ClientWorkerForTest.h"
 #include "HelpClass.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
 
-//extern boost::condition_variable g_conditionMainRun;
 
 using namespace TA_Base_Test;
 
 NS_BEGIN(TA_Base_Test) 
 
 extern std::string g_string_strServerAddress;
-extern int g_n_EachClientSendFrameNUM;
-extern int g_n_ClientNUM;
-extern int g_n_TotalClientSendFrameNUM;
 
 
 
-//////////////////////////////////////////////////////////////////////////
-CClientManager::CClientManager(void)
-{	
-	BOOST_LOG_FUNCTION();
+CClientManager::CClientManager( int nClientIndex )
+{
+	m_pClientWorkerForTest = NULL;
+	m_pClientWorkerForTest = new CClientWorkerForTest(nClientIndex);
+	m_pClientWorkerForTest->setClientManagerHandle(this);
+	m_pClientWorkerForTest->start();
+}
 
+CClientManager::~CClientManager( void )
+{
+	if (NULL != m_pClientWorkerForTest)
 	{
-		boost::mutex::scoped_lock lock(m_mutexMapClients);
-		m_mapClients.clear();
-		m_nClientCount = 0;
-		m_nCurrentClientIndex = 0;
+		m_pClientWorkerForTest->terminateAndWait();
+		delete m_pClientWorkerForTest;
+		m_pClientWorkerForTest = NULL;
 	}
 
-	m_nThreadJobState = JobState_Begin;
-	m_toTerminate = false;
-	
-}
-
-CClientManager::~CClientManager(void)
-{	
-	BOOST_LOG_FUNCTION();
-	
 }
 
 
-void CClientManager::_CreateALLClient()
+void CClientManager::handleConnected( const SessionInfo &stSessionInfo )
+{
+	m_pClientWorkerForTest->handleConnected(stSessionInfo);
+}
+
+void CClientManager::handleDisconnected( const SessionInfo &stSessionInfo )
+{
+	m_pClientWorkerForTest->handleDisconnected(stSessionInfo);
+
+}
+
+void CClientManager::handleReceivedMessage( Message::Ptr pGetMessage )
+{
+	m_pClientWorkerForTest->handleReceivedMessage(pGetMessage);
+
+}
+
+void CClientManager::handleDeliverFailure( Message::Ptr pGetMessage )
+{
+	m_pClientWorkerForTest->handleDeliverFailure(pGetMessage);
+
+}
+
+
+int CClientManager::initClient()
 {
 	BOOST_LOG_FUNCTION();
-
-	boost::mutex::scoped_lock lock(m_mutexMapClients);
-
-	CTestClientThread* pClient = NULL;	
-	for (int nIndex = 0; nIndex < g_n_ClientNUM; nIndex++)
-	{
-
-		pClient = new CTestClientThread(m_nCurrentClientIndex);
-		m_mapClients.insert(std::map<SessionID, CTestClientThread*>::value_type(m_nCurrentClientIndex, pClient));
-		pClient->start();
-		pClient = NULL;
-		m_nCurrentClientIndex++;
-		m_nClientCount++;
-
-		LOG_DEBUG<<"CClientManager new CTestClientThread"
-			<<" "<<"m_nCurrentClientIndex="<<m_nCurrentClientIndex
-			<<" "<<"m_nClientCount=%d"<<m_nClientCount;
-	}//for
-
-}
-
-
-void CClientManager::_MonitorALLClient()
-{
-	BOOST_LOG_FUNCTION();
-	
-	boost::mutex::scoped_lock lock(m_mutexMapClients);
-
-	CTestClientThread* pClient = NULL;
-	std::map<int, CTestClientThread*>::iterator iterMap;
-	int nClientIndex = 0;
-
-	//stop
-	iterMap = m_mapClients.begin();
-	while (iterMap != m_mapClients.end())
-	{
-		nClientIndex = (iterMap->first);
-		pClient = (iterMap->second);
-
-		if (pClient->isFinishWork())
-		{
-			pClient->terminateAndWait();
-			delete pClient;
-			pClient = NULL;
-
-			m_nClientCount--;
-
-			LOG_DEBUG<<"delete one client"
-				<<" "<<"nClientIndex="<<nClientIndex
-				<<" "<<"still connected m_nClientCount="<<m_nClientCount;
-
-			m_mapClients.erase(iterMap);
-			iterMap = m_mapClients.begin();
-		}
-		else
-		{
-			iterMap++;
-		}
-	
-	}//while
-
-	if (m_mapClients.empty())
-	{
-		m_nThreadJobState = JobState_End;
-	}
-	
-}
-
-
-void CClientManager::_DestoryAllClient()
-{
-	BOOST_LOG_FUNCTION();
-
-	boost::mutex::scoped_lock lock(m_mutexMapClients);
-
-	CTestClientThread* pClient = NULL;
-	std::map<int, CTestClientThread*>::iterator iterMap;
-	int nClientIndex = 0;
-
-	//stop
-	iterMap = m_mapClients.begin();
-	while (iterMap != m_mapClients.end())
-	{
-		nClientIndex = (iterMap->first);
-		pClient = (iterMap->second);
-		pClient->terminateAndWait();
-
-		delete pClient;
-		pClient = NULL;
-
-		m_nClientCount--;
-
-		LOG_DEBUG<<"delete one client"
-			<<" "<<"nClientIndex="<<nClientIndex
-			<<" "<<"still connected m_nClientCount="<<m_nClientCount;
-
-		iterMap++;
-	}//while
-	m_mapClients.clear();
-
-}
-
-void CClientManager::run()
-{
-	BOOST_LOG_FUNCTION();
-
-	m_nThreadJobState = JobState_Begin;
-
-
-	while (false == m_toTerminate)
-	{
-		_ThreadJob();
-		TA_Base_Test::CBoostThread::sleep(DEF_INT_MonitorThreadSleep);
-
-	}
-
-	_ProcessUserTerminate();
-}
-
-void CClientManager::terminate()
-{
-	BOOST_LOG_FUNCTION();
-
-	m_toTerminate = true;
-}
-
-
-int CClientManager::_ProcessUserTerminate()
-{
-	BOOST_LOG_FUNCTION();
-
 	int nFunRes = 0;
-	_DestoryAllClient();
-	m_nThreadJobState = JobState_End;
+
+	if (g_string_strServerAddress.empty())
+	{
+		LOG_ERROR<<"error! g_string_strServerAddress="<<g_string_strServerAddress;
+		nFunRes = -1;
+		return nFunRes;
+	}
+
+	{
+		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
+		m_BrokerClient.onConnected = boost::bind(&TA_Base_Test::CClientManager::handleConnected, this, _1);//static boost::arg<1> _1;
+		m_BrokerClient.onDisconnected = boost::bind(&TA_Base_Test::CClientManager::handleDisconnected, this, _1);//static boost::arg<1> _1;
+		m_BrokerClient.onReceived = boost::bind(&TA_Base_Test::CClientManager::handleReceivedMessage, this, _1);//static boost::arg<1> _1;
+		m_BrokerClient.onDeliverFailure = boost::bind(&TA_Base_Test::CClientManager::handleDeliverFailure, this, _1);//static boost::arg<1> _1;
+
+	}
+
 	return nFunRes;
 }
+
+
+int CClientManager::connectToServer()
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+
+	{
+		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
+
+		LOG_DEBUG<< "begin connect to g_string_strServerAddress="<<g_string_strServerAddress;
+		m_BrokerClient.connect(g_string_strServerAddress);
+	}
+
+	return nFunRes;
+}
+
+
+int CClientManager::sendData( const cms::SessionID& destSessionID, cms::Message::Ptr pMessage )
+{
+	int nFunRes = 0;
+
+	{
+		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
+		m_BrokerClient.sendToSession(destSessionID, pMessage);
+	}
+
+	return nFunRes;
+}
+
+int CClientManager::disConnectToServer(const cms::SessionID& destSessionID)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+
+	{
+		boost::mutex::scoped_lock lock(m_mutexBrokerClient);
+
+		LOG_DEBUG<< "begin connect to g_string_strServerAddress="<<g_string_strServerAddress;
+		m_BrokerClient.closeSession(destSessionID);
+	}
+
+	return nFunRes;
+}
+
 
 bool CClientManager::isFinishWork()
 {
 	BOOST_LOG_FUNCTION();
 
 	bool bFinishWork = false;
-	if (JobState_End == m_nThreadJobState)
-	{
-		bFinishWork = true;
-	}
+	bFinishWork = m_pClientWorkerForTest->isFinishWork();
 	return bFinishWork;
 
-}
-
-void CClientManager::_ThreadJob()
-{
-	BOOST_LOG_FUNCTION();
-
-
-	switch (m_nThreadJobState)
-	{
-	case JobState_Begin:
-		m_nThreadJobState = JobState_CreateALLClient;
-		break;
-	case JobState_CreateALLClient:
-		_CreateALLClient();
-		m_nThreadJobState = JobState_MonitorAllClient;
-		break;
-	case JobState_MonitorAllClient:
-		_MonitorALLClient();
-		TA_Base_Test::CBoostThread::sleep(DEF_INT_LongMonitorThreadSleep);
-		break;
-	case JobState_End:
-		TA_Base_Test::CBoostThread::sleep(DEF_INT_MonitorThreadSleep);
-		break;
-	default:
-		break;
-
-	}//switch
 }
 
 

@@ -4,7 +4,8 @@
 
 #include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
 
-#include "MessageBroker.h"
+#include "MarketData.h"
+#include "BarCalculator.h"
 
 NS_BEGIN(TA_Base_App)
 
@@ -15,8 +16,11 @@ public:
 	CCFDServerUtilityFun(void);	
 	~CCFDServerUtilityFun(void);
 public:
-	std::string getTimeString(unsigned int nTimeValue);
-	void logBarInfo(const std::string& strInfo, const Bar &bar);
+	std::string getTimeStringForlog(unsigned int nTimeValue);
+	std::string getTimeStringForSQL(unsigned int nTimeValue);
+public:
+	void logMarketDataInfo(const std::string& strInfo, const MarketData &marketData);
+	void logBarInfoEx(const std::string& strInfo, int interval, Bar* pBarInfo);
 };
 
 

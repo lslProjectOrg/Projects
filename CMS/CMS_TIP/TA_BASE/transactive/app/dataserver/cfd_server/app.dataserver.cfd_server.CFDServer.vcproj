@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;..\..\..\..\PUBLIC\CMS\include;C:\Qt\4.8.5\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="_DEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -211,13 +211,13 @@
 			Name="src"
 			>
 			<File
-				RelativePath=".\src\AnalysisBarInfo.cpp"
+				RelativePath=".\src\main.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\AnalysisBarInfo.h"
-				>
-			</File>
+		</Filter>
+		<Filter
+			Name="common"
+			>
 			<File
 				RelativePath=".\src\CFDServerCommonData.h"
 				>
@@ -234,46 +234,62 @@
 				RelativePath=".\src\CFDServerUtilityFun.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="BarInfo"
+			>
 			<File
-				RelativePath=".\src\main.cpp"
+				RelativePath=".\src\InsteumentBarInfoStorager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ServerManage.cpp"
+				RelativePath=".\src\InsteumentBarInfoStorager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ServerManage.h"
+				RelativePath=".\src\InstrumentBarInfoCalculator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\StoreBarInfo.cpp"
+				RelativePath=".\src\InstrumentBarInfoCalculator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\StoreBarInfo.h"
+				RelativePath=".\src\MarketDataDispatcher.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataDispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataFileAnalier.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataFileAnalier.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataFileManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataFileManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataPathManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataPathManager.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="MarketData"
+			Name="server"
 			>
-			<File
-				RelativePath="..\..\..\..\PUBLIC\MarketData\include\BarCalculator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketData.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketDataAPI.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\PUBLIC\MarketData\include\MarketDataFeed.h"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

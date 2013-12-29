@@ -18,7 +18,7 @@ STOCAckUserLoginFrame::STOCAckUserLoginFrame(void)
 	m_nClientType_SampleValue = ClientIdentity_TestClient;
 	m_strUserName_SampleValue = "m_strUserName";
 	m_strPwd_SampleValue = "m_strPwd";
-	m_strACKInfo_SampleValue = "login ok!";
+	m_strACKInfo_SampleValue = "Server Ack Client's UserLogin!";
 
 	setSampleValue();
 }
@@ -44,11 +44,10 @@ int STOCAckUserLoginFrame::setSampleValue()
 }
 
 
-int STOCAckUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Ptr pMessage)
+int STOCAckUserLoginFrame::setDataWithMessage(cms::Message::Ptr pMessage)
 {
 	int nFunRes = 0;
 
-	if (m_nFrameType_SampleValue == nFrameType)
 	{
 		m_nFrameType = m_nFrameType_SampleValue;
 
@@ -57,13 +56,6 @@ int STOCAckUserLoginFrame::setDataWithMessage(const int& nFrameType, Message::Pt
 
 		pMessage->read(m_strPwd);
 		pMessage->read(m_strACKInfo);
-	}
-	else
-	{
-
-		LOG_ERROR<<"Error: not support Frame"
-			<<" "<<"nFrameType="<<nFrameType;
-		nFunRes = -1;
 	}
 
 	return nFunRes;
@@ -110,6 +102,28 @@ int STOCAckUserLoginFrame::checkValue()
 	}
 
 	return nFunRes;
+}
+
+cms::Message::Ptr STOCAckUserLoginFrame::getMessage()
+{
+	cms::Message::Ptr pMessage(new cms::Message());
+	pMessage->write(m_nFrameType);
+	pMessage->write(m_nClientType);
+	pMessage->write(m_strUserName);
+	pMessage->write(m_strPwd);
+	pMessage->write(m_strACKInfo);
+	return pMessage;
+}
+
+void STOCAckUserLoginFrame::logFrameInfo()
+{
+	LOG_TRACE<<"FrameInfo:"
+		<<" "<<"m_nFrameType="<<m_nFrameType
+		<<" "<<"m_nClientType="<<m_nClientType
+		<<" "<<"m_strUserName="<<m_strUserName
+		<<" "<<"m_strPwd="<<m_strPwd
+		<<" "<<"m_strACKInfo="<<m_strACKInfo;
+
 }
 
 NS_END(TA_Base_Test) 
