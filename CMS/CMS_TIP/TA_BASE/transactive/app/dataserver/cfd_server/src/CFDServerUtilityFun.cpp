@@ -26,6 +26,39 @@ CCFDServerUtilityFun::~CCFDServerUtilityFun( void )
 
 
 
+time_t CCFDServerUtilityFun::stringToDatetime(const std::string& strTimeValue)
+{
+	tm tmTime;
+	int nYearValue = 0;
+	int nMonthValue = 0;
+	int nDayValue = 0;
+	int nHourValue = 0;
+	int nMinuteValue = 0;
+	int nSecondValue = 0;
+	time_t timeGetTimeValue = time(NULL);
+	
+	if (strTimeValue.empty())
+	{
+		return timeGetTimeValue;
+	}
+
+	sscanf(strTimeValue.c_str(),
+		"%d-%d-%d %d:%d:%d", 
+		&nYearValue, &nMonthValue, &nDayValue, 
+		&nHourValue, &nMinuteValue, &nSecondValue);
+
+	tmTime.tm_year  = nYearValue-1900;
+	tmTime.tm_mon   = nMonthValue-1;
+	tmTime.tm_mday  = nDayValue;
+	tmTime.tm_hour  = nHourValue;
+	tmTime.tm_min   = nMinuteValue;
+	tmTime.tm_sec   = nSecondValue;
+	tmTime.tm_isdst = 0;
+
+	timeGetTimeValue = mktime(&tmTime); //dec 8 TC
+	return timeGetTimeValue; //seconds
+}
+
 std::string CCFDServerUtilityFun::getTimeStringForSQL(unsigned int nTimeValue)
 {
 	BOOST_LOG_FUNCTION();

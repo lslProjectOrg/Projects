@@ -21,6 +21,9 @@ public:
 public:
 	void logMarketDataInfo(const std::string& strInfo, const MarketData &marketData);
 	void logBarInfoEx(const std::string& strInfo, int interval, Bar* pBarInfo);
+
+	time_t stringToDatetime(const std::string& strTimeValue);
+
 };
 
 

@@ -68,7 +68,9 @@ int main( int argc, char* argv[])
 	logInit();
 	BOOST_LOG_FUNCTION();
 
-	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\sample\\";
+	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
+	//std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\sample\\";
+	std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample\\";
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 	pMarketDataPathManager = new CMarketDataPathManager();
 	pMarketDataPathManager->setPathName(strPathName);

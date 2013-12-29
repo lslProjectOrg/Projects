@@ -1,9 +1,21 @@
 /*
 save data to SQLite
 //db name and table name
+
+//5secconds, 1mins£¬5mins£¬15mins£¬30mins£¬60mins£¬1day
+
 //SQLiteDB_3306.db
-//Table_BarInfo_3306_60
-//Table_BarInfo_3306_300
+
+//bar_data_5seconds
+//bar_data_1min
+//bar_data_5min
+//bar_data_15min
+//bar_data_30min
+//bar_data_60min
+//bar_data_1day
+//bar_data_1mon
+//bar_data_1year
+//bar_data_30day
 */
 
 #ifndef __CLASS_INSTUMENT_BAR_INFO_STORAGER__HH__

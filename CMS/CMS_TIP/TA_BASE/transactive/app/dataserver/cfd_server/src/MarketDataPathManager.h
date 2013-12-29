@@ -16,17 +16,22 @@ NS_BEGIN(TA_Base_App)
 
 class CMarketDataFileManager;
 
+class CFileSystemManager;
+
 class CMarketDataPathManager
 {
 public:
 	CMarketDataPathManager(void);
 	~CMarketDataPathManager(void);
 public:
-	int setPathName(const std::string& strFilePathName);
+	int setPathName(const std::string& strFolderPath);
 	int analieAllFiles();
 private:
-	std::string m_strFilePathName;
+
+private:
+	std::string m_strFolderPath;
 	CMarketDataFileManager*  m_pMarketDataFileManager;
+	CFileSystemManager*    m_pFileSystemManager;
 };
 
 NS_END(TA_Base_App) 

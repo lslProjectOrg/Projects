@@ -106,15 +106,15 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 	*/
 	sreaamTmp.str("");
 	sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strDbTableName
-		<<" "<<"(SEQINDEX INTEGER PRIMARY KEY,"
-		<<" "<<"INTERVAL NUMBER,"
-		<<" "<<"INSTRUMENTID NUMBER,"
-		<<" "<<"TIME NUMBER,"
-		<<" "<<"TIMESTR TIMESTAMP,"
-		<<" "<<"OPEN NUMBER(20,8),"
-		<<" "<<"CLOSE NUMBER(20,8),"
-		<<" "<<"HIGH NUMBER(20,8),"
-		<<" "<<"LOW NUMBER(20,8),"
+		<<" "<<"(SEQINDEX INTEGER PRIMARY KEY"<<","
+		<<" "<<"INTERVAL NUMBER"<<","
+		<<" "<<"INSTRUMENTID NUMBER"<<","
+		<<" "<<"TIME NUMBER"<<","
+		<<" "<<"TIMESTR TIMESTAMP"<<","
+		<<" "<<"OPEN NUMBER(20,8)"<<","
+		<<" "<<"CLOSE NUMBER(20,8)"<<","
+		<<" "<<"HIGH NUMBER(20,8)"<<","
+		<<" "<<"LOW NUMBER(20,8)"<<","
 		<<" "<<"VOLUME NUMBER)";
 
 	strSQL = sreaamTmp.str();

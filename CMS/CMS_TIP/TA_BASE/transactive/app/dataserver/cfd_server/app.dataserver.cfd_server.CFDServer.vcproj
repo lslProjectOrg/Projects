@@ -234,6 +234,22 @@
 				RelativePath=".\src\CFDServerUtilityFun.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\FileSystemItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FileSystemItem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FileSystemManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FileSystemManager.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="BarInfo"

@@ -30,6 +30,14 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_pBarCalculator->addBar(30);//seconds
 	m_pBarCalculator->addBar(60);//seconds
 	m_pBarCalculator->addBar(300);//seconds
+	//24*60*60
+
+	//5s
+	//1m
+	//5m
+	//30m
+	//60
+	//1d
 
 }
 
