@@ -66,6 +66,7 @@ private:
 	int _Exec( const std::string& strSQL);
 	std::string _BuildInsertSQL(const std::string& strTableName);
 	std::string _GetDBName(unsigned int nInstrumentID);
+	std::string _BuildBarDataTableName(unsigned int nInstrumentID, int interval);
 private:
 	unsigned int m_nInstrumentID;
 	std::string m_strSQLiteDBName;

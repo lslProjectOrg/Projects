@@ -1,5 +1,5 @@
 #include "InsteumentBarInfoStorager.h"
-
+#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
 
 #include "MarketData.h"
 #include "BarCalculator.h"
@@ -9,12 +9,32 @@
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
-
+using namespace TA_Base_Core;
 
 NS_BEGIN(TA_Base_App)
 
 
 //////////////////////////////////////////////////////////////////////////
+const std::string str_Column_InstrumentID = "InstrumentID";
+const std::string str_Column_Timestamp = "Timestamp";
+const std::string str_Column_Open = "Open";
+const std::string str_Column_Close = "Close";
+const std::string str_Column_High = "High";
+const std::string str_Column_Low = "Low";
+const std::string str_Column_Volume = "Volume";
+const std::string str_Column_LastModified = "LastModified";
+
+
+const std::string str_Column_InstrumentID_Value = ":InstrumentID_Value";
+const std::string str_Column_Timestamp_Value = ":Timestamp_Value";
+const std::string str_Column_Open_Value = ":Open_Value";
+const std::string str_Column_Close_Value = ":Close_Value";
+const std::string str_Column_High_Value = ":High_Value";
+const std::string str_Column_Low_Value = ":Low_Value";
+const std::string str_Column_Volume_Value = ":Volume_Value";
+
+
+
 
 CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentID)
 {
@@ -61,6 +81,53 @@ std::string CInstrumentBarInfoStorager::_GetDBName(unsigned int nInstrumentID)
 
 	return strInstrumentSQLDBName;
 }
+
+std::string CInstrumentBarInfoStorager::_BuildBarDataTableName(unsigned int nInstrumentID, int interval)
+{
+	BOOST_LOG_FUNCTION();	
+	std::string strBarDataTableName;
+	std::ostringstream sreaamTmp;
+
+	switch (interval)
+	{
+	case TIME_BASE_S_1S:
+		sreaamTmp<<"bar_data_1seconds";
+		break;
+	case TIME_BASE_S_5S:
+		sreaamTmp<<"bar_data_5seconds";
+		break;
+	case TIME_BASE_S_1MIN:
+		sreaamTmp<<"bar_data_1mins";
+		break;
+	case TIME_BASE_S_5MIN:
+		sreaamTmp<<"bar_data_5mins";
+		break;
+	case TIME_BASE_S_15MIN:
+		sreaamTmp<<"bar_data_15mins";
+		break;
+	case TIME_BASE_S_30MIN:
+		sreaamTmp<<"bar_data_30mins";
+		break;
+	case TIME_BASE_S_1HOUR:
+		sreaamTmp<<"bar_data_1hours";
+		break;
+	case TIME_BASE_S_1DAY:
+		sreaamTmp<<"bar_data_1days";
+		break;
+	case TIME_BASE_S_1MON:
+		sreaamTmp<<"bar_data_1mons";
+		break;
+	case TIME_BASE_S_1YEAR:
+		sreaamTmp<<"bar_data_1years";
+		break;
+	default:
+		sreaamTmp<<"bar_data_"<<interval;
+		break;
+	}
+
+	strBarDataTableName = sreaamTmp.str();
+	return strBarDataTableName;
+}
 std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrumentID, int interval)
 {
 	BOOST_LOG_FUNCTION();
@@ -68,7 +135,6 @@ std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrument
 	//find
 	std::string strTableName;
 	MapIntervalDBTableNameIterT  iterMap;
-	std::ostringstream sreaamTmp;
 
 	iterMap = m_pmapIntervalDBTableName->find(interval);
 	if (iterMap != m_pmapIntervalDBTableName->end())
@@ -77,9 +143,7 @@ std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrument
 		return strTableName;
 	}
 
-	sreaamTmp.str("");
-	sreaamTmp<<"Table_BarInfo_"<<nInstrumentID<<"_"<<interval;
-	strTableName = sreaamTmp.str();
+	strTableName = _BuildBarDataTableName(nInstrumentID, interval);
 	_CreateDBTable(strTableName);
 	m_pmapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(interval, strTableName));
 	return strTableName;
@@ -93,29 +157,37 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 	int nFunRes = 0;
 	std::ostringstream sreaamTmp;
 	std::string strSQL;
-	//create table Table_BarInfo(INDEX Integer primary key, value text);
-	//insert into Table_BarInfo values(null,'Acuzio');
-	//select last_insert_rowid();
 
 	/*
-	CREATE TABLE Table_BarInfo(SEQINDEX INTEGER PRIMARY KEY, INTERVAL NUMBER,
-	INSTRUMENTID NUMBER, TIME NUMBER, TIMESTR TIMESTAMP
-	OPEN NUMBER(20,8), CLOSE NUMBER(20,8), HIGH NUMBER(20,8), LOW NUMBER(20,8),
-	VOLUME NUMBER)
+	CREATE TABLE IF NOT EXISTS bar_data_15mins
+	(
+	InstrumentID INTEGER NOT NULL, 
+	Timestamp TIMESTAMP NOT NULL, 
+	Open decimal(25,10) NOT NULL,
+	Close decimal(25,10) NOT NULL,
+	High decimal(25,10) NOT NULL,	
+	Low decimal(25,10) NOT NULL,
+	Volume NUMBER,
+	LastModified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (InstrumentID, Timestamp)
+	)
 	//TIMESTR--%Y%m%d%H%M%S
+	//%04d-%02d-%02d %02d:%02d:%02d
 	*/
+
 	sreaamTmp.str("");
 	sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strDbTableName
-		<<" "<<"(SEQINDEX INTEGER PRIMARY KEY"<<","
-		<<" "<<"INTERVAL NUMBER"<<","
-		<<" "<<"INSTRUMENTID NUMBER"<<","
-		<<" "<<"TIME NUMBER"<<","
-		<<" "<<"TIMESTR TIMESTAMP"<<","
-		<<" "<<"OPEN NUMBER(20,8)"<<","
-		<<" "<<"CLOSE NUMBER(20,8)"<<","
-		<<" "<<"HIGH NUMBER(20,8)"<<","
-		<<" "<<"LOW NUMBER(20,8)"<<","
-		<<" "<<"VOLUME NUMBER)";
+		<<" "<<"("
+		<<" "<<str_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
+		<<" "<<str_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
+		<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
+		<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
+		<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
+		<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
+		<<" "<<str_Column_Volume<<" "<<"decimal(25,10) NOT NULL"<<","
+		<<" "<<str_Column_LastModified<<" "<<"TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"<<","
+		<<" "<<"PRIMARY KEY (InstrumentID, Timestamp)"
+		<<" "<<")";
 
 	strSQL = sreaamTmp.str();
 	nFunRes = _Exec(strSQL);
@@ -145,29 +217,64 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQL(const std::string& strTa
 	std::ostringstream sreaamTmp;
 	std::string strSQL;
 
-	//TIMESTR--%Y%m%d%H%M%S
 	/*
-	INSERT INTO Table_BarInfo 
+	INSERT INTO bar_data_15mins
 	(
-	SEQINDEX, INTERVAL, INSTRUMENTID, TIME, TIMESTR, 
-	OPEN, CLOSE, HIGH, LOW, VOLUME
+	InstrumentID, Timestamp, 
+	Open, Close, High, Low, 
+	Volume
 	) VALUES 
 	(
-	NULL, :INTERVAL_Value, :INSTRUMENTID_Value, :TIME_Value, :TIMESTR_Value, 
-	:OPEN_Value, :CLOSE_Value, :HIGH_Value, :LOW_Value, :VOLUME_Value
-	}
+	3620, '2013-12-20 09:00:02', 
+	2340.8, 2340.8, 2340.8, 2340.8, 
+	0 
+	);
 	*/
+	/*
+	INSERT INTO bar_data_15mins
+	(
+	InstrumentID, 
+	Timestamp, 
+	Open, 
+	Close, 
+	High,
+	Low, 
+	Volume
+	) 
+	VALUES 
+	(
+	:InstrumentID_Value, 
+	:Timestamp_Value,
+	:Open_Value,
+	:Close_Value,
+	:High_Value,
+	:Low_Value,
+	:Volume_Value 
+	);
+	*/
+
 	sreaamTmp.str("");
 	sreaamTmp<<"INSERT INTO "<<strTableName
 		<<" "<<"("
-		<<" "<<"SEQINDEX, INTERVAL, INSTRUMENTID, TIME, TIMESTR,"
-		<<" "<<"OPEN, CLOSE, HIGH, LOW, VOLUME"
+		<<" "<<str_Column_InstrumentID<<","
+		<<" "<<str_Column_Timestamp<<","
+		<<" "<<str_Column_Open<<","
+		<<" "<<str_Column_Close<<","
+		<<" "<<str_Column_High<<","
+		<<" "<<str_Column_Low<<","
+		<<" "<<str_Column_Volume
 		<<" "<<")"
 		<<" "<<"VALUES"
 		<<" "<<"("
-		<<" "<<"NULL, :INTERVAL_Value, :INSTRUMENTID_Value, :TIME_Value, :TIMESTR_Value,"
-		<<" "<<":OPEN_Value, :CLOSE_Value, :HIGH_Value, :LOW_Value, :VOLUME_Value"
+		<<" "<<str_Column_InstrumentID_Value<<","
+		<<" "<<str_Column_Timestamp_Value<<","
+		<<" "<<str_Column_Open_Value<<","
+		<<" "<<str_Column_Close_Value<<","
+		<<" "<<str_Column_High_Value<<","
+		<<" "<<str_Column_Low_Value<<","
+		<<" "<<str_Column_Volume_Value
 		<<" "<<")";
+
 
 	strSQL = sreaamTmp.str();
 	return strSQL;	
@@ -188,16 +295,14 @@ int CInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
 	LOG_DEBUG<<"strSQL="<<strSQL;
 
 	query.prepare(strSQL.c_str());
-	query.bindValue(":INTERVAL_Value", interval);
-	query.bindValue(":INSTRUMENTID_Value", m_nInstrumentID);
-	query.bindValue(":TIME_Value", pBarInfo->Time);
+	query.bindValue(str_Column_InstrumentID_Value.c_str(), m_nInstrumentID);
 	strTimeStr = m_pUtilityFun->getTimeStringForSQL(pBarInfo->Time);
-	query.bindValue(":TIMESTR_Value", strTimeStr.c_str());
-	query.bindValue(":OPEN_Value", pBarInfo->Open);
-	query.bindValue(":CLOSE_Value", pBarInfo->Close);
-	query.bindValue(":HIGH_Value", pBarInfo->High);
-	query.bindValue(":LOW_Value", pBarInfo->Low);
-	query.bindValue(":VOLUME_Value", pBarInfo->Volume);
+	query.bindValue(str_Column_Timestamp_Value.c_str(), strTimeStr.c_str());
+	query.bindValue(str_Column_Open_Value.c_str(), pBarInfo->Open);
+	query.bindValue(str_Column_Close_Value.c_str(), pBarInfo->Close);
+	query.bindValue(str_Column_High_Value.c_str(), pBarInfo->High);
+	query.bindValue(str_Column_Low_Value.c_str(), pBarInfo->Low);
+	query.bindValue(str_Column_Volume_Value.c_str(), pBarInfo->Volume);
 
 	bExecRes = query.exec();
 	if (!bExecRes)

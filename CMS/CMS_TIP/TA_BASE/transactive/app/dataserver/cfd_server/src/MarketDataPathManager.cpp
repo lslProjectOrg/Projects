@@ -66,7 +66,6 @@ int CMarketDataPathManager::analieAllFiles()
 	{
 		pFileSystemItem = iterMap->second;
 
-		//std::string strOneFileName = "C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample\\sample.csv";
 		strOneFileName = pFileSystemItem->getFileFullPath();
 		m_pMarketDataFileManager->setFileName(strOneFileName);
 		nFunRes = m_pMarketDataFileManager->analierFile();
@@ -75,7 +74,7 @@ int CMarketDataPathManager::analieAllFiles()
 	}
 
 
-	m_pFileSystemManager->freeData(mapTimeFileSystemItemTmp);
+ 	m_pFileSystemManager->freeData(mapTimeFileSystemItemTmp);
 	mapTimeFileSystemItemTmp.clear();
 
 	return nFunRes;

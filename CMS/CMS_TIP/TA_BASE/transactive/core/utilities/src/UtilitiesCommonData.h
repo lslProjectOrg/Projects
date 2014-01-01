@@ -47,53 +47,39 @@ NS_BEGIN(TA_Base_Core)
 //==============================================================
 /*
 	declare some time constant for easy to use
-	Ns
-	Microseconds
-	Millisecond
-	Second
+	1s=1000ms=1000 000us=1000 000 000ns=1000 000 000 000ps
+	1 Second=1000 Millisecond=1000 000 Microsecond=1000 000 000 Nanosecond=1000 000 000 000 Picosecond
 */
-enum TimeConstantMacNS
+enum TimeBaseMicrosecond
 {
-	TIME_BASE_NS		    = 1,
-	TIME_BASE_NS_10		    = 10 * TIME_BASE_NS,
-	TIME_BASE_NS_100        = 10 * TIME_BASE_NS_10,
-
-	TIME_BASE_MICROS        = 10 * TIME_BASE_NS_100,
-	TIME_BASE_MICROS_10     = 10 * TIME_BASE_MICROS,
-	TIME_BASE_MICROS_100    = 10 * TIME_BASE_MICROS_10,
-
-
-	TIME_BASE_SECOND_NS		= 10 * TIME_BASE_MICROS_100,
+	TIME_BASE_US_1US		    = 1,
+	TIME_BASE_US_1MS        = 1000 * TIME_BASE_US_1US,
+	TIME_BASE_US_1S		   = 1000 * TIME_BASE_US_1MS,
 };
-enum TimeConstantMacMicroseconds
+enum TimeBaseMillisecond
 {	
-	TIME_BASE_SECOND		= 1000,
-
-	TIME_BASE_MIN			= 60   * TIME_BASE_SECOND,
-	TIME_BASE_HOUR			= 60   * TIME_BASE_MIN,
-	TIME_BASE_DAY			= 24   * TIME_BASE_HOUR,
-
-	TIME_SECOND_TWO         = 2    * TIME_BASE_SECOND,
-	TIME_SECOND_THREE       = 3    * TIME_BASE_SECOND,
-	TIME_SECOND_FOUR        = 4    * TIME_BASE_SECOND,
-	TIME_SECOND_FIVE		= 5    * TIME_BASE_SECOND,
-	TIME_SECOND_TEN         = 10   * TIME_BASE_SECOND,
-	TIME_SECOND_THIRTY      = 30   * TIME_BASE_SECOND,
-            
-	TIME_MIN_TWO			= 2  * TIME_BASE_MIN,
-	TIME_MIN_THREE			= 3  * TIME_BASE_MIN,
-	TIME_MIN_FIVE           = 5  * TIME_BASE_MIN,
-	TIME_MIN_EIGHT          = 8  * TIME_BASE_MIN,
-	TIME_MIN_TEN            = 10 * TIME_BASE_MIN,
-	TIME_MIN_FIFTEEN        = 15 * TIME_BASE_MIN,
-	TIME_MIN_TWENTY         = 20 * TIME_BASE_MIN,
-	TIME_MIN_THIRTY         = 30 * TIME_BASE_MIN,
-	TIME_MIN_FOURTY         = 40 * TIME_BASE_MIN,
-	TIME_MIN_FIFTY          = 50 * TIME_BASE_MIN,
-
-	TIME_HOUR_TWO           = 2 * TIME_BASE_HOUR
+	TIME_BASE_MS_1MS        = 1,
+	TIME_BASE_MS_1S		    = 1000 * TIME_BASE_MS_1MS,
+	TIME_BASE_MS_1MIN		= 60   * TIME_BASE_MS_1S,
+	TIME_BASE_MS_1HOUR		= 60   * TIME_BASE_MS_1MIN,
+	TIME_BASE_MS_1DAY		= 24   * TIME_BASE_MS_1HOUR,
 };
+enum TimeBaseSecond
+{	
+	TIME_BASE_S_1S          = 1,
+	TIME_BASE_S_5S          = 5 * TIME_BASE_S_1S,
 
+	TIME_BASE_S_1MIN		= 60   * TIME_BASE_S_1S,
+	TIME_BASE_S_5MIN		= 5   * TIME_BASE_S_1MIN,
+	TIME_BASE_S_15MIN		= 15   * TIME_BASE_S_1MIN,
+	TIME_BASE_S_30MIN		= 30   * TIME_BASE_S_1MIN,
+
+	TIME_BASE_S_1HOUR		= 60   * TIME_BASE_S_1MIN,
+	TIME_BASE_S_1DAY		= 24   * TIME_BASE_S_1HOUR,
+	TIME_BASE_S_1MON		= 30   * TIME_BASE_S_1DAY,
+	TIME_BASE_S_1YEAR		= 12   * TIME_BASE_S_1MON,
+
+};
 
 NS_END(TA_Base_Core)
 

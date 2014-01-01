@@ -1,5 +1,7 @@
 #include "InstrumentBarInfoCalculator.h"
 
+#include "core/utilities/src/UtilitiesCommonData.h"
+
 #include "MarketData.h"
 #include "BarCalculator.h"
 #include "InsteumentBarInfoStorager.h"
@@ -8,7 +10,7 @@
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
-
+using namespace TA_Base_Core;
 
 NS_BEGIN(TA_Base_App) 
 
@@ -27,10 +29,13 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
 	
 	//TODO.
-	m_pBarCalculator->addBar(30);//seconds
-	m_pBarCalculator->addBar(60);//seconds
-	m_pBarCalculator->addBar(300);//seconds
-	//24*60*60
+	m_pBarCalculator->addBar(TIME_BASE_S_5S);//seconds
+	m_pBarCalculator->addBar(TIME_BASE_S_1MIN);//seconds
+	m_pBarCalculator->addBar(TIME_BASE_S_5MIN);//seconds
+	m_pBarCalculator->addBar(TIME_BASE_S_30MIN);//seconds
+	m_pBarCalculator->addBar(TIME_BASE_S_1HOUR);//seconds
+	m_pBarCalculator->addBar(TIME_BASE_S_1DAY);//seconds
+
 
 	//5s
 	//1m
@@ -45,12 +50,6 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	if (NULL != m_pBarCalculator)
-	{
-		delete m_pBarCalculator;
-		m_pBarCalculator = NULL;
-	}
-
 	if (NULL != m_pMapTimeBarInfo)
 	{
 		_ClearDataInMap(m_pMapTimeBarInfo);
@@ -58,6 +57,15 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 		delete m_pMapTimeBarInfo;
 		m_pMapTimeBarInfo = NULL;
 	}
+
+	LOG_DEBUG<<"begin delete m_pBarCalculator";
+	if (NULL != m_pBarCalculator)
+	{
+		delete m_pBarCalculator;
+		m_pBarCalculator = NULL;
+	}
+	LOG_DEBUG<<"end delete m_pBarCalculator";
+
 
 	if (NULL != m_pUtilityFun)
 	{
@@ -82,6 +90,9 @@ int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTime
 	MapIntervalBarInfoIterT  iterMap;
 	int nInterval = 0;
 	Bar* pBar = NULL;
+	std::ostringstream sreaamTmp;
+
+	LOG_DEBUG<<"Last Save bar m_pMapTimeBarInfo.size="<<m_pMapTimeBarInfo->size();
 
 	//save last Data
 	iterMap = m_pMapTimeBarInfo->begin();
@@ -90,8 +101,10 @@ int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTime
 		nInterval = (iterMap->first);
 		pBar = (iterMap->second);
 		//log bar
-		strLogInfo="save bar";
-		m_pUtilityFun->logBarInfoEx(strLogInfo, nInterval, pBar);
+		sreaamTmp.str("");
+		sreaamTmp<<"last save bar InstrumentID="<<m_nInstrumentID<<" ";
+		strLogInfo = sreaamTmp.str();
+		m_pUtilityFun->logBarInfo(strLogInfo, nInterval, pBar);
 		//save to db
 		m_pStorager->storeBarInfo(nInterval, pBar);
 
@@ -110,6 +123,7 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 	BOOST_LOG_FUNCTION();
 
 	std::string strLogInfo;
+	std::ostringstream sreaamTmp;
 
 	MapIntervalBarInfoIterT  iterMap;
 	Bar* pBar = NULL;
@@ -119,8 +133,10 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 		//find ok
 		pBar = (iterMap->second);
 		//log bar
-		strLogInfo="save bar";
-		m_pUtilityFun->logBarInfoEx(strLogInfo, interval, pBar);
+		sreaamTmp.str("");
+		sreaamTmp<<"save bar InstrumentID="<<m_nInstrumentID<<" ";
+		strLogInfo=sreaamTmp.str();
+		m_pUtilityFun->logBarInfo(strLogInfo, interval, pBar);
 		//save to db
 		m_pStorager->storeBarInfo(interval, pBar);
 
@@ -129,8 +145,10 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 		(*pBar) = bar;
 
 		//log bar
-		strLogInfo="reuse bar";
-		m_pUtilityFun->logBarInfoEx(strLogInfo, interval, pBar);
+		sreaamTmp.str("");
+		sreaamTmp<<"reuse bar InstrumentID="<<m_nInstrumentID<<" ";
+		strLogInfo=sreaamTmp.str();
+		m_pUtilityFun->logBarInfo(strLogInfo, interval, pBar);
 	}
 	else
 	{
@@ -140,8 +158,10 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 		pBar->update(0, 0, 0);
 		(*pBar) = bar;
 
-		strLogInfo="new bar";
-		m_pUtilityFun->logBarInfoEx(strLogInfo, interval, pBar);
+		sreaamTmp.str("");
+		sreaamTmp<<"new bar for InstrumentID="<<m_nInstrumentID<<" ";
+		strLogInfo=sreaamTmp.str();
+		m_pUtilityFun->logBarInfo(strLogInfo, interval, pBar);
 	}
 
 }
@@ -161,7 +181,7 @@ void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 		pBar = (iterMap->second);
 		//log bar
 		strLogInfo="UpdateBar bar";
-		m_pUtilityFun->logBarInfoEx(strLogInfo, interval, pBar);
+		m_pUtilityFun->logBarInfo(strLogInfo, interval, pBar);
 		//reset bar
 		(*pBar) = bar;
 	}

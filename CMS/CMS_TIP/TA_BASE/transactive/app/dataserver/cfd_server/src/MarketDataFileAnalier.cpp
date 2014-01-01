@@ -51,7 +51,6 @@ int CMarketDataFileAnalier::analierFile()
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
 	
-	//std::string filename = "C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample\\sample.csv";
 	std::string filename = m_strFileName;
 	std::ifstream priceFile(filename.c_str());
 	std::string strLogInfo = "get data from file";

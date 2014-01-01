@@ -20,7 +20,7 @@ public:
 	std::string getTimeStringForSQL(unsigned int nTimeValue);
 public:
 	void logMarketDataInfo(const std::string& strInfo, const MarketData &marketData);
-	void logBarInfoEx(const std::string& strInfo, int interval, Bar* pBarInfo);
+	void logBarInfo(const std::string& strInfo, int interval, Bar* pBarInfo);
 
 	time_t stringToDatetime(const std::string& strTimeValue);
 

@@ -120,7 +120,7 @@ std::string CCFDServerUtilityFun::getTimeStringForlog(unsigned int nTimeValue)
 	return strTimeString;
 }
 
-void CCFDServerUtilityFun::logBarInfoEx(const std::string& strInfo, int interval, Bar* pBarInfo)
+void CCFDServerUtilityFun::logBarInfo(const std::string& strInfo, int interval, Bar* pBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	std::string strBarTime;

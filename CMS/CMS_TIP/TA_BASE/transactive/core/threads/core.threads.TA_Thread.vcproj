@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\core\exceptions\src,..\..\core\utilities\src,..\..\core\synchronisation\src,..\..\..\cots\omniORB\omniORB_4.1.6\include,..\..\,..\..\..\cots\boost\boost_1_39_0"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\PUBLIC\boost\boost_1_54_0\"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;__WIN32__;__x86__;__NT__;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;_USE_32BIT_TIME_T"
 				StringPooling="true"
 				RuntimeLibrary="2"
