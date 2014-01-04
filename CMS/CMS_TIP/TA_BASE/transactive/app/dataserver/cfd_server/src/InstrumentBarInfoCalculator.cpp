@@ -5,6 +5,7 @@
 #include "MarketData.h"
 #include "BarCalculator.h"
 #include "InsteumentBarInfoStorager.h"
+#include "InsteumentBarInfoStoragerMysql.h"
 #include "CFDServerUtilityFun.h"
 
 #include "core/utilities/src/BoostLogger.h"
@@ -22,6 +23,7 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pStorager = new CInstrumentBarInfoStorager(m_nInstrumentID);
+	//m_pStorager = new CInstrumentBarInfoStoragerMysql(m_nInstrumentID);
 
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
 
@@ -35,14 +37,6 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_pBarCalculator->addBar(TIME_BASE_S_30MIN);//seconds
 	m_pBarCalculator->addBar(TIME_BASE_S_1HOUR);//seconds
 	m_pBarCalculator->addBar(TIME_BASE_S_1DAY);//seconds
-
-
-	//5s
-	//1m
-	//5m
-	//30m
-	//60
-	//1d
 
 }
 
@@ -58,14 +52,6 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 		m_pMapTimeBarInfo = NULL;
 	}
 
-	LOG_DEBUG<<"begin delete m_pBarCalculator";
-	if (NULL != m_pBarCalculator)
-	{
-		delete m_pBarCalculator;
-		m_pBarCalculator = NULL;
-	}
-	LOG_DEBUG<<"end delete m_pBarCalculator";
-
 
 	if (NULL != m_pUtilityFun)
 	{
@@ -78,6 +64,16 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 		delete m_pStorager;
 		m_pStorager = NULL;
 	}
+
+	LOG_DEBUG<<"begin delete m_pBarCalculator";
+	if (NULL != m_pBarCalculator)
+	{
+		delete m_pBarCalculator;
+		m_pBarCalculator = NULL;
+	}
+	LOG_DEBUG<<"end delete m_pBarCalculator";
+
+
 
 }
 

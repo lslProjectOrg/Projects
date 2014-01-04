@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;C:\Qt\4.8.5\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;..\..\..\..\PUBLIC\MySQL\MySQL32\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="_DEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities_d.lib"
+				AdditionalDependencies="aced.lib libmysql.lib mysqlcppconn.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities_d.lib"
 				OutputFile="../../../../../bin/win32_nd/CFDServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
+				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;..\..\..\..\PUBLIC\MarketData\lib;..\..\..\..\PUBLIC\MySQL\MySQL32\lib;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../../../../../bin/win32_nd/CFDServer.pdb"
 				SubSystem="1"
@@ -141,7 +141,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;C:\Qt\4.8.5\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\SQLite\include;..\..\..\..\PUBLIC\MarketData\include;..\..\..\..\PUBLIC\MySQL\MySQL32\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="NDEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -168,11 +168,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities.lib"
+				AdditionalDependencies="aced.lib sqlite3.lib libmysql.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities.lib"
 				OutputFile="../../../../../bin/win32_nr/CFDServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nr;..\..\..\..\..\build\win32_nr;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
+				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nr;..\..\..\..\..\build\win32_nr;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\SQLite\lib;..\..\..\..\PUBLIC\MarketData\lib;..\..\..\..\PUBLIC\MySQL\MySQL32\lib;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"

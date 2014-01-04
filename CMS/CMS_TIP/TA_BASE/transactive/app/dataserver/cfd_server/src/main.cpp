@@ -1,11 +1,16 @@
 //#include "vld.h"
 #include <signal.h>
 #include <iostream>
+#include <QtCore/QCoreApplication>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QtSql>
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
 #include "MarketDataPathManager.h"
+
+#include "core/utilities/src/WorkTime.h"
 
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
@@ -40,7 +45,8 @@ void logInit()
 
 	std::string strLogPath = "ALL_CFDServer_LOG_PATH";
 	std::string strLogFileName = "CFDServer_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
-	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
+	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
+	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
 
 
 	TA_Base_Core::CBoostLogger::getInstance().setLogPath(strLogPath);
@@ -60,13 +66,27 @@ void logUnInit()
 
 int main( int argc, char* argv[])
 { 	   
+	logInit();
+	BOOST_LOG_FUNCTION();
+
+	QCoreApplication a(argc, argv);
+	LOG_INFO<<"Available drivers:";
+	QStringList drivers = QSqlDatabase::drivers();
+	foreach(QString driver, drivers)
+	{
+		LOG_INFO<<"qt support:"<<driver.toStdString();
+	}
+
 	signal(SIGINT, usr_signal);
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
 	
-	logInit();
-	BOOST_LOG_FUNCTION();
+
+
+	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
+	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
+	pWorkTime->workBegin();
 
 	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
 	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
@@ -77,7 +97,13 @@ int main( int argc, char* argv[])
 	pMarketDataPathManager->analieAllFiles();
 
 
+	delete pMarketDataPathManager;
+	pMarketDataPathManager = NULL;
 
+
+	pWorkTime->workEnd();
+
+	LOG_INFO<<"work time = "<<pWorkTime->getWorkTime();
 
 	//sleep
 	{	
@@ -85,8 +111,6 @@ int main( int argc, char* argv[])
 		//g_conditionMainRun.wait(lock);
 	}
 
-	delete pMarketDataPathManager;
-	pMarketDataPathManager = NULL;
 	logUnInit();
 
 	return 0;

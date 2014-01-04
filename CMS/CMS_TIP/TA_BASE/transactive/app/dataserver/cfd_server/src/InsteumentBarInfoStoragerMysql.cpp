@@ -1,4 +1,4 @@
-#include "InsteumentBarInfoStorager.h"
+#include "InsteumentBarInfoStoragerMysql.h"
 
  
 
@@ -28,38 +28,35 @@ static const std::string str_Column_Volume = "Volume";
 static const std::string str_Column_LastModified = "LastModified";
 
 
-static const std::string str_Column_InstrumentID_Value = ":InstrumentID_Value";
-static const std::string str_Column_Timestamp_Value = ":Timestamp_Value";
-static const std::string str_Column_Open_Value = ":Open_Value";
-static const std::string str_Column_Close_Value = ":Close_Value";
-static const std::string str_Column_High_Value = ":High_Value";
-static const std::string str_Column_Low_Value = ":Low_Value";
-static const std::string str_Column_Volume_Value = ":Volume_Value";
+static const std::string str_Column_InstrumentID_Value = "?";
+static const std::string str_Column_Timestamp_Value= "?";
+static const std::string str_Column_Open_Value = "?";
+static const std::string str_Column_Close_Value= "?";
+static const std::string str_Column_High_Value = "?";
+static const std::string str_Column_Low_Value = "?";
+static const std::string str_Column_Volume_Value = "?";
 
 
 
 
-CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentID)
+CInstrumentBarInfoStoragerMysql::CInstrumentBarInfoStoragerMysql(unsigned int nInstrumentID)
 {
 	BOOST_LOG_FUNCTION();
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pmapIntervalDBTableName = new MapIntervalDBTableNameT();
 	m_nInstrumentID = nInstrumentID;
 
-	m_strDBType = defSQLiteDBName;
-	m_nDBType = TA_Base_Core::enumSqliteDb;
-
-	//qt not mysql driver need complie
-	//m_strDBType = defMysqlDBName;
-	//m_nDBType = TA_Base_Core::enumMysqlDb;
+	m_strDBType = defMysqlDBName;
+	m_nDBType = TA_Base_Core::enumMysqlDb;
 
 	m_strDBName = _GetDBName(nInstrumentID);
-
+	m_pMysqlDriver = NULL;
+	m_pMysqlDataBase = NULL;
 	_InitDataBase();
 
 }
 
-CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
+CInstrumentBarInfoStoragerMysql::~CInstrumentBarInfoStoragerMysql(void)
 {
 	BOOST_LOG_FUNCTION();
 
@@ -80,53 +77,48 @@ CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
 
 
 }
-void CInstrumentBarInfoStorager::_InitDataBase()
+void CInstrumentBarInfoStoragerMysql::_InitDataBase()
 {
 	bool bExecRes = false;
 	//SQLiteDB_3306.db
 	//mysqldb_3306
-	switch (m_nDBType)
-	{
-	case TA_Base_Core::enumSqliteDb:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str());	
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-		break;
-	case TA_Base_Core::enumMysqlDb:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QMYSQL");
-		m_QSqlDataBase.setHostName("127.0.0.1");
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-		m_QSqlDataBase.setUserName("root");
-		m_QSqlDataBase.setPassword("root");
-		break;
-	default:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str());	
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
 
-		QSqlDatabase *db = new QSqlDatabase;
-		db->addDatabase("QSQLITE", "sqlitedb");
-		//db->addDatabase("QMYSQL", "mysqldb");
-		m_QSqlDataBase.setHostName("127.0.0.1");
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-		db->setUserName("root");
-		m_QSqlDataBase.setPassword("root");
-		m_QSqlDataBase = *db;
-		break;
+	try
+	{
+		switch (m_nDBType)
+		{
+		case TA_Base_Core::enumSqliteDb:
+			break;
+		case TA_Base_Core::enumMysqlDb:
+			/* Using the Driver to create a connection */
+			m_pMysqlDriver = get_driver_instance();//sql::mysql::get_driver_instance();
+			m_pMysqlDataBase = m_pMysqlDriver->connect("tcp://127.0.0.1:3306", "root", "root");
+			/* Connect to the MySQL test database */
+			m_pMysqlDataBase->setSchema(m_strDBName.c_str());
+			break;
+		default:
+			break;
+		}
 	}
-
-	bExecRes = m_QSqlDataBase.open();
-	if (!bExecRes)
+	catch (sql::SQLException &e)
 	{
-		LOG_ERROR<<"Fail to open db:"<<m_strDBName<<" error:"<<m_QSqlDataBase.lastError().text().toStdString();
+		LOG_ERROR<<"Fail to open db:"<<m_strDBName<<" error:"<<e.what();
 	}
 }
 
-void CInstrumentBarInfoStorager::_UnInitDataBase()
+void CInstrumentBarInfoStoragerMysql::_UnInitDataBase()
 {
-	m_QSqlDataBase.close();
+	if (NULL != m_pMysqlDataBase)
+	{
+		m_pMysqlDataBase->close();
+		delete m_pMysqlDataBase;
+		m_pMysqlDataBase = NULL;
+	}
+
 }
 
 
-std::string CInstrumentBarInfoStorager::_GetDBName(unsigned int nInstrumentID)
+std::string CInstrumentBarInfoStoragerMysql::_GetDBName(unsigned int nInstrumentID)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -154,7 +146,7 @@ std::string CInstrumentBarInfoStorager::_GetDBName(unsigned int nInstrumentID)
 	return strInstrumentSQLDBName;
 }
 
-std::string CInstrumentBarInfoStorager::_BuildBarDataTableName(unsigned int nInstrumentID, int interval)
+std::string CInstrumentBarInfoStoragerMysql::_BuildBarDataTableName(unsigned int nInstrumentID, int interval)
 {
 	BOOST_LOG_FUNCTION();	
 	std::string strBarDataTableName;
@@ -200,7 +192,7 @@ std::string CInstrumentBarInfoStorager::_BuildBarDataTableName(unsigned int nIns
 	strBarDataTableName = sreaamTmp.str();
 	return strBarDataTableName;
 }
-std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrumentID, int interval)
+std::string CInstrumentBarInfoStoragerMysql::_GetDBTableName(unsigned int nInstrumentID, int interval)
 {
 	BOOST_LOG_FUNCTION();
 
@@ -223,7 +215,7 @@ std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrument
 
 
 
-int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName)
+int CInstrumentBarInfoStoragerMysql::_CreateDBTable(const std::string& strDbTableName)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -264,7 +256,7 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 	return nFunRes;
 }
 
-int CInstrumentBarInfoStorager::_DropDBTable(const std::string& strDbTableName)
+int CInstrumentBarInfoStoragerMysql::_DropDBTable(const std::string& strDbTableName)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -281,7 +273,7 @@ int CInstrumentBarInfoStorager::_DropDBTable(const std::string& strDbTableName)
 }
 
 
-std::string CInstrumentBarInfoStorager::_BuildInsertSQL(const std::string& strTableName)
+std::string CInstrumentBarInfoStoragerMysql::_BuildInsertSQL(const std::string& strTableName, Bar* pBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -322,42 +314,6 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQL(const std::string& strTa
 	:Volume_Value 
 	);
 	*/
-
-	sreaamTmp.str("");
-	sreaamTmp<<"INSERT INTO "<<strTableName
-		<<" "<<"("
-		<<" "<<str_Column_InstrumentID<<","
-		<<" "<<str_Column_Timestamp<<","
-		<<" "<<str_Column_Open<<","
-		<<" "<<str_Column_Close<<","
-		<<" "<<str_Column_High<<","
-		<<" "<<str_Column_Low<<","
-		<<" "<<str_Column_Volume
-		<<" "<<")"
-		<<" "<<"VALUES"
-		<<" "<<"("
-		<<" "<<str_Column_InstrumentID_Value<<","
-		<<" "<<str_Column_Timestamp_Value<<","
-		<<" "<<str_Column_Open_Value<<","
-		<<" "<<str_Column_Close_Value<<","
-		<<" "<<str_Column_High_Value<<","
-		<<" "<<str_Column_Low_Value<<","
-		<<" "<<str_Column_Volume_Value
-		<<" "<<")";
-
-
-	strSQL = sreaamTmp.str();
-	return strSQL;	
-}
-
-
-
-std::string CInstrumentBarInfoStorager::_BuildInsertSQLEx(const std::string& strTableName, Bar* pBarInfo)
-{
-	BOOST_LOG_FUNCTION();
-	std::ostringstream sreaamTmp;
-	std::string strSQL;
-
 	std::string strTimeStr;
 	strTimeStr = m_pUtilityFun->getTimeStringForSQL(pBarInfo->Time);
 
@@ -390,86 +346,71 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQLEx(const std::string& str
 	return strSQL;	
 }
 
-int CInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
+int CInstrumentBarInfoStoragerMysql::_InsertData(int interval, Bar* pBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
 	bool bExecRes = true;
 	std::string strTimeStr;
-	QSqlQuery query(m_QSqlDataBase);
-
 	std::string strDBTableName;
 	std::string strSQL;
-	strDBTableName = _GetDBTableName(m_nInstrumentID, interval);
-	strSQL = _BuildInsertSQL(strDBTableName);
-	LOG_DEBUG<<"strSQL="<<strSQL;
 
-	query.prepare(strSQL.c_str());
-	query.bindValue(str_Column_InstrumentID_Value.c_str(), m_nInstrumentID);
-	strTimeStr = m_pUtilityFun->getTimeStringForSQL(pBarInfo->Time);
-	query.bindValue(str_Column_Timestamp_Value.c_str(), strTimeStr.c_str());
-	query.bindValue(str_Column_Open_Value.c_str(), pBarInfo->Open);
-	query.bindValue(str_Column_Close_Value.c_str(), pBarInfo->Close);
-	query.bindValue(str_Column_High_Value.c_str(), pBarInfo->High);
-	query.bindValue(str_Column_Low_Value.c_str(), pBarInfo->Low);
-	query.bindValue(str_Column_Volume_Value.c_str(), pBarInfo->Volume);
-
-	bExecRes = query.exec();
-	if (!bExecRes)
+	if (NULL == m_pMysqlDataBase || m_pMysqlDataBase->isClosed())
 	{
+		LOG_ERROR<<"DB error!";
 		nFunRes = -1;
-		LOG_ERROR<<"Fail to exec sql:"<<strSQL<<" error:"<<query.lastError().text().toStdString();
+		return nFunRes;
 	}
 
-
-	return nFunRes;
-}
-
-
-int CInstrumentBarInfoStorager::_InsertDataEx(int interval, Bar* pBarInfo)
-{
-	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
-	bool bExecRes = true;
-	std::string strTimeStr;
-	std::string strDBTableName;
-	std::string strSQL;
-
-
 	strDBTableName = _GetDBTableName(m_nInstrumentID, interval);
-	strSQL = _BuildInsertSQLEx(strDBTableName, pBarInfo);
+	strSQL = _BuildInsertSQL(strDBTableName, pBarInfo);
 	nFunRes = _Exec(strSQL);
 	return nFunRes;
 }
 
-int CInstrumentBarInfoStorager::_Exec( const std::string& strSQL)
+int CInstrumentBarInfoStoragerMysql::_Exec( const std::string& strSQL)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
-	bool bExecRes = true;
+	sql::Statement *stmt = NULL;
+
+	if (NULL == m_pMysqlDataBase || m_pMysqlDataBase->isClosed())
+	{
+		LOG_ERROR<<"DB error!";
+		nFunRes = -1;
+		return nFunRes;
+	}
+
 	LOG_DEBUG<<"strSQL="<<strSQL;
 
-	QSqlQuery query(m_QSqlDataBase);
-	bExecRes = query.exec(strSQL.c_str());
-	if (!bExecRes)
+	try
 	{
-		nFunRes = -1;
-		LOG_ERROR<<"Fail to exec sql:"<<strSQL<<" error:"<<query.lastError().text().toStdString();
+		stmt = m_pMysqlDataBase->createStatement();
+		stmt->execute(strSQL.c_str());
 	}
+	catch (sql::SQLException &e)
+	{
+		LOG_ERROR<<"Fail to exec:"<<strSQL<<" error:"<<e.what();
+	}
+	
+	if (NULL != stmt)
+	{
+		delete stmt;
+		stmt = NULL;
+	}
+
 	return nFunRes;
 }
 
 
 
 
-int CInstrumentBarInfoStorager::storeBarInfo(int interval, Bar* pBarInfo)
+int CInstrumentBarInfoStoragerMysql::storeBarInfo(int interval, Bar* pBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
 
 	nFunRes = _InsertData(interval, pBarInfo);
-	//nFunRes = _InsertDataEx(interval, pBarInfo);
-
 	
 	return nFunRes;
 }
