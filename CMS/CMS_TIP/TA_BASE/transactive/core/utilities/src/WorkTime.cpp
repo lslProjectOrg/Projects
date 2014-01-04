@@ -19,37 +19,66 @@ CAWorkTime::~CAWorkTime()
 
 }
 
+BigInt64 CAWorkTime::getTimeSeconds(boost::posix_time::millisec_posix_time_system_config::time_duration_type* pfbtime)
+{
+	BigInt64 nFunRes = 0;
 
-std::string CAWorkTime::getTimeString(struct timeb* pfbtime)
+	if (NULL != pfbtime)
+	{
+		nFunRes = pfbtime->total_seconds();
+	}
+
+	return nFunRes;
+}
+
+BigInt64 CAWorkTime::getTimeMilliseconds(boost::posix_time::millisec_posix_time_system_config::time_duration_type* pfbtime)
+{
+	BigInt64 nFunRes = 0;
+
+	if (NULL != pfbtime)
+	{
+		nFunRes = pfbtime->total_milliseconds();
+	}
+
+	return nFunRes;
+}
+
+
+std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 {
 	std::string	strTimeString;
-	char* pszCurTime = NULL;
-	int nBufferSize = 256;
-	struct tm* pTM = NULL;
+	int pos = 0;
+	std::string strFormatTmp;
 
 	if (NULL == pfbtime)
 	{
 		return strTimeString;
 	}
 
-	pszCurTime =new char[nBufferSize];
-	memset(pszCurTime, 0, nBufferSize);
 
-	pTM = localtime(&(pfbtime->time));
+	//YYYYMMDDTHHMMSS  T
+	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
+	strTimeString = boost::posix_time::to_iso_string(*pfbtime);
 
-	//format to string
-	if ( NULL != pTM )
-	{
-		sprintf(pszCurTime, "[%04d-%02d-%02d %02d:%02d:%02d.%03d]",
-			pTM->tm_year + 1900, pTM->tm_mon + 1, pTM->tm_mday,
-			pTM->tm_hour, pTM->tm_min, pTM->tm_sec, pfbtime->millitm); 
+	//YYYYMMDDTHHMM:SS
+	strFormatTmp = "YYYYMMDDTHHMM";
+	strTimeString.replace(strFormatTmp.length(), 0, std::string(":"));
 
-		strTimeString = pszCurTime;     
-	}
+	//YYYYMMDDTHH:MM:SS
+	strFormatTmp = "YYYYMMDDTHH";
+	strTimeString.replace(strFormatTmp.length(), 0, std::string(":"));
 
-	delete pszCurTime;
-	pszCurTime = NULL;
-	pTM = NULL;
+	//YYYYMMDD HH:MM:SS
+	strFormatTmp = "YYYYMMDD";
+	strTimeString.replace(strFormatTmp.length(), 1, std::string(" "));
+
+	//YYYYMM-DD HH:MM:SS
+	strFormatTmp = "YYYYMM";
+	strTimeString.replace(strFormatTmp.length(), 1, std::string("-"));
+
+	//YYYY-MM-DD HH:MM:SS
+	strFormatTmp = "YYYY";
+	strTimeString.replace(strFormatTmp.length(), 1, std::string("-"));
 
 	return strTimeString;
 }
@@ -58,10 +87,9 @@ std::string CAWorkTime::getTimeString(struct timeb* pfbtime)
 std::string CAWorkTime::getTimeNow(void)
 {
 	std::string	strCurrentTime;
-	struct timeb fTimeNow;
-	getCurrentTime(&fTimeNow);
-
-	strCurrentTime = getTimeString(&fTimeNow);
+	boost::posix_time::ptime timeNow;
+	getCurrentTime(&timeNow);
+	strCurrentTime = getTimeString(&timeNow);
 	return strCurrentTime;
 }
 std::string CAWorkTime::getBeginTime(void)
@@ -73,30 +101,32 @@ std::string CAWorkTime::getEndTime(void)
 	return getTimeString(&m_fTimeWorkEnd);
 }
 
-std::string CAWorkTime::getCurrentTime( struct timeb* pfbtime )
+std::string CAWorkTime::getCurrentTime(boost::posix_time::ptime* pfbtime)
 {
 	std::string			strCurrentTime;
-
+	boost::posix_time::ptime  timeNow;
 	if (NULL != pfbtime)
 	{
-		ftime(pfbtime);
+		timeNow = boost::posix_time::microsec_clock::universal_time() + boost::posix_time::hours(8); 
+		(*pfbtime) = timeNow;
 	}
 	strCurrentTime = getTimeString(pfbtime);
 	return strCurrentTime;
 }
 
-BigInt64 CAWorkTime::getDiffTime( struct timeb* pfbtimeBegin, struct timeb* pfbtimeEnd )
+boost::posix_time::millisec_posix_time_system_config::time_duration_type CAWorkTime::getDiffTime(
+	boost::posix_time::ptime* pfbtimeBegin, 
+	boost::posix_time::ptime* pfbtimeEnd )
 {
-	BigInt64             nDiffTimeRes = 0;
-	time_t				 diffSeconds;
+	boost::posix_time::millisec_posix_time_system_config::time_duration_type timeElapse;
 
 	if (NULL != pfbtimeBegin && NULL != pfbtimeEnd)
 	{
-		diffSeconds = pfbtimeEnd->time - pfbtimeBegin->time;
-		nDiffTimeRes = (BigInt64)(diffSeconds*1000.0 + pfbtimeEnd->millitm - pfbtimeBegin->millitm);//double
+		timeElapse = (*pfbtimeEnd) - (*pfbtimeBegin);  
 	}
+	//%10.3f ms
 
-	return nDiffTimeRes;
+	return timeElapse;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -108,10 +138,11 @@ CWorkTimeLock::CWorkTimeLock(int nWorkTimeCode )
 	m_nWorkTimeCode = nWorkTimeCode;	
 	getCurrentTime(&m_fTimeWorkBegin);
 	getCurrentTime(&m_fTimeWorkEnd);
-	m_nWorkTime = 0;	
+	m_nWorkTime = getDiffTime(&m_fTimeWorkEnd, &m_fTimeWorkEnd);//0
+	m_nNotWorkTime = getDiffTime(&m_fTimeWorkEnd, &m_fTimeWorkEnd);//0
 	m_bSetWorkBegin = false;
 	m_bSetWorkEnd = false;
-	m_nNotWorkTime = 0;
+
 
 }
 CWorkTimeLock::~CWorkTimeLock(void)
@@ -132,13 +163,13 @@ void CWorkTimeLock::workBegin()
 
 BigInt64 CWorkTimeLock::workEnd()
 {
-	int nFunRes = 0;
+	BigInt64 nFunRes = 0;
+	boost::posix_time::ptime fTimeNow;
 	boost::mutex::scoped_lock lock(m_lockWorkTime);
 
 	if (m_bSetWorkBegin)
 	{ 	
 		getCurrentTime(&m_fTimeWorkEnd);
-
 		m_nWorkTime = getDiffTime(&m_fTimeWorkBegin, &m_fTimeWorkEnd);
 
 		m_bSetWorkEnd = true;
@@ -146,42 +177,45 @@ BigInt64 CWorkTimeLock::workEnd()
 	} 
 	else
 	{
-		m_bSetWorkEnd = false;		
-		m_nWorkTime = 0;
+		m_bSetWorkEnd = false;
+		getCurrentTime(&fTimeNow);
+		m_nWorkTime = getDiffTime(&fTimeNow, &fTimeNow);//0
 	}
 
-	return m_nWorkTime;
+	nFunRes = getTimeMilliseconds(&m_nWorkTime);
+	return nFunRes;
 }
 
 BigInt64 CWorkTimeLock::getNotworkTime()
 {
-	int nFunRes = 0;
-	struct timeb m_fTimeNow;
+	BigInt64 nFunRes = 0;
+	boost::posix_time::ptime fTimeNow;
 
 	boost::mutex::scoped_lock lock(m_lockWorkTime);
 
 	if (true == m_bSetWorkBegin && false == m_bSetWorkEnd)
 	{
-		getCurrentTime(&m_fTimeNow);
-		m_nNotWorkTime = getDiffTime(&m_fTimeWorkBegin, &m_fTimeNow);
+		getCurrentTime(&fTimeNow);
+		m_nNotWorkTime = getDiffTime(&m_fTimeWorkBegin, &fTimeNow);
 	}
 	else
 	{
-		m_nNotWorkTime = 0;
-		return m_nNotWorkTime;
+		m_nNotWorkTime = getDiffTime(&fTimeNow, &fTimeNow);//0
 	}
 
+	nFunRes = getTimeMilliseconds(&m_nNotWorkTime);
 
-
-	return m_nNotWorkTime;
+	return nFunRes;
 }
 
 
 BigInt64 CWorkTimeLock::getWorkTime()
 {
-	int nFunRes = 0;
+	BigInt64 nFunRes = 0;
 	boost::mutex::scoped_lock lock(m_lockWorkTime);
-	return m_nWorkTime;
+	nFunRes = getTimeMilliseconds(&m_nWorkTime);
+
+	return nFunRes;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -198,11 +232,10 @@ CWorkTimeNoLock::CWorkTimeNoLock(int nWorkTimeCode )
 	m_nWorkTimeCode = nWorkTimeCode;	
 	getCurrentTime(&m_fTimeWorkBegin);
 	getCurrentTime(&m_fTimeWorkEnd);
-	m_nWorkTime = 0;	
+	m_nWorkTime = getDiffTime(&m_fTimeWorkEnd, &m_fTimeWorkEnd);//0
 	m_bSetWorkBegin = false;
 	m_bSetWorkEnd = false;
-	m_nNotWorkTime = 0;
-
+	m_nNotWorkTime = getDiffTime(&m_fTimeWorkEnd, &m_fTimeWorkEnd);//0
 }
 CWorkTimeNoLock::~CWorkTimeNoLock(void)
 {
@@ -221,7 +254,8 @@ void CWorkTimeNoLock::workBegin()
 
 BigInt64 CWorkTimeNoLock::workEnd()
 {
-	int nFunRes = 0;
+	BigInt64 nFunRes = 0;
+	boost::posix_time::ptime fTimeNow;
 
 	if (m_bSetWorkBegin)
 	{ 	
@@ -233,40 +267,42 @@ BigInt64 CWorkTimeNoLock::workEnd()
 	} 
 	else
 	{
-		m_bSetWorkEnd = false;		
-		m_nWorkTime = 0;
+		m_bSetWorkEnd = false;
+		getCurrentTime(&fTimeNow);
+		m_nWorkTime = getDiffTime(&fTimeNow, &fTimeNow);//0
 	}
 
-	return m_nWorkTime;
+	nFunRes = getTimeMilliseconds(&m_nWorkTime);
+	return nFunRes;
 }
 
 BigInt64 CWorkTimeNoLock::getNotworkTime()
 {
-	int nFunRes = 0;
-	struct timeb m_fTimeNow;
-
+	BigInt64 nFunRes = 0;
+	boost::posix_time::ptime fTimeNow;
 
 	if (true == m_bSetWorkBegin && false == m_bSetWorkEnd)
 	{
-		getCurrentTime(&m_fTimeNow);
-		m_nNotWorkTime = getDiffTime(&m_fTimeWorkBegin, &m_fTimeNow);
+		getCurrentTime(&fTimeNow);
+		m_nNotWorkTime = getDiffTime(&m_fTimeWorkBegin, &fTimeNow);
 	}
 	else
 	{
-		m_nNotWorkTime = 0;
-		return m_nNotWorkTime;
+		m_nNotWorkTime = getDiffTime(&fTimeNow, &fTimeNow);//0
 	}
 
+	nFunRes = getTimeMilliseconds(&m_nNotWorkTime);
 
-
-	return m_nNotWorkTime;
+	return nFunRes;
 }
 
 
 BigInt64 CWorkTimeNoLock::getWorkTime()
 {
-	int nFunRes = 0;
-	return m_nWorkTime;
+	BigInt64 nFunRes = 0;
+	nFunRes = getTimeMilliseconds(&m_nWorkTime);
+
+	return nFunRes;
 }
 
 //////////////////////////////////////////////////////////////////////////

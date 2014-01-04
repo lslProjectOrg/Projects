@@ -1,7 +1,21 @@
 #ifndef __CLASS_WORK_TIME__HH__
 #define __CLASS_WORK_TIME__HH__
 
-#include "BoostUtilityFun.h"
+#include <iostream>
+#include <fstream>
+#include <list> 
+ 
+#include <sys/timeb.h>
+#include <stdlib.h>
+
+#include <boost/chrono.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>  
+#include <boost/thread.hpp>  
+#define BOOST_DATE_TIME_SOURCE
+
+#include "core/utilities/src/UtilitiesCommonData.h"
+
+using namespace TA_Base_Core;
 
 NS_BEGIN(TA_Base_Core)
 
@@ -28,30 +42,31 @@ public:
 
 
 public:
-	std::string getTimeString(struct timeb* pfbtime);
+	std::string getTimeString(boost::posix_time::ptime* pfbtime);
 	virtual std::string getTimeNow(void);
 	virtual std::string getBeginTime(void);
 	virtual std::string getEndTime(void);
 public:
-	virtual std::string getCurrentTime(struct timeb* pfbtime);
-	virtual BigInt64 getDiffTime(struct timeb* pfbtimeBegin, struct timeb* pfbtimeEnd);
-
+	virtual std::string getCurrentTime(boost::posix_time::ptime* pfbtime);
+	virtual boost::posix_time::millisec_posix_time_system_config::time_duration_type getDiffTime(
+		boost::posix_time::ptime* pfbtimeBegin, 
+		boost::posix_time::ptime* pfbtimeEnd);
+	virtual BigInt64 getTimeSeconds(boost::posix_time::millisec_posix_time_system_config::time_duration_type* pfbtime);
+	virtual BigInt64 getTimeMilliseconds(boost::posix_time::millisec_posix_time_system_config::time_duration_type* pfbtime);
 protected:
 	int  m_nWorkTimeCode;
 	//begin work time
-	struct timeb m_fTimeWorkBegin;	
+	boost::posix_time::ptime m_fTimeWorkBegin;	
 	//end work time
-	struct timeb m_fTimeWorkEnd;		
+	boost::posix_time::ptime m_fTimeWorkEnd;		
 	//WorkTime valuse is end work time - begin work time
-	BigInt64		 m_nWorkTime;//millsecs	 
+	boost::posix_time::millisec_posix_time_system_config::time_duration_type	m_nWorkTime;//millsecs	 
 	//NotWorkTime valuse is now time - begin work time
-	BigInt64         m_nNotWorkTime;
+	boost::posix_time::millisec_posix_time_system_config::time_duration_type    m_nNotWorkTime;
 	//set begin work 
 	bool         m_bSetWorkBegin;
 	//set end work 
 	bool         m_bSetWorkEnd;
-
-
 };
 
 class CWorkTimeLock	: public  CAWorkTime
