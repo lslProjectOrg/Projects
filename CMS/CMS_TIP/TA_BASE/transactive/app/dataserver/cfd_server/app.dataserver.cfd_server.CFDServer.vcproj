@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib libmysql.lib mysqlcppconn.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities_d.lib"
+				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities_d.lib"
 				OutputFile="../../../../../bin/win32_nd/CFDServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib sqlite3.lib libmysql.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities.lib"
+				AdditionalDependencies="aced.lib sqlite3.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib TA_Utilities.lib"
 				OutputFile="../../../../../bin/win32_nr/CFDServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -306,6 +306,50 @@
 		<Filter
 			Name="server"
 			>
+		</Filter>
+		<Filter
+			Name="CFDBarInfo"
+			>
+			<File
+				RelativePath=".\src\BuildCFDMarketData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\BuildCFDMarketData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInsteumentBarInfoStorager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInsteumentBarInfoStorager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInstrumentBarInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInstrumentBarInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInstrumentBarInfoCalculator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInstrumentBarInfoCalculator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CreateCFDInstrumentBarInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CreateCFDInstrumentBarInfo.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

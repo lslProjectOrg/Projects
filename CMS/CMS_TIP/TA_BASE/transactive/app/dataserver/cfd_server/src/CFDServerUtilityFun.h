@@ -16,13 +16,17 @@ public:
 	CCFDServerUtilityFun(void);	
 	~CCFDServerUtilityFun(void);
 public:
-	std::string getTimeStringForlog(unsigned int nTimeValue);
-	std::string getTimeStringForSQL(unsigned int nTimeValue);
+	//"%d-%d-%d %d:%d:%d"
+	time_t strToDateTime(const std::string& strTimeValue);
+
+	//"%04d-%02d-%02d %02d:%02d:%02d"
+	std::string dataTimeToStr(time_t nTimeValue);
 public:
 	void logMarketDataInfo(const std::string& strInfo, const MarketData &marketData);
 	void logBarInfo(const std::string& strInfo, int interval, Bar* pBarInfo);
 
-	time_t stringToDatetime(const std::string& strTimeValue);
+
+
 
 };
 

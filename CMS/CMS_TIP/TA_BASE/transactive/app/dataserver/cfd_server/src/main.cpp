@@ -1,16 +1,17 @@
 //#include "vld.h"
 #include <signal.h>
 #include <iostream>
-#include <QtCore/QCoreApplication>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QtSql>
+// #include <QtCore/QCoreApplication>
+// #include <QtSql/QSqlDatabase>
+// #include <QtSql/QtSql>
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
 #include "MarketDataPathManager.h"
-
 #include "core/utilities/src/WorkTime.h"
+
+#include "CreateCFDInstrumentBarInfo.h"
 
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
@@ -64,46 +65,81 @@ void logUnInit()
 
 //////////////////////////////////////////////////////////////////////////
 
+void Test_CMarketDataPathManager()
+{
+	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
+	CMarketDataPathManager* pMarketDataPathManager = NULL;
+
+	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
+	//std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
+	std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\HistoryMarketData\\";//company
+
+
+	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
+	pWorkTime->workBegin();
+
+	pMarketDataPathManager = new CMarketDataPathManager();
+	pMarketDataPathManager->setPathName(strPathName);
+
+	pMarketDataPathManager->analieAllFiles();
+	
+	if (NULL != pMarketDataPathManager)
+	{
+		delete pMarketDataPathManager;
+		pMarketDataPathManager = NULL;
+	}
+
+	pWorkTime->workEnd();
+
+	LOG_INFO<<"work time = "<<pWorkTime->getWorkTime();
+
+	if (NULL != pWorkTime)
+	{
+		delete pWorkTime;
+		pWorkTime = NULL;
+	}
+
+}
+
+void Test_CCreateCFDInstrumentBarInfo()
+{
+	CCreateCFDInstrumentBarInfo* pCreateCFDInstrumentBarInfo = NULL;
+	pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo();
+
+
+	pCreateCFDInstrumentBarInfo->doOneTest();
+
+
+	if (NULL != pCreateCFDInstrumentBarInfo)
+	{
+		delete pCreateCFDInstrumentBarInfo;
+		pCreateCFDInstrumentBarInfo = NULL;
+	}
+}
+//////////////////////////////////////////////////////////////////////////
+
+
+
 int main( int argc, char* argv[])
 { 	   
 	logInit();
 	BOOST_LOG_FUNCTION();
 
-	QCoreApplication a(argc, argv);
-	LOG_INFO<<"Available drivers:";
-	QStringList drivers = QSqlDatabase::drivers();
-	foreach(QString driver, drivers)
-	{
-		LOG_INFO<<"qt support:"<<driver.toStdString();
-	}
+// 	QCoreApplication a(argc, argv);
+// 	LOG_INFO<<"Available drivers:";
+// 	QStringList drivers = QSqlDatabase::drivers();
+// 	foreach(QString driver, drivers)
+// 	{
+// 		LOG_INFO<<"qt support:"<<driver.toStdString();
+// 	}
 
 	signal(SIGINT, usr_signal);
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
-	
+	//Test_CMarketDataPathManager();
 
-
-	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
-	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
-	pWorkTime->workBegin();
-
-	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
-	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
-	//std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\HistoryMarketData\\";//company
-	CMarketDataPathManager* pMarketDataPathManager = NULL;
-	pMarketDataPathManager = new CMarketDataPathManager();
-	pMarketDataPathManager->setPathName(strPathName);
-	pMarketDataPathManager->analieAllFiles();
-
-
-	delete pMarketDataPathManager;
-	pMarketDataPathManager = NULL;
-
-
-	pWorkTime->workEnd();
-
-	LOG_INFO<<"work time = "<<pWorkTime->getWorkTime();
+	Test_CCreateCFDInstrumentBarInfo();
 
 	//sleep
 	{	

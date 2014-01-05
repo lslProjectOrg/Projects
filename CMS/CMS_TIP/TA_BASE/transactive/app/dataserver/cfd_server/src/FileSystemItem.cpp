@@ -20,7 +20,7 @@ CFileSystemItem::CFileSystemItem( const std::string& strFilePath )
 	m_strFileExten = fFileFullPath.extension().generic_string();//.csv
 
 	m_strFileNameTimeStrValue = _GetFileNameTimeStrValue(m_strFileName);//2012-12-10 09:00:00
-	m_nFileNameTimeIntValue = m_pUtilityFun->stringToDatetime(m_strFileNameTimeStrValue);//2012-12-10 09:00:00
+	m_nFileNameTimeIntValue = m_pUtilityFun->strToDateTime(m_strFileNameTimeStrValue);//2012-12-10 09:00:00
 }
 
 CFileSystemItem::~CFileSystemItem( void )

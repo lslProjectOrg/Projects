@@ -24,9 +24,12 @@ CCFDServerUtilityFun::~CCFDServerUtilityFun( void )
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 
-time_t CCFDServerUtilityFun::stringToDatetime(const std::string& strTimeValue)
+//"%d-%d-%d %d:%d:%d"
+time_t CCFDServerUtilityFun::strToDateTime(const std::string& strTimeValue)
 {
 	tm tmTime;
 	int nYearValue = 0;
@@ -59,7 +62,9 @@ time_t CCFDServerUtilityFun::stringToDatetime(const std::string& strTimeValue)
 	return timeGetTimeValue; //seconds
 }
 
-std::string CCFDServerUtilityFun::getTimeStringForSQL(unsigned int nTimeValue)
+
+//"%04d-%02d-%02d %02d:%02d:%02d"
+std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
 {
 	BOOST_LOG_FUNCTION();
 	std::string	strTimeString;
@@ -89,43 +94,17 @@ std::string CCFDServerUtilityFun::getTimeStringForSQL(unsigned int nTimeValue)
 
 	return strTimeString;
 }
-std::string CCFDServerUtilityFun::getTimeStringForlog(unsigned int nTimeValue)
-{
-	BOOST_LOG_FUNCTION();
-	std::string	strTimeString;
-	char* pszCurTime = NULL;
-	int nBufferSize = 256;
-	struct tm* pTM = NULL;
-	time_t time_Value = (time_t)nTimeValue;
 
-	pszCurTime =new char[nBufferSize];
-	memset(pszCurTime, 0, nBufferSize);
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
-	pTM = localtime(&(time_Value));
-
-	//format to string
-	if ( NULL != pTM )
-	{
-		sprintf(pszCurTime, "[%04d-%02d-%02d %02d:%02d:%02d]",
-			pTM->tm_year + 1900, pTM->tm_mon + 1, pTM->tm_mday,
-			pTM->tm_hour, pTM->tm_min, pTM->tm_sec); 
-
-		strTimeString = pszCurTime;     
-	}
-
-	delete pszCurTime;
-	pszCurTime = NULL;
-	pTM = NULL;
-
-	return strTimeString;
-}
 
 void CCFDServerUtilityFun::logBarInfo(const std::string& strInfo, int interval, Bar* pBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	std::string strBarTime;
 
-	strBarTime = getTimeStringForlog(pBarInfo->Time);
+	strBarTime = dataTimeToStr(pBarInfo->Time);
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Time="<<pBarInfo->Time;
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"strBarTime="<<strBarTime;
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Open="<<pBarInfo->Open;
@@ -161,7 +140,7 @@ void CCFDServerUtilityFun::logMarketDataInfo(const std::string& strInfo, const M
 	nSecurityIDValue = marketData.getSecurityID();
 	nMarkerStatusValue = (MarketData::MarketStatus)(marketData.getMarketStatus());
 	nTimeValue = marketData.getTime();
-	strTimeValue = getTimeStringForlog(nTimeValue);
+	strTimeValue = dataTimeToStr(nTimeValue);
 	nVolumeValue = marketData.getVolume(nVolumeTypeValue);
 	nBidVolValue = marketData.getBidVol(0);
 	nAskVolValue = marketData.getAskVol(0);

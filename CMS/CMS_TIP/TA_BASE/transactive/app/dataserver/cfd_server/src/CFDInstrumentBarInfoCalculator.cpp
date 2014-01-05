@@ -1,4 +1,4 @@
-#include "InstrumentBarInfoCalculator.h"
+#include "CFDInstrumentBarInfoCalculator.h"
 
 #include "core/utilities/src/UtilitiesCommonData.h"
 
@@ -16,7 +16,7 @@ using namespace TA_Base_Core;
 NS_BEGIN(TA_Base_App) 
 
 //////////////////////////////////////////////////////////////////////////
-CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrumentID)
+CCFDInstrumentBarInfoCalculator::CCFDInstrumentBarInfoCalculator(unsigned int nInstrumentID)
 {	
 	BOOST_LOG_FUNCTION();
 	m_nInstrumentID = nInstrumentID;
@@ -27,8 +27,8 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
 
-	m_pBarCalculator->onNewBar = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleNewBar, this, _1, _2);
-	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
+	m_pBarCalculator->onNewBar = boost::bind(&TA_Base_App::CCFDInstrumentBarInfoCalculator::HandleNewBar, this, _1, _2);
+	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CCFDInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
 	
 	//TODO.
 	m_pBarCalculator->addBar(TIME_BASE_S_5S);//seconds
@@ -40,7 +40,7 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 
 }
 
-CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
+CCFDInstrumentBarInfoCalculator::~CCFDInstrumentBarInfoCalculator(void)
 {
 	BOOST_LOG_FUNCTION();
 
@@ -78,7 +78,7 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 }
 
 
-int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTimeBarInfo)
+int CCFDInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTimeBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -114,7 +114,7 @@ int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTime
 	return nFunRes;
 }
 
-void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
+void CCFDInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 {
 	BOOST_LOG_FUNCTION();
 
@@ -164,7 +164,7 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 
 
 
-void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
+void CCFDInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 {
 	std::string strLogInfo;
 
@@ -190,7 +190,7 @@ void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 
 
 
-int CInstrumentBarInfoCalculator::updateMarketData(const MarketData& marketData)
+int CCFDInstrumentBarInfoCalculator::updateMarketData(const MarketData& marketData)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
