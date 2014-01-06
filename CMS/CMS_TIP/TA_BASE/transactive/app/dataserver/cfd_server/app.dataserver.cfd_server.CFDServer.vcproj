@@ -311,22 +311,6 @@
 			Name="CFDBarInfo"
 			>
 			<File
-				RelativePath=".\src\BuildCFDMarketData.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\BuildCFDMarketData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDInsteumentBarInfoStorager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDInsteumentBarInfoStorager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\CFDInstrumentBarInfo.cpp"
 				>
 			</File>
@@ -343,11 +327,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CFDInstrumentBarInfoStorager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CFDInstrumentBarInfoStorager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CreateCFDInstrumentBarInfo.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\CreateCFDInstrumentBarInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SyncMarketDataForCFD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SyncMarketDataForCFD.h"
 				>
 			</File>
 		</Filter>

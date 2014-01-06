@@ -22,17 +22,18 @@ public:
 	void setInterval(int nInterval);
 	void setCFDInstrumentID(int nCFDInstrumentID);
 public:
+	/*
+	note: DataFirst.Time == DataSecond.Time
+	CFDMarketData = DataFirst.Time
+	*/
 	int  buidCFDBarInfo();
+	void logInfo();
 private:
 	Bar m_nBarInfoFirst;
 	Bar m_nBarInfoSecond;
 	int m_nInterval;// = 5;//second
-private:
 	int m_nCFDInstrumentID;// = 3620*3521;
 	Bar m_CFDBarInfo;
-private:
-	CCFDServerUtilityFun*    m_pUtilityFun;
-	CBuildCFDMarketData*     m_pBuildCFDMarketData;
 
 };
 

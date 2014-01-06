@@ -4,6 +4,8 @@
 
 #include "CFDServerUtilityFun.h"
 #include "CFDInstrumentBarInfo.h"
+#include "SyncMarketDataForCFD.h"
+#include "CFDInstrumentBarInfoCalculator.h"
 
 
 
@@ -17,6 +19,10 @@ CCreateCFDInstrumentBarInfo::CCreateCFDInstrumentBarInfo(void)
 {
 	BOOST_LOG_FUNCTION();
 	m_pUtilityFun = new CCFDServerUtilityFun();
+	m_CSyncMarketDataForCFD = new CSyncMarketDataForCFD();
+	int nCFDInstrumentID = 3620*3521;
+
+	m_pCFDBarInfoCalculator = new CCFDInstrumentBarInfoCalculator(nCFDInstrumentID);
 }
 
 CCreateCFDInstrumentBarInfo::~CCreateCFDInstrumentBarInfo( void )
@@ -29,19 +35,31 @@ CCreateCFDInstrumentBarInfo::~CCreateCFDInstrumentBarInfo( void )
 		m_pUtilityFun = NULL;
 	}
 
+	if (NULL != m_CSyncMarketDataForCFD)
+	{
+		delete m_CSyncMarketDataForCFD;
+		m_CSyncMarketDataForCFD = NULL;
+	}
+
+	if (NULL != m_pCFDBarInfoCalculator)
+	{
+		delete m_pCFDBarInfoCalculator;
+		m_pCFDBarInfoCalculator = NULL;
+	}
+
 }
 
 void CCreateCFDInstrumentBarInfo::doOneTest()
 {
 	BOOST_LOG_FUNCTION();
-	CCFDInstrumentBarInfo* pCFDInstrumentBarInfoTmp = NULL;
+	CSyncMarketDataForCFD::LstCFDBarInfoT   lstCFDBarInfoTmp;
 	int nCFDInstrumentID = 3620*3521;
 	int interval = 5;//second
+	int nFunRes = 0;
 
 	Bar BarInfo_3620;
 	Bar BarInfo_3621;
 
-	pCFDInstrumentBarInfoTmp =new CCFDInstrumentBarInfo();
 
 	BarInfo_3620.Time = 1387502103;
 	BarInfo_3620.Open = 2346;
@@ -58,19 +76,26 @@ void CCreateCFDInstrumentBarInfo::doOneTest()
 	BarInfo_3621.Volume = 0;
 
 
-	pCFDInstrumentBarInfoTmp->setCFDInstrumentID(nCFDInstrumentID);
-	pCFDInstrumentBarInfoTmp->setInterval(interval);
-	pCFDInstrumentBarInfoTmp->setBarInfoFirst(BarInfo_3620);
-	pCFDInstrumentBarInfoTmp->setBarInfoFirst(BarInfo_3621);
-	pCFDInstrumentBarInfoTmp->buidCFDBarInfo();
+	m_CSyncMarketDataForCFD->setCFDInstrumentID(nCFDInstrumentID);
+	m_CSyncMarketDataForCFD->setInterval(interval);
+	m_CSyncMarketDataForCFD->syncSingleCFDBarInfo(BarInfo_3620, BarInfo_3621, lstCFDBarInfoTmp);
+
+	//////////////////////////////////////////////////////////////////////////
 
 
-	if (NULL != pCFDInstrumentBarInfoTmp)
-	{
-		delete pCFDInstrumentBarInfoTmp;
-		pCFDInstrumentBarInfoTmp = NULL;
-	}
 
+	//////////////////////////////////////////////////////////////////////////
+	m_CSyncMarketDataForCFD->clearCFDBarInfoList(lstCFDBarInfoTmp);
+}
+
+int CCreateCFDInstrumentBarInfo::UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT&  lstCFDBarInfo)
+{
+	int nFunRes = 0;
+	BOOST_LOG_FUNCTION();
+
+	m_pCFDBarInfoCalculator;
+
+	return nFunRes;
 }
 
 

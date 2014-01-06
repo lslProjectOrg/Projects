@@ -4,7 +4,7 @@
 
 #include "MarketData.h"
 #include "BarCalculator.h"
-#include "InsteumentBarInfoStorager.h"
+#include "CFDInstrumentBarInfoStorager.h"
 //#include "InsteumentBarInfoStoragerMysql.h"
 #include "CFDServerUtilityFun.h"
 
@@ -22,8 +22,7 @@ CCFDInstrumentBarInfoCalculator::CCFDInstrumentBarInfoCalculator(unsigned int nI
 	m_nInstrumentID = nInstrumentID;
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pStorager = new CInstrumentBarInfoStorager(m_nInstrumentID);
-	//m_pStorager = new CInstrumentBarInfoStoragerMysql(m_nInstrumentID);
+	m_pStorager = new CCFDInstrumentBarInfoStorager(m_nInstrumentID);
 
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
 
@@ -31,12 +30,7 @@ CCFDInstrumentBarInfoCalculator::CCFDInstrumentBarInfoCalculator(unsigned int nI
 	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CCFDInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
 	
 	//TODO.
-	m_pBarCalculator->addBar(TIME_BASE_S_5S);//seconds
 	m_pBarCalculator->addBar(TIME_BASE_S_1MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_5MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_30MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_1HOUR);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_1DAY);//seconds
 
 }
 

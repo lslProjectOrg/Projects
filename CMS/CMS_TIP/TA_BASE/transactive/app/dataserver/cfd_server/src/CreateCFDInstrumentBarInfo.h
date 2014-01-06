@@ -10,6 +10,8 @@ NS_BEGIN(TA_Base_App)
 
 class CCFDServerUtilityFun;
 class CCFDInstrumentBarInfo;
+class CSyncMarketDataForCFD;
+class CCFDInstrumentBarInfoCalculator;
 
 class CCreateCFDInstrumentBarInfo
 {
@@ -20,6 +22,8 @@ public:
 	void doOneTest();
 private:
 	CCFDServerUtilityFun*    m_pUtilityFun;
+	CSyncMarketDataForCFD*   m_CSyncMarketDataForCFD;
+	CCFDInstrumentBarInfoCalculator*   m_pCFDBarInfoCalculator;
 };
 
 

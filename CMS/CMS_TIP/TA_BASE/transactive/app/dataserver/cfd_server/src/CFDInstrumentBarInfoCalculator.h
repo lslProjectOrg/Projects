@@ -16,7 +16,7 @@ Calculator CFDInstrument's Bar Info
 NS_BEGIN(TA_Base_App) 
 
 class CCFDServerUtilityFun;
-class CInstrumentBarInfoStorager;
+class CCFDInstrumentBarInfoStorager;
 
 class CCFDInstrumentBarInfoCalculator 
 {
@@ -39,7 +39,7 @@ private:
 	MapIntervalBarInfoT*   m_pMapTimeBarInfo;
 	CCFDServerUtilityFun*  m_pUtilityFun;
 	unsigned int m_nInstrumentID;
-	CInstrumentBarInfoStorager* m_pStorager;
+	CCFDInstrumentBarInfoStorager* m_pStorager;
 
 };
 
