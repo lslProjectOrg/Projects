@@ -20,7 +20,6 @@ public:
 	void setBarInfoFirst(const Bar&  nBarInfoFirst);
 	void setBarInfoSecond(const Bar&  nBarInfoSecond);
 	void setInterval(int nInterval);
-	void setCFDInstrumentID(int nCFDInstrumentID);
 public:
 	/*
 	note: DataFirst.Time == DataSecond.Time
@@ -28,11 +27,15 @@ public:
 	*/
 	int  buidCFDBarInfo();
 	void logInfo();
+	void setCFDInstrumentIDFirst(unsigned int nCFDInstrumentIDFirst);
+	void setCFDInstrumentIDSecond(unsigned int nCFDInstrumentIDSecond);
 private:
 	Bar m_nBarInfoFirst;
 	Bar m_nBarInfoSecond;
 	int m_nInterval;// = 5;//second
-	int m_nCFDInstrumentID;// = 3620*3521;
+	unsigned int m_nCFDInstrumentIDFirst;// = 3620*3521;
+	unsigned int m_nCFDInstrumentIDSecond;// = 3620*3521;
+public:
 	Bar m_CFDBarInfo;
 
 };

@@ -12,6 +12,15 @@ class CCFDInstrumentBarInfo;
 class CSyncMarketDataForCFD
 {
 public:
+	enum enSynType
+	{
+		SynType_BEGIN,
+		SynType_EQUAL,
+		SynType_SMALL,
+		SynType_BIGGER,
+		SynType_END,
+	};
+public:
 	typedef std::list<CCFDInstrumentBarInfo*>				  LstCFDBarInfoT;
 	typedef std::list<CCFDInstrumentBarInfo*>::iterator       LstCFDBarInfoIterT;
 
@@ -23,7 +32,8 @@ public:
 	~CSyncMarketDataForCFD(void);
 public:
 	void setInterval(int nInterval);
-	void setCFDInstrumentID(int nCFDInstrumentID);
+	void setCFDInstrumentIDFirst(unsigned int nCFDInstrumentIDFirst);
+	void setCFDInstrumentIDSecond(unsigned int nCFDInstrumentIDSecond);
 
 	int syncSingleCFDBarInfo( const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstCFDBarInfoT& lstCFDbarInfo);
 	int clearCFDBarInfoList(LstCFDBarInfoT& lstCFDbarInfo);
@@ -32,11 +42,16 @@ private:
 	int _SyncSingleBarInfo( const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, 
 		LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond);
 	int _ClearBarInfoList(LstBarInfoT& lstBarInfo);
+private:
 	int _SyncLstCFDBarInfo(LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond, LstCFDBarInfoT& lstCFDBarInfo);
+	int _SyncSingleBarInfoSynType( enSynType nSynType, const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond);
+	int _SyncSingleBarInfoSynTypeEqual( enSynType nSynType, const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond);
+	int _SyncSingleBarInfoSynTypeSmall( enSynType nSynType, const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond);
 private:
 	CCFDServerUtilityFun*    m_pUtilityFun;
 	int m_nInterval;// = 5;//second
-	int m_nCFDInstrumentID;// = 3620*3521;
+	unsigned int m_nCFDInstrumentIDFirst;//
+	unsigned int m_nCFDInstrumentIDSecond;//
 
 };
 

@@ -256,7 +256,7 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 		<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
 		<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
 		<<" "<<str_Column_Volume<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<"PRIMARY KEY (InstrumentID, Timestamp)"
+		<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
 		<<" "<<")";
 
 	strSQL = sreaamTmp.str();

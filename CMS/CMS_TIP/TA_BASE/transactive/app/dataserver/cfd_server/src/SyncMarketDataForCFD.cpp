@@ -1,6 +1,6 @@
 #include "SyncMarketDataForCFD.h"
 #include "CFDServerUtilityFun.h"
-
+#include "CFDInstrumentBarInfo.h"
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
 
@@ -11,8 +11,9 @@ CSyncMarketDataForCFD::CSyncMarketDataForCFD(void)
 {
 	BOOST_LOG_FUNCTION();
 	m_nInterval = 0;// = 5;//second
-	m_nCFDInstrumentID = 0;// = 3620*3521;
 	m_pUtilityFun = new CCFDServerUtilityFun();
+	m_nCFDInstrumentIDFirst = 0;//
+	m_nCFDInstrumentIDSecond = 0;//
 }
 
 CSyncMarketDataForCFD::~CSyncMarketDataForCFD( void )
@@ -39,13 +40,11 @@ int CSyncMarketDataForCFD::syncSingleCFDBarInfo(const Bar& nBarInfoFirst, const 
 	pLstBarInfoSecond = new LstBarInfoT();
 	pLstBarInfoFirst->clear();
 	pLstBarInfoSecond->clear();
-	//////////////////////////////////////////////////////////////////////////
 
 	_SyncSingleBarInfo(nBarInfoFirst, nBarInfoSecond, *pLstBarInfoFirst, *pLstBarInfoSecond);
 
 	_SyncLstCFDBarInfo(*pLstBarInfoFirst, *pLstBarInfoSecond, lstCFDbarInfo);
 
-	//////////////////////////////////////////////////////////////////////////
 	if (NULL != pLstBarInfoFirst)
 	{
 		_ClearBarInfoList(*pLstBarInfoFirst);
@@ -91,25 +90,149 @@ int CSyncMarketDataForCFD::_SyncSingleBarInfo(const Bar& nBarInfoFirst, const Ba
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
-	Bar* pNewBar = NULL;
+	enSynType nSynType = SynType_BEGIN;
 	//TODO.
+
+
 	if (nBarInfoFirst.Time == nBarInfoSecond.Time)
 	{
-		pNewBar = NULL;
-		pNewBar = new Bar();
-		*pNewBar = nBarInfoFirst;
-		lstBarInfoFirst.push_back(pNewBar);
-		pNewBar = NULL;
+		nSynType = SynType_EQUAL;
+	}	
+	else if (nBarInfoFirst.Time < nBarInfoSecond.Time)
+	{
+		nSynType = SynType_SMALL;
+	}
+	else if (nBarInfoFirst.Time > nBarInfoSecond.Time)
+	{
+		nSynType = SynType_BIGGER;
+	}
 
-		pNewBar = NULL;
-		pNewBar = new Bar();
-		*pNewBar = nBarInfoSecond;
-		lstBarInfoSecond.push_back(pNewBar);
-		pNewBar = NULL;
+	nFunRes = _SyncSingleBarInfoSynType(
+		nSynType,
+		nBarInfoFirst,
+		nBarInfoSecond,
+		lstBarInfoFirst,
+		lstBarInfoSecond);
+
+
+	return nFunRes;
+}
+
+
+int CSyncMarketDataForCFD::_SyncSingleBarInfoSynType(
+	enSynType nSynType,
+	const Bar& nBarInfoFirst, 
+	const Bar& nBarInfoSecond, 
+	LstBarInfoT& lstBarInfoFirst, 
+	LstBarInfoT& lstBarInfoSecond)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	switch (nSynType)
+	{
+	case SynType_EQUAL:
+		nFunRes = _SyncSingleBarInfoSynTypeEqual(nSynType, nBarInfoFirst, nBarInfoSecond, lstBarInfoFirst, lstBarInfoSecond);
+		break;
+	case SynType_SMALL:
+		nFunRes = _SyncSingleBarInfoSynTypeSmall(nSynType, nBarInfoFirst, nBarInfoSecond, lstBarInfoFirst, lstBarInfoSecond);		
+		break;
+	case SynType_BIGGER:
+		nFunRes = _SyncSingleBarInfoSynTypeSmall(nSynType, nBarInfoSecond, nBarInfoFirst, lstBarInfoSecond, lstBarInfoFirst);		
+		break;
+	default:
+		nFunRes = -1;
+		break;
 	}
 
 	return nFunRes;
 }
+
+
+int CSyncMarketDataForCFD::_SyncSingleBarInfoSynTypeEqual(
+	enSynType nSynType,
+	const Bar& nBarInfoFirst, 
+	const Bar& nBarInfoSecond, 
+	LstBarInfoT& lstBarInfoFirst, 
+	LstBarInfoT& lstBarInfoSecond)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	Bar* pNewBar = NULL;
+	
+	if (!(nBarInfoFirst.Time == nBarInfoSecond.Time))
+	{
+		nFunRes = -1;
+		return nFunRes;
+	}
+
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoFirst;
+	lstBarInfoFirst.push_back(pNewBar);
+	pNewBar = NULL;
+
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoSecond;
+	lstBarInfoSecond.push_back(pNewBar);
+	pNewBar = NULL;
+
+	return nFunRes;
+}
+
+
+
+int CSyncMarketDataForCFD::_SyncSingleBarInfoSynTypeSmall(
+	enSynType nSynType,
+	const Bar& nBarInfoFirst, 
+	const Bar& nBarInfoSecond, 
+	LstBarInfoT& lstBarInfoFirst, 
+	LstBarInfoT& lstBarInfoSecond)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	Bar* pNewBar = NULL;
+
+	if (!(nBarInfoFirst.Time < nBarInfoSecond.Time))
+	{
+		nFunRes = -1;
+		return nFunRes;
+	}
+
+	//syn small
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoFirst;
+	lstBarInfoFirst.push_back(pNewBar);
+	pNewBar = NULL;
+
+	
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoFirst;
+	pNewBar->Time = nBarInfoSecond.Time;
+	lstBarInfoFirst.push_back(pNewBar);
+	pNewBar = NULL;
+
+	//syn biger
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoSecond;
+	pNewBar->Time = nBarInfoFirst.Time;
+	lstBarInfoSecond.push_back(pNewBar);
+	pNewBar = NULL;
+
+
+	//syn biger
+	pNewBar = NULL;
+	pNewBar = new Bar();
+	*pNewBar = nBarInfoSecond;
+	lstBarInfoSecond.push_back(pNewBar);
+	pNewBar = NULL;
+
+	return nFunRes;
+}
+
 
 int CSyncMarketDataForCFD::_ClearBarInfoList(LstBarInfoT& lstBarInfo)
 {
@@ -167,7 +290,8 @@ int CSyncMarketDataForCFD::_SyncLstCFDBarInfo(LstBarInfoT& lstBarInfoFirst, LstB
 
 		pCFDInstrumentBarInfoTmp =new CCFDInstrumentBarInfo();
 
-		pCFDInstrumentBarInfoTmp->setCFDInstrumentID(m_nCFDInstrumentID);
+		pCFDInstrumentBarInfoTmp->setCFDInstrumentIDFirst(m_nCFDInstrumentIDFirst);
+		pCFDInstrumentBarInfoTmp->setCFDInstrumentIDSecond(m_nCFDInstrumentIDSecond);
 		pCFDInstrumentBarInfoTmp->setInterval(m_nInterval);
 		pCFDInstrumentBarInfoTmp->setBarInfoFirst(*pBarFirst);
 		pCFDInstrumentBarInfoTmp->setBarInfoSecond(*pBarSecond);
@@ -201,14 +325,20 @@ void CSyncMarketDataForCFD::setInterval(int nInterval)
 	m_nInterval = nInterval;// = 5;//second
 }
 
-void CSyncMarketDataForCFD::setCFDInstrumentID(int nCFDInstrumentID)
+void CSyncMarketDataForCFD::setCFDInstrumentIDFirst(unsigned int nCFDInstrumentIDFirst)
 {
 	BOOST_LOG_FUNCTION();
 
-	m_nCFDInstrumentID = nCFDInstrumentID;// = 3620*3521;
+	m_nCFDInstrumentIDFirst = nCFDInstrumentIDFirst;
 }
 
 
+void CSyncMarketDataForCFD::setCFDInstrumentIDSecond(unsigned int nCFDInstrumentIDSecond)
+{
+	BOOST_LOG_FUNCTION();
+
+	m_nCFDInstrumentIDSecond = nCFDInstrumentIDSecond;
+}
 
 
 

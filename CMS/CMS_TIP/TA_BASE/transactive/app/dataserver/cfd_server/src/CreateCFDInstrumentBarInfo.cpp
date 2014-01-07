@@ -15,14 +15,15 @@ USING_BOOST_LOG;
 NS_BEGIN(TA_Base_App)
 
 
-CCreateCFDInstrumentBarInfo::CCreateCFDInstrumentBarInfo(void)
+CCreateCFDInstrumentBarInfo::CCreateCFDInstrumentBarInfo(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond)
 {
 	BOOST_LOG_FUNCTION();
+	m_nInstrumentIDFirest = nInstrumentIDFirst;
+	m_nInstrumentIDSecond = nInstrumentIDSecond;
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_CSyncMarketDataForCFD = new CSyncMarketDataForCFD();
-	int nCFDInstrumentID = 3620*3521;
-
-	m_pCFDBarInfoCalculator = new CCFDInstrumentBarInfoCalculator(nCFDInstrumentID);
+	m_pCFDBarInfoCalculator = new CCFDInstrumentBarInfoCalculator(m_nInstrumentIDFirest, m_nInstrumentIDSecond);
+	
 }
 
 CCreateCFDInstrumentBarInfo::~CCreateCFDInstrumentBarInfo( void )
@@ -53,7 +54,6 @@ void CCreateCFDInstrumentBarInfo::doOneTest()
 {
 	BOOST_LOG_FUNCTION();
 	CSyncMarketDataForCFD::LstCFDBarInfoT   lstCFDBarInfoTmp;
-	int nCFDInstrumentID = 3620*3521;
 	int interval = 5;//second
 	int nFunRes = 0;
 
@@ -75,25 +75,34 @@ void CCreateCFDInstrumentBarInfo::doOneTest()
 	BarInfo_3621.Low = 2334;
 	BarInfo_3621.Volume = 0;
 
-
-	m_CSyncMarketDataForCFD->setCFDInstrumentID(nCFDInstrumentID);
+	m_CSyncMarketDataForCFD->setCFDInstrumentIDFirst(m_nInstrumentIDFirest);
+	m_CSyncMarketDataForCFD->setCFDInstrumentIDSecond(m_nInstrumentIDSecond);
 	m_CSyncMarketDataForCFD->setInterval(interval);
 	m_CSyncMarketDataForCFD->syncSingleCFDBarInfo(BarInfo_3620, BarInfo_3621, lstCFDBarInfoTmp);
 
-	//////////////////////////////////////////////////////////////////////////
+	UpdateCFDMarketData(lstCFDBarInfoTmp);
 
-
-
-	//////////////////////////////////////////////////////////////////////////
 	m_CSyncMarketDataForCFD->clearCFDBarInfoList(lstCFDBarInfoTmp);
 }
 
 int CCreateCFDInstrumentBarInfo::UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT&  lstCFDBarInfo)
-{
-	int nFunRes = 0;
+{	
 	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	CSyncMarketDataForCFD::LstCFDBarInfoIterT  iterLst;
+	CCFDInstrumentBarInfo* pCFDBarInfo = NULL;
 
-	m_pCFDBarInfoCalculator;
+	iterLst = lstCFDBarInfo.begin();
+	while (iterLst != lstCFDBarInfo.end())
+	{
+		pCFDBarInfo = (*iterLst);
+
+		m_pCFDBarInfoCalculator->updateMarketData(pCFDBarInfo);
+
+		iterLst++;
+	}
+
+	
 
 	return nFunRes;
 }

@@ -11,7 +11,7 @@ CCFDInstrumentBarInfo::CCFDInstrumentBarInfo(void)
 	BOOST_LOG_FUNCTION();
 }
 
-CCFDInstrumentBarInfo::~CCFDInstrumentBarInfo( void )
+CCFDInstrumentBarInfo::~CCFDInstrumentBarInfo(void)
 {
 	BOOST_LOG_FUNCTION();
 }
@@ -38,13 +38,20 @@ void CCFDInstrumentBarInfo::setInterval( int nInterval )
 
 }
 
-void CCFDInstrumentBarInfo::setCFDInstrumentID( int nCFDInstrumentID )
+void CCFDInstrumentBarInfo::setCFDInstrumentIDFirst(unsigned int nCFDInstrumentIDFirst)
 {
 	BOOST_LOG_FUNCTION();
-	m_nCFDInstrumentID = nCFDInstrumentID;
+
+	m_nCFDInstrumentIDFirst = nCFDInstrumentIDFirst;
 }
 
 
+void CCFDInstrumentBarInfo::setCFDInstrumentIDSecond(unsigned int nCFDInstrumentIDSecond)
+{
+	BOOST_LOG_FUNCTION();
+
+	m_nCFDInstrumentIDSecond = nCFDInstrumentIDSecond;
+}
 
 
 int CCFDInstrumentBarInfo::buidCFDBarInfo()

@@ -17,6 +17,7 @@ NS_BEGIN(TA_Base_App)
 
 class CCFDServerUtilityFun;
 class CCFDInstrumentBarInfoStorager;
+class CCFDInstrumentBarInfo;
 
 class CCFDInstrumentBarInfoCalculator 
 {
@@ -25,11 +26,11 @@ public:
 	typedef std::map<int, Bar*>::iterator    MapIntervalBarInfoIterT;
 	typedef std::map<int, Bar*>::value_type    MapIntervalBarInfoValueTypeT;
 public:
-	CCFDInstrumentBarInfoCalculator(unsigned int nInstrumentID);
+	CCFDInstrumentBarInfoCalculator(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);
 	~CCFDInstrumentBarInfoCalculator(void);
 
 public:
-	int updateMarketData(const MarketData& marketData);
+	int updateMarketData(CCFDInstrumentBarInfo* pCFDBarInfo);
 private:
 	int _ClearDataInMap(MapIntervalBarInfoT* pMapTimeBarInfo);
 	void HandleNewBar(int interval, const Bar &bar);
@@ -38,7 +39,8 @@ private:
 	BarCalculator*   m_pBarCalculator;
 	MapIntervalBarInfoT*   m_pMapTimeBarInfo;
 	CCFDServerUtilityFun*  m_pUtilityFun;
-	unsigned int m_nInstrumentID;
+	unsigned int m_nInstrumentIDFirest;
+	unsigned int m_nInstrumentIDSecond;
 	CCFDInstrumentBarInfoStorager* m_pStorager;
 
 };

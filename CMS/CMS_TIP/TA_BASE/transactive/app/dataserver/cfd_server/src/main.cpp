@@ -103,8 +103,10 @@ void Test_CMarketDataPathManager()
 
 void Test_CCreateCFDInstrumentBarInfo()
 {
+	unsigned int nInstrumentIDFirst = 3620;
+	unsigned int nInstrumentIDSecond = 3621;
 	CCreateCFDInstrumentBarInfo* pCreateCFDInstrumentBarInfo = NULL;
-	pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo();
+	pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo(nInstrumentIDFirst, nInstrumentIDSecond);
 
 
 	pCreateCFDInstrumentBarInfo->doOneTest();

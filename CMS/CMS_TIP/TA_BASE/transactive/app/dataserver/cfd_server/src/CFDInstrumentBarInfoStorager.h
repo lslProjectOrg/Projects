@@ -38,7 +38,7 @@ public:
 	typedef std::map<int, std::string>::iterator      MapIntervalDBTableNameIterT;
 	typedef std::map<int, std::string>::value_type    MapIntervalDBTableNameValueTypeT;
 public:
-	CCFDInstrumentBarInfoStorager(unsigned int nInstrumentID);
+	CCFDInstrumentBarInfoStorager(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);
 	~CCFDInstrumentBarInfoStorager(void);
 public:
 	int storeBarInfo(int interval, Bar* pBarInfo);
@@ -47,17 +47,16 @@ private:
 	int _InsertData(int interval, Bar* pBarInfo);
 	int _DropDBTable(const std::string& strDbTableName);
 	int _CreateDBTable(const std::string& strDbTableName);
-	std::string _GetDBTableName(unsigned int nInstrumentID, int interval);
+	std::string _GetDBTableName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval);
 	int _Exec( const std::string& strSQL);
 	std::string _BuildInsertSQL(const std::string& strTableName);
-	std::string _GetDBName(unsigned int nInstrumentID);
-	std::string _BuildBarDataTableName(unsigned int nInstrumentID, int interval);
+	std::string _GetDBName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);
+	std::string _BuildBarDataTableName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval);
 	void _InitDataBase();
 	void _UnInitDataBase();
-	std::string _BuildInsertSQLEx(const std::string& strTableName, Bar* pBarInfo);
-	int _InsertDataEx(int interval, Bar* pBarInfo);
 private:
-	unsigned int m_nInstrumentID;
+	unsigned int m_nInstrumentIDFirst;
+	unsigned int m_nInstrumentIDSecond;
 	std::string m_strDBName;//SQLiteDB_3306.db
 	std::string m_strDBType;// defSQLiteDBName defMysqlDBName
 	TA_Base_Core::DbServerType m_nDBType;//enumSqliteDb enumMysqlDb
