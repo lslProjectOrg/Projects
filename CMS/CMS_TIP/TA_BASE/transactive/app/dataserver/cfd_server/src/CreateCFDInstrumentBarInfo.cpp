@@ -56,33 +56,127 @@ void CCreateCFDInstrumentBarInfo::doOneTest()
 	CSyncMarketDataForCFD::LstCFDBarInfoT   lstCFDBarInfoTmp;
 	int interval = 5;//second
 	int nFunRes = 0;
+	CSyncMarketDataForCFD::enNextWorkType nNextWorkType;
 
-	Bar BarInfo_3620;
-	Bar BarInfo_3621;
+	//prepare data
+	Bar BarInfo_First;
+	Bar BarInfo_Second;
+	std::list<Bar>  lstBarFirst;
+	std::list<Bar>::iterator  iterLstFirst;
+	std::list<Bar>  lstBarSecond;
+	std::list<Bar>::iterator  iterLstSecond;
+
+	BarInfo_First.Time = 1387502100;
+	BarInfo_First.Open = 2346;
+	BarInfo_First.Close = 2345;
+	BarInfo_First.High = 2347;
+	BarInfo_First.Low = 2344;
+	BarInfo_First.Volume = 0;
+
+	BarInfo_Second.Time = 1387502110;
+	BarInfo_Second.Open = 2336;
+	BarInfo_Second.Close = 2335;
+	BarInfo_Second.High = 2337;
+	BarInfo_Second.Low = 2334;
+	BarInfo_Second.Volume = 0;
+
+	//type1 small
+	BarInfo_First.Time = 1387502100;
+	BarInfo_Second.Time = 1387502110;
+	lstBarFirst.push_back(BarInfo_First);
+	lstBarSecond.push_back(BarInfo_Second);	
+
+	//type2 bigger
+	BarInfo_First.Time = 1387502115;
+	BarInfo_Second.Time = 1387502112;
+	lstBarFirst.push_back(BarInfo_First);
+	lstBarSecond.push_back(BarInfo_Second);	
+
+	//type3 equal
+	BarInfo_First.Time = 1387502120;
+	BarInfo_Second.Time = 1387502120;
+	lstBarFirst.push_back(BarInfo_First);
+	lstBarSecond.push_back(BarInfo_Second);
+
+	//type3 equal
+	BarInfo_First.Time = 1387502130;
+	BarInfo_Second.Time = 1387502130;
+	lstBarFirst.push_back(BarInfo_First);
+	lstBarSecond.push_back(BarInfo_Second);	
+
+	//type3 equal
+	BarInfo_First.Time = 1387502135;
+	BarInfo_Second.Time = 1387502140;
+	lstBarFirst.push_back(BarInfo_First);
+	lstBarSecond.push_back(BarInfo_Second);	
 
 
-	BarInfo_3620.Time = 1387502103;
-	BarInfo_3620.Open = 2346;
-	BarInfo_3620.Close = 2345;
-	BarInfo_3620.High = 2347;
-	BarInfo_3620.Low = 2344;
-	BarInfo_3620.Volume = 0;
-
-	BarInfo_3621.Time = 1387502103;
-	BarInfo_3621.Open = 2336;
-	BarInfo_3621.Close = 2335;
-	BarInfo_3621.High = 2337;
-	BarInfo_3621.Low = 2334;
-	BarInfo_3621.Volume = 0;
-
+	//get CFD bar
 	m_CSyncMarketDataForCFD->setCFDInstrumentIDFirst(m_nInstrumentIDFirest);
 	m_CSyncMarketDataForCFD->setCFDInstrumentIDSecond(m_nInstrumentIDSecond);
 	m_CSyncMarketDataForCFD->setInterval(interval);
-	m_CSyncMarketDataForCFD->syncSingleCFDBarInfo(BarInfo_3620, BarInfo_3621, lstCFDBarInfoTmp);
 
-	UpdateCFDMarketData(lstCFDBarInfoTmp);
 
-	m_CSyncMarketDataForCFD->clearCFDBarInfoList(lstCFDBarInfoTmp);
+	iterLstFirst = lstBarFirst.begin();
+	iterLstSecond = lstBarSecond.begin();
+
+	//15705914359
+	while 
+		(
+			(iterLstFirst != lstBarFirst.end())
+			|| (iterLstSecond != lstBarSecond.end())
+		)
+	{
+		if (iterLstFirst != lstBarFirst.end())
+		{
+			BarInfo_First = (*iterLstFirst);
+		}
+		if (iterLstSecond != lstBarSecond.end())
+		{
+			BarInfo_Second = (*iterLstSecond);
+		}
+
+		m_CSyncMarketDataForCFD->syncSingleCFDBarInfo(BarInfo_First, BarInfo_Second, lstCFDBarInfoTmp, nNextWorkType);
+		UpdateCFDMarketData(lstCFDBarInfoTmp);
+		m_CSyncMarketDataForCFD->clearCFDBarInfoList(lstCFDBarInfoTmp);
+
+		if (nNextWorkType == CSyncMarketDataForCFD::NextWorkType_UseNewFirst_UseNewSecond)
+		{
+			if (iterLstFirst != lstBarFirst.end())
+			{
+				iterLstFirst++;
+			}
+			if (iterLstSecond != lstBarSecond.end())
+			{
+				iterLstSecond++;
+			}
+		}
+		else if (nNextWorkType == CSyncMarketDataForCFD::NextWorkType_UseNewFirst_ReUseSecond)
+		{
+			if (iterLstFirst != lstBarFirst.end())
+			{
+				iterLstFirst++;
+			}
+			else
+			{
+				//last data
+				BarInfo_First.Time = BarInfo_Second.Time;
+			}
+		}
+		else if (nNextWorkType == CSyncMarketDataForCFD::NextWorkType_ReUseFirst_UseNewSecond)
+		{
+			if (iterLstSecond != lstBarSecond.end())
+			{
+				iterLstSecond++;
+			}
+			else
+			{
+				//last data
+				BarInfo_Second.Time = BarInfo_First.Time;
+			}
+		}
+
+	}//while
 }
 
 int CCreateCFDInstrumentBarInfo::UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT&  lstCFDBarInfo)

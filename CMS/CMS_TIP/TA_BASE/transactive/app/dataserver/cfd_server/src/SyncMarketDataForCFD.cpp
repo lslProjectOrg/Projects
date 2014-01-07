@@ -28,7 +28,11 @@ CSyncMarketDataForCFD::~CSyncMarketDataForCFD( void )
 
 
 
-int CSyncMarketDataForCFD::syncSingleCFDBarInfo(const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstCFDBarInfoT& lstCFDbarInfo)
+int CSyncMarketDataForCFD::syncSingleCFDBarInfo(
+	const Bar& nBarInfoFirst, 
+	const Bar& nBarInfoSecond,
+	LstCFDBarInfoT& lstCFDbarInfo,
+	enNextWorkType& nNextWorkType)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -41,7 +45,7 @@ int CSyncMarketDataForCFD::syncSingleCFDBarInfo(const Bar& nBarInfoFirst, const 
 	pLstBarInfoFirst->clear();
 	pLstBarInfoSecond->clear();
 
-	_SyncSingleBarInfo(nBarInfoFirst, nBarInfoSecond, *pLstBarInfoFirst, *pLstBarInfoSecond);
+	_SyncSingleBarInfo(nBarInfoFirst, nBarInfoSecond, *pLstBarInfoFirst, *pLstBarInfoSecond, nNextWorkType);
 
 	_SyncLstCFDBarInfo(*pLstBarInfoFirst, *pLstBarInfoSecond, lstCFDbarInfo);
 
@@ -86,7 +90,12 @@ int CSyncMarketDataForCFD::clearCFDBarInfoList(LstCFDBarInfoT& lstCFDbarInfo)
 	return nFunRes;
 }
 
-int CSyncMarketDataForCFD::_SyncSingleBarInfo(const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond)
+int CSyncMarketDataForCFD::_SyncSingleBarInfo(
+	const Bar& nBarInfoFirst, 
+	const Bar& nBarInfoSecond, 
+	LstBarInfoT& lstBarInfoFirst, 
+	LstBarInfoT& lstBarInfoSecond,
+	enNextWorkType& nNextWorkType)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -97,14 +106,17 @@ int CSyncMarketDataForCFD::_SyncSingleBarInfo(const Bar& nBarInfoFirst, const Ba
 	if (nBarInfoFirst.Time == nBarInfoSecond.Time)
 	{
 		nSynType = SynType_EQUAL;
+		nNextWorkType = NextWorkType_UseNewFirst_UseNewSecond;
 	}	
 	else if (nBarInfoFirst.Time < nBarInfoSecond.Time)
 	{
 		nSynType = SynType_SMALL;
+		nNextWorkType = NextWorkType_UseNewFirst_ReUseSecond;
 	}
 	else if (nBarInfoFirst.Time > nBarInfoSecond.Time)
 	{
 		nSynType = SynType_BIGGER;
+		nNextWorkType = NextWorkType_ReUseFirst_UseNewSecond;
 	}
 
 	nFunRes = _SyncSingleBarInfoSynType(
@@ -206,27 +218,11 @@ int CSyncMarketDataForCFD::_SyncSingleBarInfoSynTypeSmall(
 	lstBarInfoFirst.push_back(pNewBar);
 	pNewBar = NULL;
 
-	
-	pNewBar = NULL;
-	pNewBar = new Bar();
-	*pNewBar = nBarInfoFirst;
-	pNewBar->Time = nBarInfoSecond.Time;
-	lstBarInfoFirst.push_back(pNewBar);
-	pNewBar = NULL;
-
 	//syn biger
 	pNewBar = NULL;
 	pNewBar = new Bar();
 	*pNewBar = nBarInfoSecond;
 	pNewBar->Time = nBarInfoFirst.Time;
-	lstBarInfoSecond.push_back(pNewBar);
-	pNewBar = NULL;
-
-
-	//syn biger
-	pNewBar = NULL;
-	pNewBar = new Bar();
-	*pNewBar = nBarInfoSecond;
 	lstBarInfoSecond.push_back(pNewBar);
 	pNewBar = NULL;
 

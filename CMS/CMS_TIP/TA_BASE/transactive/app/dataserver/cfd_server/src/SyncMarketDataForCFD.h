@@ -20,6 +20,15 @@ public:
 		SynType_BIGGER,
 		SynType_END,
 	};
+
+	enum enNextWorkType
+	{
+		NextWorkType_BEGIN,
+		NextWorkType_UseNewFirst_UseNewSecond,
+		NextWorkType_UseNewFirst_ReUseSecond,
+		NextWorkType_ReUseFirst_UseNewSecond,
+		NextWorkType_END,
+	};
 public:
 	typedef std::list<CCFDInstrumentBarInfo*>				  LstCFDBarInfoT;
 	typedef std::list<CCFDInstrumentBarInfo*>::iterator       LstCFDBarInfoIterT;
@@ -35,12 +44,20 @@ public:
 	void setCFDInstrumentIDFirst(unsigned int nCFDInstrumentIDFirst);
 	void setCFDInstrumentIDSecond(unsigned int nCFDInstrumentIDSecond);
 
-	int syncSingleCFDBarInfo( const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, LstCFDBarInfoT& lstCFDbarInfo);
+	int syncSingleCFDBarInfo( 
+		const Bar& nBarInfoFirst, 
+		const Bar& nBarInfoSecond, 
+		LstCFDBarInfoT& lstCFDbarInfo,
+		enNextWorkType& nNextWorkType);
 	int clearCFDBarInfoList(LstCFDBarInfoT& lstCFDbarInfo);
 
 private:
-	int _SyncSingleBarInfo( const Bar& nBarInfoFirst, const Bar& nBarInfoSecond, 
-		LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond);
+	int _SyncSingleBarInfo( 
+		const Bar& nBarInfoFirst, 
+		const Bar& nBarInfoSecond, 
+		LstBarInfoT& lstBarInfoFirst, 
+		LstBarInfoT& lstBarInfoSecond,
+		enNextWorkType& nNextWorkType);
 	int _ClearBarInfoList(LstBarInfoT& lstBarInfo);
 private:
 	int _SyncLstCFDBarInfo(LstBarInfoT& lstBarInfoFirst, LstBarInfoT& lstBarInfoSecond, LstCFDBarInfoT& lstCFDBarInfo);
