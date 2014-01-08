@@ -4,7 +4,7 @@
 
 #include "MarketData.h"
 #include "BarCalculator.h"
-#include "InsteumentBarInfoStorager.h"
+#include "InstrumentBarInfoStorager.h"
 //#include "InsteumentBarInfoStoragerMysql.h"
 #include "CFDServerUtilityFun.h"
 

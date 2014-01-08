@@ -255,19 +255,19 @@
 			Name="BarInfo"
 			>
 			<File
-				RelativePath=".\src\InsteumentBarInfoStorager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InsteumentBarInfoStorager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\InstrumentBarInfoCalculator.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\InstrumentBarInfoCalculator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentBarInfoStorager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentBarInfoStorager.h"
 				>
 			</File>
 			<File
@@ -340,6 +340,14 @@
 			</File>
 			<File
 				RelativePath=".\src\CreateCFDInstrumentBarInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\PrepareDataForCFDRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\PrepareDataForCFDRequest.h"
 				>
 			</File>
 			<File

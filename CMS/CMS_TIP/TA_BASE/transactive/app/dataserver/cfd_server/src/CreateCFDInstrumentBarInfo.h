@@ -11,21 +11,36 @@ NS_BEGIN(TA_Base_App)
 class CCFDServerUtilityFun;
 class CCFDInstrumentBarInfo;
 class CCFDInstrumentBarInfoCalculator;
+class CInstrumentBarInfoStorager;
 
 class CCreateCFDInstrumentBarInfo
 {
 public:
+	typedef std::list<Bar>				LstBarInfoT;
+	typedef std::list<Bar>::iterator	LstBarInfoIterT;
+public:
 	CCreateCFDInstrumentBarInfo(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);	
 	~CCreateCFDInstrumentBarInfo(void);
 public:
+	//use Instrument 5seconds bar info to calc  CFD 1mins bar Info
+	void setInterval(int nInterval);
+	int createCFDbarInfoByDB();
+	void createCFDbarInfoByLst(LstBarInfoT& lstBarFirst, LstBarInfoT& lstBarSecond);
+public:
 	void doOneTest();
-	int UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT& lstCFDBarInfo);
+
+private:
+	int _UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT& lstCFDBarInfo);
+	int _InitInstrumentDataSource(unsigned int nInstrumentID, int nInterval, CInstrumentBarInfoStorager** ppStorager);
+	int _UnInitInstrumentDataSource(unsigned int nInstrumentID, int nInterval, CInstrumentBarInfoStorager** ppStorager);
+	int _GetNextBarInfo( CInstrumentBarInfoStorager* pStorager, bool& bIsLstEnd, Bar& BarInfoGet);
 private:
 	CCFDServerUtilityFun*    m_pUtilityFun;
 	CSyncMarketDataForCFD*   m_CSyncMarketDataForCFD;
 	CCFDInstrumentBarInfoCalculator*   m_pCFDBarInfoCalculator;
-	unsigned int m_nInstrumentIDFirest;
+	unsigned int m_nInstrumentIDFirst;
 	unsigned int m_nInstrumentIDSecond;
+	int m_nInterval;
 };
 
 

@@ -62,27 +62,31 @@ public:
 	~CInstrumentBarInfoStorager(void);
 public:
 	int storeBarInfo(int interval, Bar* pBarInfo);
+	std::string getBarInfoDBName(unsigned int nInstrumentID);
+	std::string getBarInfoDBTableName(unsigned int nInstrumentID, int interval);
+public:
+	int beginGetBarInfo(unsigned int nInstrumentID, int interval);
+	int getNextBarInfo(Bar& getNextBarInfo);
 
 private:
 	int _InsertData(int interval, Bar* pBarInfo);
-	int _DropDBTable(const std::string& strDbTableName);
 	int _CreateDBTable(const std::string& strDbTableName);
-	std::string _GetDBTableName(unsigned int nInstrumentID, int interval);
+	std::string _CheckAndInitDBTable(unsigned int nInstrumentID, int interval);
 	int _Exec( const std::string& strSQL);
 	std::string _BuildInsertSQL(const std::string& strTableName);
-	std::string _GetDBName(unsigned int nInstrumentID);
-	std::string _BuildBarDataTableName(unsigned int nInstrumentID, int interval);
+	std::string _BuildSelectSQL(const std::string& strTableName);
+	std::string _BuildCreateDBTableSQL(const std::string& strTableName);
+	std::string _BuildDropDBTableSQL(const std::string& strDbTableName);
 	void _InitDataBase();
 	void _UnInitDataBase();
-	std::string _BuildInsertSQLEx(const std::string& strTableName, Bar* pBarInfo);
-	int _InsertDataEx(int interval, Bar* pBarInfo);
 private:
 	unsigned int m_nInstrumentID;
 	std::string m_strDBName;//SQLiteDB_3306.db
 	std::string m_strDBType;// defSQLiteDBName defMysqlDBName
 	TA_Base_Core::DbServerType m_nDBType;//enumSqliteDb enumMysqlDb
 private:
-	QSqlDatabase		m_QSqlDataBase;
+	QSqlDatabase*		m_pQSqlDataBase;
+	QSqlQuery*			m_pQSqlQuery;
 	CCFDServerUtilityFun*   m_pUtilityFun;
 	MapIntervalDBTableNameT* m_pmapIntervalDBTableName;
 };

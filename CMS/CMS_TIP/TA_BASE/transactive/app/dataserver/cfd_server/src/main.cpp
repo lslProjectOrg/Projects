@@ -1,17 +1,14 @@
 //#include "vld.h"
 #include <signal.h>
 #include <iostream>
-// #include <QtCore/QCoreApplication>
-// #include <QtSql/QSqlDatabase>
-// #include <QtSql/QtSql>
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
+#include "CFDServerCommonData.h"
 #include "MarketDataPathManager.h"
 #include "core/utilities/src/WorkTime.h"
-
-#include "CreateCFDInstrumentBarInfo.h"
+#include "PrepareDataForCFDRequest.h"
 
 #include "core/utilities/src/BoostLogger.h"
 USING_BOOST_LOG;
@@ -91,7 +88,7 @@ void Test_CMarketDataPathManager()
 
 	pWorkTime->workEnd();
 
-	LOG_INFO<<"work time = "<<pWorkTime->getWorkTime();
+	LOG_INFO<<"Test_CMarketDataPathManager work time = "<<pWorkTime->getWorkTime();
 
 	if (NULL != pWorkTime)
 	{
@@ -101,21 +98,37 @@ void Test_CMarketDataPathManager()
 
 }
 
-void Test_CCreateCFDInstrumentBarInfo()
+void Test_PrepareDataForCFDRequest()
 {
+	int nFunRes = 0;
 	unsigned int nInstrumentIDFirst = 3620;
 	unsigned int nInstrumentIDSecond = 3621;
-	CCreateCFDInstrumentBarInfo* pCreateCFDInstrumentBarInfo = NULL;
-	pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo(nInstrumentIDFirst, nInstrumentIDSecond);
+	int nCFDBarInterval = TA_Base_Core::TIME_BASE_S_1MIN;
+	int nInstrumentBarInterval = TA_Base_Core::TIME_BASE_S_5S;
+	CPrepareDataForCFDRequest* pPrepareDataForCFDRequest = NULL;
+	CPrepareDataForCFDRequest::LstBarInfoT  lstCFDBarInfo;
+	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
+	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
+	pWorkTime->workBegin();
 
+	pPrepareDataForCFDRequest = new CPrepareDataForCFDRequest(nInstrumentIDFirst, nInstrumentIDSecond);
+	pPrepareDataForCFDRequest->setCFDBarInterval(nCFDBarInterval);//get 1mins bar info list
+	pPrepareDataForCFDRequest->setInstrumentBarInterval(nInstrumentBarInterval);//use Instrument 5seconds bar info to calc  CFD 1mins bar Info
+	nFunRes = pPrepareDataForCFDRequest->getCFDBarInfo(lstCFDBarInfo);
 
-	pCreateCFDInstrumentBarInfo->doOneTest();
+	pWorkTime->workEnd();
 
-
-	if (NULL != pCreateCFDInstrumentBarInfo)
+	LOG_INFO<<"Test_PrepareDataForCFDRequest work time = "<<pWorkTime->getWorkTime();
+	if (NULL != pWorkTime)
 	{
-		delete pCreateCFDInstrumentBarInfo;
-		pCreateCFDInstrumentBarInfo = NULL;
+		delete pWorkTime;
+		pWorkTime = NULL;
+	}
+
+	if (NULL != pPrepareDataForCFDRequest)
+	{
+		delete pPrepareDataForCFDRequest;
+		pPrepareDataForCFDRequest = NULL;
 	}
 }
 //////////////////////////////////////////////////////////////////////////
@@ -127,21 +140,13 @@ int main( int argc, char* argv[])
 	logInit();
 	BOOST_LOG_FUNCTION();
 
-// 	QCoreApplication a(argc, argv);
-// 	LOG_INFO<<"Available drivers:";
-// 	QStringList drivers = QSqlDatabase::drivers();
-// 	foreach(QString driver, drivers)
-// 	{
-// 		LOG_INFO<<"qt support:"<<driver.toStdString();
-// 	}
-
 	signal(SIGINT, usr_signal);
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
 	//Test_CMarketDataPathManager();
 
-	Test_CCreateCFDInstrumentBarInfo();
+	Test_PrepareDataForCFDRequest();
 
 	//sleep
 	{	

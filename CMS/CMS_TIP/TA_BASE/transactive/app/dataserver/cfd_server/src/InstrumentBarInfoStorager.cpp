@@ -1,4 +1,4 @@
-#include "InsteumentBarInfoStorager.h"
+#include "InstrumentBarInfoStorager.h"
 
  
 
@@ -53,8 +53,9 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentI
 	//m_strDBType = defMysqlDBName;
 	//m_nDBType = TA_Base_Core::enumMysqlDb;
 
-	m_strDBName = _GetDBName(nInstrumentID);
-
+	m_strDBName = getBarInfoDBName(nInstrumentID);
+	m_pQSqlDataBase = NULL;
+	m_pQSqlQuery = NULL;
 	_InitDataBase();
 
 }
@@ -83,50 +84,65 @@ CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
 void CInstrumentBarInfoStorager::_InitDataBase()
 {
 	bool bExecRes = false;
+
+	if (NULL != m_pQSqlDataBase)
+	{
+		m_pQSqlDataBase->close();
+		delete m_pQSqlDataBase;
+		m_pQSqlDataBase = NULL;
+	}
+
 	//SQLiteDB_3306.db
 	//mysqldb_3306
 	switch (m_nDBType)
 	{
 	case TA_Base_Core::enumSqliteDb:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str());	
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "user"));
+		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	case TA_Base_Core::enumMysqlDb:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QMYSQL");
-		m_QSqlDataBase.setHostName("127.0.0.1");
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-		m_QSqlDataBase.setUserName("root");
-		m_QSqlDataBase.setPassword("root");
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL", "user"));
+		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
+		m_pQSqlDataBase->setHostName("127.0.0.1");
+		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
+		m_pQSqlDataBase->setUserName("root");
+		m_pQSqlDataBase->setPassword("root");
 		break;
 	default:
-		m_QSqlDataBase = QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str());	
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-
-		QSqlDatabase *db = new QSqlDatabase;
-		db->addDatabase("QSQLITE", "sqlitedb");
-		//db->addDatabase("QMYSQL", "mysqldb");
-		m_QSqlDataBase.setHostName("127.0.0.1");
-		m_QSqlDataBase.setDatabaseName(m_strDBName.c_str());
-		db->setUserName("root");
-		m_QSqlDataBase.setPassword("root");
-		m_QSqlDataBase = *db;
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "user"));
+		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	}
 
-	bExecRes = m_QSqlDataBase.open();
+	bExecRes = m_pQSqlDataBase->open();
 	if (!bExecRes)
 	{
-		LOG_ERROR<<"Fail to open db:"<<m_strDBName<<" error:"<<m_QSqlDataBase.lastError().text().toStdString();
+		LOG_ERROR<<"Fail to open db:"<<m_strDBName<<" error:"<<m_pQSqlDataBase->lastError().text().toStdString();
 	}
 }
 
 void CInstrumentBarInfoStorager::_UnInitDataBase()
 {
-	m_QSqlDataBase.close();
+	if (NULL != m_pQSqlDataBase)
+	{
+		m_pQSqlDataBase->close();
+		delete m_pQSqlDataBase;
+		m_pQSqlDataBase = NULL;
+		QSqlDatabase::removeDatabase("user");
+	}
+
+	if (NULL != m_pQSqlQuery)
+	{
+		m_pQSqlQuery->clear();
+		m_pQSqlQuery->finish();
+		delete m_pQSqlQuery;
+		m_pQSqlQuery = NULL;
+	}
+
 }
 
 
-std::string CInstrumentBarInfoStorager::_GetDBName(unsigned int nInstrumentID)
+std::string CInstrumentBarInfoStorager::getBarInfoDBName(unsigned int nInstrumentID)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -154,7 +170,7 @@ std::string CInstrumentBarInfoStorager::_GetDBName(unsigned int nInstrumentID)
 	return strInstrumentSQLDBName;
 }
 
-std::string CInstrumentBarInfoStorager::_BuildBarDataTableName(unsigned int nInstrumentID, int interval)
+std::string CInstrumentBarInfoStorager::getBarInfoDBTableName(unsigned int nInstrumentID, int interval)
 {
 	BOOST_LOG_FUNCTION();	
 	std::string strBarDataTableName;
@@ -200,7 +216,7 @@ std::string CInstrumentBarInfoStorager::_BuildBarDataTableName(unsigned int nIns
 	strBarDataTableName = sreaamTmp.str();
 	return strBarDataTableName;
 }
-std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrumentID, int interval)
+std::string CInstrumentBarInfoStorager::_CheckAndInitDBTable(unsigned int nInstrumentID, int interval)
 {
 	BOOST_LOG_FUNCTION();
 
@@ -215,18 +231,16 @@ std::string CInstrumentBarInfoStorager::_GetDBTableName(unsigned int nInstrument
 		return strTableName;
 	}
 
-	strTableName = _BuildBarDataTableName(nInstrumentID, interval);
+	strTableName = getBarInfoDBTableName(nInstrumentID, interval);
 	_CreateDBTable(strTableName);
 	m_pmapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(interval, strTableName));
 	return strTableName;
 }
 
 
-
-int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName)
+std::string CInstrumentBarInfoStorager::_BuildCreateDBTableSQL(const std::string& strTableName)
 {
 	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
 	std::ostringstream sreaamTmp;
 	std::string strSQL;
 
@@ -247,7 +261,7 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 	*/
 
 	sreaamTmp.str("");
-	sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strDbTableName
+	sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
 		<<" "<<"("
 		<<" "<<str_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
 		<<" "<<str_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
@@ -256,18 +270,25 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 		<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
 		<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
 		<<" "<<str_Column_Volume<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<"PRIMARY KEY (InstrumentID, Timestamp)"
+		<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
 		<<" "<<")";
 
 	strSQL = sreaamTmp.str();
+	return strSQL;
+}
+int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	std::string strSQL;
+	strSQL = _BuildCreateDBTableSQL(strDbTableName);
 	nFunRes = _Exec(strSQL);
 	return nFunRes;
 }
 
-int CInstrumentBarInfoStorager::_DropDBTable(const std::string& strDbTableName)
+std::string CInstrumentBarInfoStorager::_BuildDropDBTableSQL(const std::string& strDbTableName)
 {
 	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
 	std::ostringstream sreaamTmp;
 	std::string strSQL;
 	
@@ -276,8 +297,7 @@ int CInstrumentBarInfoStorager::_DropDBTable(const std::string& strDbTableName)
 	sreaamTmp<<"DROP TABLE "<<strDbTableName;
 
 	strSQL = sreaamTmp.str();
-	nFunRes = _Exec(strSQL);
-	return nFunRes;
+	return strSQL;
 }
 
 
@@ -351,21 +371,28 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQL(const std::string& strTa
 }
 
 
-
-std::string CInstrumentBarInfoStorager::_BuildInsertSQLEx(const std::string& strTableName, Bar* pBarInfo)
+std::string CInstrumentBarInfoStorager::_BuildSelectSQL(const std::string& strTableName)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
 	std::string strSQL;
 
-	std::string strTimeStr;
-	strTimeStr = m_pUtilityFun->dataTimeToStr(pBarInfo->Time);
-
-	//INSERT INTO bar_data_5seconds ( InstrumentID, Timestamp, Open, Close, High, Low, Volume ) VALUES ( 3620, '2014-01-05 14:15:12', 2340.8, 2340.8, 2340.8, 2340.8, 0 );
+	/*
+	SELECT 
+	InstrumentID, 
+	Timestamp, 
+	Open, 
+	Close, 
+	High,
+	Low, 
+	Volume
+	FROM bar_data_15mins
+	order by Timestamp
+	;
+	*/
 
 	sreaamTmp.str("");
-	sreaamTmp<<"INSERT INTO "<<strTableName
-		<<" "<<"("
+	sreaamTmp<<"SELECT"
 		<<" "<<str_Column_InstrumentID<<","
 		<<" "<<str_Column_Timestamp<<","
 		<<" "<<str_Column_Open<<","
@@ -373,22 +400,14 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQLEx(const std::string& str
 		<<" "<<str_Column_High<<","
 		<<" "<<str_Column_Low<<","
 		<<" "<<str_Column_Volume
-		<<" "<<")"
-		<<" "<<"VALUES"
-		<<" "<<"("
-		<<" "<<m_nInstrumentID<<","
-		<<" "<<"'"<<strTimeStr<<"'"<<","
-		<<" "<<pBarInfo->Open<<","
-		<<" "<<pBarInfo->Close<<","
-		<<" "<<pBarInfo->High<<","
-		<<" "<<pBarInfo->Low<<","
-		<<" "<<pBarInfo->Volume
-		<<" "<<")";
-
+		<<" "<<"FROM"<<" "<<strTableName
+		<<" "<<"ORDER BY"<<" "<<str_Column_Timestamp;
 
 	strSQL = sreaamTmp.str();
 	return strSQL;	
 }
+
+
 
 int CInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
 {
@@ -396,11 +415,11 @@ int CInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
 	int nFunRes = 0;
 	bool bExecRes = true;
 	std::string strTimeStr;
-	QSqlQuery query(m_QSqlDataBase);
+	QSqlQuery query(*m_pQSqlDataBase);
 
 	std::string strDBTableName;
 	std::string strSQL;
-	strDBTableName = _GetDBTableName(m_nInstrumentID, interval);
+	strDBTableName = _CheckAndInitDBTable(m_nInstrumentID, interval);
 	strSQL = _BuildInsertSQL(strDBTableName);
 	LOG_DEBUG<<"strSQL="<<strSQL;
 
@@ -426,22 +445,6 @@ int CInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
 }
 
 
-int CInstrumentBarInfoStorager::_InsertDataEx(int interval, Bar* pBarInfo)
-{
-	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
-	bool bExecRes = true;
-	std::string strTimeStr;
-	std::string strDBTableName;
-	std::string strSQL;
-
-
-	strDBTableName = _GetDBTableName(m_nInstrumentID, interval);
-	strSQL = _BuildInsertSQLEx(strDBTableName, pBarInfo);
-	nFunRes = _Exec(strSQL);
-	return nFunRes;
-}
-
 int CInstrumentBarInfoStorager::_Exec( const std::string& strSQL)
 {
 	BOOST_LOG_FUNCTION();
@@ -449,7 +452,7 @@ int CInstrumentBarInfoStorager::_Exec( const std::string& strSQL)
 	bool bExecRes = true;
 	LOG_DEBUG<<"strSQL="<<strSQL;
 
-	QSqlQuery query(m_QSqlDataBase);
+	QSqlQuery query(*m_pQSqlDataBase);
 	bExecRes = query.exec(strSQL.c_str());
 	if (!bExecRes)
 	{
@@ -468,12 +471,98 @@ int CInstrumentBarInfoStorager::storeBarInfo(int interval, Bar* pBarInfo)
 	int nFunRes = 0;
 
 	nFunRes = _InsertData(interval, pBarInfo);
-	//nFunRes = _InsertDataEx(interval, pBarInfo);
-
 	
 	return nFunRes;
 }
 
+//////////////////////////////////////////////////////////////////////////
+int CInstrumentBarInfoStorager::beginGetBarInfo(unsigned int nInstrumentID, int interval)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	std::string strTableName;
+	std::string strSQL;
+	bool bExecRes = false;
+	int nRows = 0;
+
+	if (NULL != m_pQSqlQuery)
+	{
+		m_pQSqlQuery->clear();
+		m_pQSqlQuery->finish();
+		delete m_pQSqlQuery;
+		m_pQSqlQuery = NULL;
+	}
+
+	if (!m_pQSqlDataBase->isOpen())
+	{
+		LOG_ERROR<<"m_QSqlDataBase is closed";
+		nFunRes = -1;
+		return nFunRes;
+	}
+
+	m_pQSqlQuery = new QSqlQuery(*m_pQSqlDataBase);
+
+	strTableName = getBarInfoDBTableName(nInstrumentID, interval);
+	strSQL = _BuildSelectSQL(strTableName);
+	LOG_DEBUG<<"begin Exec sql="<<strSQL;
+
+	bExecRes = m_pQSqlQuery->exec(strSQL.c_str());
+	if (!bExecRes)
+	{
+		nFunRes = -1;
+		LOG_ERROR<<"Fail to exec sql:"<<strSQL<<" error:"<<m_pQSqlQuery->lastError().text().toStdString();
+	}
+	else
+	{
+		nRows = m_pQSqlQuery->size();
+		LOG_DEBUG<<"end Exec sql="<<strSQL<<" and get rows="<<nRows;
+	}
+	return nFunRes;
+}
+int CInstrumentBarInfoStorager::getNextBarInfo(Bar& getNextBarInfo)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	unsigned int nInstrumentIDTmp = 0;
+	int nColumnIndex = 0;
+
+	if (NULL == m_pQSqlQuery)
+	{
+		nFunRes = -1;
+		return nFunRes;
+	}
+
+	/*
+	0 1 2 3 4 5 6 
+	InstrumentID INTEGER NOT NULL, 
+	Timestamp TIMESTAMP NOT NULL, 
+	Open decimal(25,10) NOT NULL,
+	Close decimal(25,10) NOT NULL,
+	High decimal(25,10) NOT NULL,	
+	Low decimal(25,10) NOT NULL,
+	Volume NUMBER,
+	*/
+	if (m_pQSqlQuery->isActive() && m_pQSqlQuery->isSelect() && m_pQSqlQuery->next()) 
+	{ 		
+		nColumnIndex = 0;
+		nInstrumentIDTmp = (unsigned int)m_pQSqlQuery->value(nColumnIndex++).toInt();
+		getNextBarInfo.Time = (unsigned int )m_pQSqlQuery->value(nColumnIndex++).toDateTime().toTime_t();
+		getNextBarInfo.Open = (float)m_pQSqlQuery->value(nColumnIndex++).toReal();
+		getNextBarInfo.Close = (float)m_pQSqlQuery->value(nColumnIndex++).toReal();
+		getNextBarInfo.High = (float)m_pQSqlQuery->value(nColumnIndex++).toReal();
+		getNextBarInfo.Low = (float)m_pQSqlQuery->value(nColumnIndex++).toReal();
+		getNextBarInfo.Volume = (int)m_pQSqlQuery->value(nColumnIndex++).toInt();
+	} 
+	else
+	{
+		nFunRes = -1;
+		m_pQSqlQuery->clear();
+		m_pQSqlQuery->finish();
+		delete m_pQSqlQuery;
+		m_pQSqlQuery = NULL;
+	}
+	return nFunRes;
+}
 
 
 
