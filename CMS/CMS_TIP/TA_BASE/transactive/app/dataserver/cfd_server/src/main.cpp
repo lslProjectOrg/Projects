@@ -68,8 +68,8 @@ void Test_CMarketDataPathManager()
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 
 	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
-	//std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
-	std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\HistoryMarketData\\";//company
+	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
+	//std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\HistoryMarketData\\";//company
 
 
 	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
@@ -144,7 +144,7 @@ int main( int argc, char* argv[])
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
-	//Test_CMarketDataPathManager();
+	Test_CMarketDataPathManager();
 
 	Test_PrepareDataForCFDRequest();
 

@@ -55,7 +55,7 @@ int CMarketDataFileAnalier::analierFile()
 	std::ifstream priceFile(filename.c_str());
 	std::string strLogInfo = "get data from file";
 
-	LOG_DEBUG<<"AnalierFile: "<<m_strFileName;
+	LOG_INFO<<"AnalierFile: "<<m_strFileName;
 
 	while (!priceFile.eof())
 	{

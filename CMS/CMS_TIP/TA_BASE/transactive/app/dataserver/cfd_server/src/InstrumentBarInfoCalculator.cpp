@@ -88,7 +88,7 @@ int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTime
 	Bar* pBar = NULL;
 	std::ostringstream sreaamTmp;
 
-	LOG_DEBUG<<"Last Save bar m_pMapTimeBarInfo.size="<<m_pMapTimeBarInfo->size();
+	LOG_INFO<<"Last Save bar m_pMapTimeBarInfo.size="<<m_pMapTimeBarInfo->size();
 
 	//save last Data
 	iterMap = m_pMapTimeBarInfo->begin();

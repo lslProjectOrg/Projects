@@ -97,6 +97,12 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 		nFunRes = _GetCFDBarInfoFromStorager(pCFDStorager, lstCFDBarInfo);
 	}
 
+	if (NULL != pCFDStorager)
+	{
+		delete pCFDStorager;
+		pCFDStorager = NULL;
+	}
+
 	if (0 != nFunRes)
 	{
 		//get data from db no data then try to create data and save to db
@@ -117,8 +123,16 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 
 	}
 
+	if (NULL != pCreateCFDInstrumentBarInfo)
+	{
+		delete pCreateCFDInstrumentBarInfo;
+		pCreateCFDInstrumentBarInfo = NULL;
+	}
+
 	if (0 == nFunRes)
 	{
+		pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nInstrumentIDFirst, m_nInstrumentIDSecond);
+
 		//create data and save to db ok! then get data from db again
 		nFunRes = pCFDStorager->beginGetBarInfo(m_nInstrumentIDFirst, m_nInstrumentIDSecond, m_nCFDBarInterval);
 		if (0 == nFunRes)

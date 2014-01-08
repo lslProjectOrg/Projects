@@ -99,11 +99,11 @@ void CCFDInstrumentBarInfoStorager::_InitDataBase()
 	switch (m_nDBType)
 	{
 	case TA_Base_Core::enumSqliteDb:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "user"));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	case TA_Base_Core::enumMysqlDb:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL", "user"));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL", m_strDBName.c_str()));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		m_pQSqlDataBase->setHostName("127.0.0.1");
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
@@ -111,7 +111,7 @@ void CCFDInstrumentBarInfoStorager::_InitDataBase()
 		m_pQSqlDataBase->setPassword("root");
 		break;
 	default:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "user"));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	}
@@ -130,13 +130,11 @@ void CCFDInstrumentBarInfoStorager::_UnInitDataBase()
 		m_pQSqlDataBase->close();
 		delete m_pQSqlDataBase;
 		m_pQSqlDataBase = NULL;
-		QSqlDatabase::removeDatabase("user");
+		//QSqlDatabase::removeDatabase(m_strDBName.c_str());
 	}
 
 	if (NULL != m_pQSqlQuery)
 	{
-		m_pQSqlQuery->clear();
-		m_pQSqlQuery->finish();
 		delete m_pQSqlQuery;
 		m_pQSqlQuery = NULL;
 	}
@@ -497,8 +495,6 @@ int CCFDInstrumentBarInfoStorager::beginGetBarInfo(unsigned int nInstrumentIDFir
 
 	if (NULL != m_pQSqlQuery)
 	{
-		m_pQSqlQuery->clear();
-		m_pQSqlQuery->finish();
 		delete m_pQSqlQuery;
 		m_pQSqlQuery = NULL;
 	}
@@ -523,7 +519,7 @@ int CCFDInstrumentBarInfoStorager::beginGetBarInfo(unsigned int nInstrumentIDFir
 	else
 	{
 		nRows = m_pQSqlQuery->size();
-		LOG_DEBUG<<"end Exec sql="<<strSQL<<" and get rows="<<nRows;
+		LOG_INFO<<"end Exec sql="<<strSQL<<" and get rows="<<nRows;
 	}
 	return nFunRes;
 }
@@ -566,8 +562,6 @@ int CCFDInstrumentBarInfoStorager::getNextBarInfo(Bar& getNextBarInfo)
 	else
 	{
 		nFunRes = -1;
-		m_pQSqlQuery->clear();
-		m_pQSqlQuery->finish();
 		delete m_pQSqlQuery;
 		m_pQSqlQuery = NULL;
 	}

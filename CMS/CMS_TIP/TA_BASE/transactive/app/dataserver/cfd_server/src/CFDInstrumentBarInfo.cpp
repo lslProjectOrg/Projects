@@ -72,6 +72,18 @@ int CCFDInstrumentBarInfo::buidCFDBarInfo()
 	m_CFDBarInfo.Low = m_nBarInfoFirst.Low - m_nBarInfoSecond.Low;
 	m_CFDBarInfo.Volume = m_nBarInfoFirst.Volume - m_nBarInfoSecond.Volume;
 
+
+	//TODO.
+	//bid  buy  
+	//ask  sell
+	/*
+	Jake: A B
+	xA - yB
+	bidPx = xABid - yBAsk
+	askPx = xAAsk - yBBid
+	price = (bidPx + askPx) / 2
+	price = (xAska + xAskb - yAska - yBidb) / 2
+	*/
 	return nFunRes;
 }
 
