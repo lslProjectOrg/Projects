@@ -1,0 +1,9 @@
+﻿<Window x:Class="WPFDispatchMarketData.MenuWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MenuWindow" Height="500" Width="500">
+    <Grid>
+        <Button Height="44" Margin="71,59,96,0" Name="buttonMarketDataPathManagerWindow" VerticalAlignment="Top" Click="buttonMarketDataPathManagerWindow_Click">MarketDataPathManagerWindow</Button>
+
+    </Grid>
+</Window>
