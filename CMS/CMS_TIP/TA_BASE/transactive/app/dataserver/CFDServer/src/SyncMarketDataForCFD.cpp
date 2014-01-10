@@ -295,7 +295,7 @@ int CSyncMarketDataForCFD::_SyncLstCFDBarInfo(LstBarInfoT& lstBarInfoFirst, LstB
 		pBarFirst = (*iterLstFirst);
 		pBarSecond = (*iterLstSecond);
 
-		pCFDInstrumentBarInfoTmp =new CCFDInstrumentBarInfo();
+		pCFDInstrumentBarInfoTmp =new CCFDInstrumentBarInfo(m_CFDRequest);
 
 		pCFDInstrumentBarInfoTmp->setCFDRequest(m_CFDRequest);
 		pCFDInstrumentBarInfoTmp->setBarInfoFirst(*pBarFirst);
@@ -304,8 +304,8 @@ int CSyncMarketDataForCFD::_SyncLstCFDBarInfo(LstBarInfoT& lstBarInfoFirst, LstB
 		if (0 != nFunRes)
 		{
 			LOG_ERROR<<"buildCFDMarketData DataFirst.Time != DataSecond.Time"
-				<<" ["<<"DataFirst.Time="<<m_pUtilityFun->dataTimeToStr(pBarFirst->Time)<<"]"
-				<<" ["<<"DataSecond.Time="<<m_pUtilityFun->dataTimeToStr(pBarSecond->Time)<<"]"; 
+				<<" ["<<"DataFirst.Time="<<m_pUtilityFun->dataTimeToStr(pBarFirst->getTime())<<"]"
+				<<" ["<<"DataSecond.Time="<<m_pUtilityFun->dataTimeToStr(pBarSecond->getTime())<<"]"; 
 		}
 		else
 		{

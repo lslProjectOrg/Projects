@@ -20,11 +20,14 @@ namespace WPFDispatchMarketData
     /// </summary>
     public partial class MarketDataPathManagerWindow : Window
     {
+        //c://TestData//HistoryMarketDataTotal   20131220.csv 
+        //C://TestData//HistoryMarketDataInstrument   3320.csv
+
         private System.String m_strInitText_ButtonOneInstrumentOneFile = System.String.Empty;//OneInstrumentOneFile
         private System.String m_strClickText_ButtonOneInstrumentOneFile = System.String.Empty;//Run...
-        private System.String m_strMarketDataPath = System.String.Empty;//c://HistoryMarketData
+        private System.String m_strPathHistoryMarketDataTotal = System.String.Empty;//c://TestData//HistoryMarketDataTotal
         private System.String m_strMarketDataFileExtenName = System.String.Empty;//*.csv
-        private System.String m_strSaveDataPath = System.String.Empty;//"C://SaveDataPath"
+        private System.String m_strPathHistoryMarketDataInstrument = System.String.Empty;//"C://TestData//HistoryMarketDataInstrument"
 
         private FileInfo[] m_lstAllFilesInPath;
         private int m_nlstAllFilesInPathSize = 0;
@@ -52,8 +55,8 @@ namespace WPFDispatchMarketData
             //this.buttonOneThreadOnefile.Background = Brushes.Red;
             this.buttonOneInstrumentOneFile.Content = m_strClickText_ButtonOneInstrumentOneFile;//"Run...";
 
-            this.m_strMarketDataPath = this.textMarketDataPath.Text;
-            this.m_strSaveDataPath = this.textSaveDataPath.Text;
+            this.m_strPathHistoryMarketDataTotal = this.textPathHistoryMarketDataTotal.Text;
+            this.m_strPathHistoryMarketDataInstrument = this.textPathHistoryMarketDataInstrument.Text;
 
             //lsl for test
             //m_strMarketDataPath = System.String.Empty;//c://HistoryMarketData
@@ -73,11 +76,14 @@ namespace WPFDispatchMarketData
 
             //获取应用程序的当前工作目录
             var varCurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-            this.textMarketDataPath.Text = varCurrentPath.ToString();
-            this.textSaveDataPath.Text = varCurrentPath.ToString();
+            this.textPathHistoryMarketDataTotal.Text = varCurrentPath.ToString();
+            this.textPathHistoryMarketDataInstrument.Text = varCurrentPath.ToString();
 
-            this.textMarketDataPath.Text = "c://HistoryMarketData";
-            this.textSaveDataPath.Text = "C://SaveDataPath";
+            //c://TestData//HistoryMarketDataTotal   20131220.csv 
+            //C://TestData//HistoryMarketDataInstrument   3320.csv
+
+            this.textPathHistoryMarketDataTotal.Text = "c://TestData//HistoryMarketDataTotal";
+            this.textPathHistoryMarketDataInstrument.Text = "C://TestData//HistoryMarketDataInstrument";
         }
 
 
@@ -85,9 +91,9 @@ namespace WPFDispatchMarketData
         {
             this.m_strInitText_ButtonOneInstrumentOneFile = "OneInstrumentOneFile";
             this.m_strClickText_ButtonOneInstrumentOneFile = "Run...";
-            this.m_strMarketDataPath = "c://HistoryMarketData";
+            this.m_strPathHistoryMarketDataTotal = "C://TestData//HistoryMarketDataTotal";
             this.m_strMarketDataFileExtenName = "*.csv";
-            this.m_strSaveDataPath = "C://SaveDataPath";
+            this.m_strPathHistoryMarketDataInstrument = "C://TestData//HistoryMarketDataInstrument";
             this.m_strSysLog = "SysLog.log";
             this.m_SysLogHandle = null;
             this.m_lstAllFilesInPath = null;
@@ -137,7 +143,7 @@ namespace WPFDispatchMarketData
             //MessageBox.Show("Run begin");
 
             //CreateDirectory m_strSaveDataPath
-            CreateDirectory(this.m_strSaveDataPath);
+            CreateDirectory(this.m_strPathHistoryMarketDataInstrument);
 
             if (null == this.m_SysLogHandle)
             {
@@ -147,7 +153,7 @@ namespace WPFDispatchMarketData
             }
 
             //get all File name in path
-            this.m_lstAllFilesInPath = GetALLFilesInPath(this.m_strMarketDataPath, this.m_strMarketDataFileExtenName);
+            this.m_lstAllFilesInPath = GetALLFilesInPath(this.m_strPathHistoryMarketDataTotal, this.m_strMarketDataFileExtenName);
             if (null == this.m_lstAllFilesInPath)
             {
                 return;
@@ -171,7 +177,7 @@ namespace WPFDispatchMarketData
             this.buttonOneInstrumentOneFile.Content = m_strInitText_ButtonOneInstrumentOneFile;//"OneInstrumentOneFile";
             this.buttonOneInstrumentOneFile.IsEnabled = true;
 
-            MessageBox.Show("Analyst To Thread File Work end");
+            MessageBox.Show("Analyst Work end");
         }//BackgroundWorkerAnalystFile_RunWorkerCompleted
 
 
@@ -233,7 +239,6 @@ namespace WPFDispatchMarketData
             int nFunRes = 0;
             System.String strFileFullPath = "";//"c://HistoryMarketData//20131220.csv"
             System.String strFileName = "";   //20131220.csv  
-            System.String strFileExtenName = "";   //".csv "
             System.String strFileNameTime = "";//20131220
             long nFileNameTimeToLong = -1;//2
             int nfindSunStr = -1;
@@ -502,7 +507,7 @@ namespace WPFDispatchMarketData
         {
             System.String strDstFileName = "";
 
-            strDstFileName = m_strSaveDataPath + "//" + strInstrumentID + ".csv";
+            strDstFileName = m_strPathHistoryMarketDataInstrument + "//" + strInstrumentID + ".csv";
 
             return strDstFileName;
         }//AnalyseFile

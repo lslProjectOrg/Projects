@@ -22,7 +22,7 @@ CCFDInstrumentBarInfoCalculator::CCFDInstrumentBarInfoCalculator(const CCFDReque
 	m_CFDRequest = cfdRequest;
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pStorager = new CCFDInstrumentBarInfoStorager(m_CFDRequest.m_nCFDInstrumentIDFirst, m_CFDRequest.m_nCFDInstrumentIDSecond);
+	m_pStorager = new CCFDInstrumentBarInfoStorager(m_CFDRequest);
 
 	unsigned int m_nInstrumentIDForBarCalculator = m_CFDRequest.m_nCFDInstrumentIDFirst * m_CFDRequest.m_nCFDInstrumentIDSecond;
 	m_pBarCalculator = new BarCalculator(m_nInstrumentIDForBarCalculator);
@@ -31,7 +31,13 @@ CCFDInstrumentBarInfoCalculator::CCFDInstrumentBarInfoCalculator(const CCFDReque
 	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CCFDInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
 	
 	//TODO.
-	m_pBarCalculator->addBar(TIME_BASE_S_1MIN);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_5S);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_1MIN);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_5MIN);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_30MIN);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_1HOUR);//seconds
+	m_pBarCalculator->addBar(TA_Base_Core::TIME_BASE_S_1DAY);//seconds
+
 
 }
 

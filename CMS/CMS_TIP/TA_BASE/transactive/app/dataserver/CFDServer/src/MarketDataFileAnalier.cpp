@@ -12,11 +12,9 @@ NS_BEGIN(TA_Base_App)
 
 //////////////////////////////////////////////////////////////////////////
 
-CMarketDataFileAnalier::CMarketDataFileAnalier()
+CMarketDataFileAnalier::CMarketDataFileAnalier(void)
 {
 	BOOST_LOG_FUNCTION();
-
-	m_strFileName.clear();
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pMarketDataDispatcher = new CMarketDataDispatcher();
 
@@ -40,22 +38,25 @@ CMarketDataFileAnalier::~CMarketDataFileAnalier(void)
 
 }
 
-void CMarketDataFileAnalier::setFileName(const std::string& strFileName)
+
+void CMarketDataFileAnalier::setInstrumentBarInfoRequest( const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
 {
 	BOOST_LOG_FUNCTION();
-	m_strFileName = strFileName;
+	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 }
+
 
 int CMarketDataFileAnalier::analierFile()
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
 	
-	std::string filename = m_strFileName;
+	std::string filename = m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName;
 	std::ifstream priceFile(filename.c_str());
 	std::string strLogInfo = "get data from file";
 
-	LOG_INFO<<"AnalierFile: "<<m_strFileName;
+	LOG_INFO<<"AnalierFile: "<<m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName;
+	m_pMarketDataDispatcher->setInstrumentBarInfoRequest(m_InstrumentBarInfoRequest);
 
 	while (!priceFile.eof())
 	{

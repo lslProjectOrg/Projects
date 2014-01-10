@@ -1,12 +1,12 @@
 ﻿<Window x:Class="WPFDispatchMarketData.MarketDataPathManagerWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="MarketDataPathManagerWindow" Height="500" Width="700" Loaded="MarketDataPathManagerWindow_Loaded">
+    Title="MarketDataPathManagerWindow" Height="500" Width="800" Loaded="MarketDataPathManagerWindow_Loaded">
     <Grid>
-        <Label Height="28" HorizontalAlignment="Left" Margin="12,22,0,0" Name="labelMarketDataPath" VerticalAlignment="Top" Width="117">MarketDataPath:</Label>
-        <TextBox Height="28" Margin="143,22,54,0" Name="textMarketDataPath" VerticalAlignment="Top" ></TextBox>
-        <Label Height="28" HorizontalAlignment="Left" Margin="12,58,0,0" Name="labelSaveDataPath" VerticalAlignment="Top" Width="117">SaveDataPath:</Label>
-        <TextBox Height="28" Margin="143,59,54,0" Name="textSaveDataPath" VerticalAlignment="Top" ></TextBox>
+        <Label Height="28" HorizontalAlignment="Left" Margin="12,22,0,0" Name="labelPathHistoryMarketDataTotal" VerticalAlignment="Top" Width="187">PathHistoryMarketDataTotal:</Label>
+        <TextBox Height="28" Margin="235,22,54,0" Name="textPathHistoryMarketDataTotal" VerticalAlignment="Top" ></TextBox>
+        <Label Height="28" HorizontalAlignment="Left" Margin="12,58,0,0" Name="labelPathHistoryMarketDataInstrument" VerticalAlignment="Top" Width="205">PathHistoryMarketDataInstrument:</Label>
+        <TextBox Height="28" Margin="235,59,54,0" Name="textPathHistoryMarketDataInstrument" VerticalAlignment="Top" ></TextBox>
 
         <Button HorizontalAlignment="Left" Margin="20,130,0,0" Name="buttonOneInstrumentOneFile" Width="179" Click="buttonOneInstrumentOneFile_Click" Height="47" VerticalAlignment="Top">OneInstrumentOneFile</Button>
 

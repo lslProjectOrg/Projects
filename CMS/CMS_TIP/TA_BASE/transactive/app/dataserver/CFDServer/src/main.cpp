@@ -43,8 +43,8 @@ void logInit()
 
 	std::string strLogPath = "ALL_CFDServer_LOG_PATH";
 	std::string strLogFileName = "CFDServer_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
-	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
-	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
+	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
+	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
 
 
 	TA_Base_Core::CBoostLogger::getInstance().setLogPath(strLogPath);
@@ -62,22 +62,21 @@ void logUnInit()
 
 //////////////////////////////////////////////////////////////////////////
 
-void Test_CMarketDataPathManager()
+void Test_CInstrumentBarInfoRequest()
 {
 	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 
-	//C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\sample
-	std::string strPathName="G:\\LSL\\LSL_Code\\Svn_Work\\PUBLIC\\MarketData\\HistoryMarketData\\";//home
-	//std::string strPathName="C:\\LSL\\SVNWork\\CMS\\PUBLIC\\MarketData\\HistoryMarketData\\";//company
-
+	CInstrumentBarInfoRequest instrumentBarInfoRequest; 
+	instrumentBarInfoRequest.m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
+	instrumentBarInfoRequest.m_strInstrumetBarInfoTotal = "C://TestData//InstrumetBarInfoTotal";
+	instrumentBarInfoRequest.addBarTimeNormal();
 
 	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
 	pWorkTime->workBegin();
 
 	pMarketDataPathManager = new CMarketDataPathManager();
-	pMarketDataPathManager->setPathName(strPathName);
-
+	pMarketDataPathManager->setInstrumentBarInfoRequest(instrumentBarInfoRequest);
 	pMarketDataPathManager->analieAllFiles();
 	
 	if (NULL != pMarketDataPathManager)
@@ -88,7 +87,7 @@ void Test_CMarketDataPathManager()
 
 	pWorkTime->workEnd();
 
-	LOG_INFO<<"Test_CMarketDataPathManager work time = "<<pWorkTime->getWorkTime();
+	LOG_INFO<<"Test_CInstrumentBarInfoRequest work time = "<<pWorkTime->getWorkTime();
 
 	if (NULL != pWorkTime)
 	{
@@ -98,8 +97,48 @@ void Test_CMarketDataPathManager()
 
 }
 
-void Test_PrepareDataForCFDRequest()
+
+void Test_CInstrumentMarketDataRequest()
 {
+	TA_Base_Core::CAWorkTime* pWorkTime = NULL;
+	CMarketDataPathManager* pMarketDataPathManager = NULL;
+
+	CInstrumentMarketDataRequest instrumentMarketDataRequest; 
+	instrumentMarketDataRequest.m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
+	instrumentMarketDataRequest.m_strHistoryMarketDataInstrument = "C://TestData//HistoryMarketDataInstrument";
+
+	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
+	pWorkTime->workBegin();
+
+	pMarketDataPathManager = new CMarketDataPathManager();
+	pMarketDataPathManager->setInstrumentMarketDataRequest(instrumentMarketDataRequest);
+	pMarketDataPathManager->analieAllFiles();
+
+	if (NULL != pMarketDataPathManager)
+	{
+		delete pMarketDataPathManager;
+		pMarketDataPathManager = NULL;
+	}
+
+	pWorkTime->workEnd();
+
+	LOG_INFO<<"Test_CInstrumentMarketDataRequest work time = "<<pWorkTime->getWorkTime();
+
+	if (NULL != pWorkTime)
+	{
+		delete pWorkTime;
+		pWorkTime = NULL;
+	}
+
+}
+
+void Test_CCFDRequest()
+{
+	//c://TestData//HistoryMarketDataTotal   20131220.csv 
+	//C://TestData//HistoryMarketDataInstrument   3320.csv
+	//C://TestData//CFDBarInfoTotal   SQLiteDB_CFD_3320_3321.db
+	//C://TestData//InstrumetBarInfoTotal   SQLiteDB_3320.db
+
 	int nFunRes = 0;
 
 	CCFDRequest cfdRequest;
@@ -109,6 +148,8 @@ void Test_PrepareDataForCFDRequest()
 	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
 	pWorkTime->workBegin();
 
+	cfdRequest.m_strPathHistoryMarketDataInstrument = "C://TestData//HistoryMarketDataInstrument";
+	cfdRequest.m_strCFDBarInfoTotal = "C://TestData//CFDBarInfoTotal";
 	cfdRequest.m_nCFDInstrumentIDFirst = 3620;
 	cfdRequest.m_nCFDInstrumentIDSecond = 3621;
 	cfdRequest.m_nXValue = 1;
@@ -116,6 +157,7 @@ void Test_PrepareDataForCFDRequest()
 	cfdRequest.m_nCFDInterval = TA_Base_Core::TIME_BASE_S_1MIN;
 
 	pPrepareDataForCFDRequest = new CPrepareDataForCFDRequest(cfdRequest);
+	
 	nFunRes = pPrepareDataForCFDRequest->getCFDBarInfo(lstCFDBarInfo);
 
 	pWorkTime->workEnd();
@@ -146,9 +188,10 @@ int main( int argc, char* argv[])
 #ifndef WIN32
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
-	Test_CMarketDataPathManager();
 
-	Test_PrepareDataForCFDRequest();
+	Test_CInstrumentBarInfoRequest();
+	Test_CInstrumentMarketDataRequest();
+	Test_CCFDRequest();
 
 	//sleep
 	{	

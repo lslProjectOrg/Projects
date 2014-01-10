@@ -11,7 +11,7 @@ Dispatcher MarketData class by SecurityID(InstumentID)
 #include <boost/bind.hpp>
 
 #include "MarketData.h"
-
+#include "InstrumentBarInfoRequest.h"
 
 
 NS_BEGIN(TA_Base_App) 
@@ -32,8 +32,10 @@ public:
 public:
 	int dispatcherMarketData(const MarketData& marketData);
 	int _ClearDataInMap(MapInstrumentIDBarInfoCalcT* pMapInstrumentIDBarInfoCalc);
+	void setInstrumentBarInfoRequest( const CInstrumentBarInfoRequest& instrumentBarInfoRequest );
 private:
 	MapInstrumentIDBarInfoCalcT*   m_mapInstrumentIDBarInfoCalc;
+	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
 
 };
 

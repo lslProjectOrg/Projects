@@ -23,6 +23,7 @@
 #include <boost/unordered_map.hpp>
 
 #include "core/DataAccess/src/DataAccessCommonData.h"
+#include "CFDRequest.h"
 
 class Bar;
 
@@ -38,13 +39,13 @@ public:
 	typedef std::map<int, std::string>::iterator      MapIntervalDBTableNameIterT;
 	typedef std::map<int, std::string>::value_type    MapIntervalDBTableNameValueTypeT;
 public:
-	CCFDInstrumentBarInfoStorager(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);
+	CCFDInstrumentBarInfoStorager(const CCFDRequest& cfdRequest);
 	~CCFDInstrumentBarInfoStorager(void);
 public:
 	int storeBarInfo(int interval, Bar* pBarInfo);
-	std::string getCFDBarInfoDBName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond);
-	std::string getCFDBarInfoDBTableName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval);
-	int beginGetBarInfo(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval);
+	std::string getCFDBarInfoDBName(const CCFDRequest& cfdRequest);
+	std::string getCFDBarInfoDBTableName(const CCFDRequest& cfdRequest);
+	int beginGetBarInfo(const CCFDRequest& cfdRequest);
 	int getNextBarInfo(Bar& getNextBarInfo);
 
 private:
@@ -59,8 +60,6 @@ private:
 	void _InitDataBase();
 	void _UnInitDataBase();
 private:
-	unsigned int m_nInstrumentIDFirst;
-	unsigned int m_nInstrumentIDSecond;
 	std::string m_strDBName;//SQLiteDB_3306.db
 	std::string m_strDBType;// defSQLiteDBName defMysqlDBName
 	TA_Base_Core::DbServerType m_nDBType;//enumSqliteDb enumMysqlDb
@@ -69,6 +68,7 @@ private:
 	QSqlQuery*			m_pQSqlQuery;
 	CCFDServerUtilityFun*   m_pUtilityFun;
 	MapIntervalDBTableNameT* m_pmapIntervalDBTableName;
+	CCFDRequest m_CFDRequest;
 };
 
 NS_END(TA_Base_App) 

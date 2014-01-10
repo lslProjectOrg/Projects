@@ -44,7 +44,7 @@ save data to SQLite
 #include <boost/unordered_map.hpp>
 
 #include "core/DataAccess/src/DataAccessCommonData.h"
-
+#include "InstrumentBarInfoRequest.h"
 class Bar;
 
 NS_BEGIN(TA_Base_App) 
@@ -58,12 +58,13 @@ public:
 	typedef std::map<int, std::string>::iterator      MapIntervalDBTableNameIterT;
 	typedef std::map<int, std::string>::value_type    MapIntervalDBTableNameValueTypeT;
 public:
-	CInstrumentBarInfoStorager(unsigned int nInstrumentID);
+	CInstrumentBarInfoStorager(unsigned int nInstrumentID, const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	~CInstrumentBarInfoStorager(void);
 public:
 	int storeBarInfo(int interval, Bar* pBarInfo);
-	std::string getBarInfoDBName(unsigned int nInstrumentID);
+	std::string getBarInfoDBName(unsigned int nInstrumentID, const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	std::string getBarInfoDBTableName(unsigned int nInstrumentID, int interval);
+
 public:
 	int beginGetBarInfo(unsigned int nInstrumentID, int interval);
 	int getNextBarInfo(Bar& getNextBarInfo);
@@ -89,6 +90,7 @@ private:
 	QSqlQuery*			m_pQSqlQuery;
 	CCFDServerUtilityFun*   m_pUtilityFun;
 	MapIntervalDBTableNameT* m_pmapIntervalDBTableName;
+	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
 };
 
 NS_END(TA_Base_App) 

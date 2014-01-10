@@ -35,7 +35,7 @@ CCFDRequest& CCFDRequest::operator=( const CCFDRequest& cfdRequest )
 	m_nXValue = cfdRequest.m_nXValue;
 	m_nYValue = cfdRequest.m_nYValue;
 	m_nCFDInterval = cfdRequest.m_nCFDInterval;
-
+	return *this;
 }
 
 

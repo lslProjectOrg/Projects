@@ -74,10 +74,10 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 	CCreateCFDInstrumentBarInfo*  pCreateCFDInstrumentBarInfo = NULL;
 
 	//check data is in db
-	pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest.m_nCFDInstrumentIDFirst, m_nCFDRequest.m_nCFDInstrumentIDSecond);
+	pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest);
 
 	//get data from db
-	nFunRes = pCFDStorager->beginGetBarInfo(m_nCFDRequest.m_nCFDInstrumentIDFirst, m_nCFDRequest.m_nCFDInstrumentIDSecond, m_nCFDRequest.m_nCFDInterval);
+	nFunRes = pCFDStorager->beginGetBarInfo(m_nCFDRequest);
 	if (0 == nFunRes)
 	{
 		nFunRes = _GetCFDBarInfoFromStorager(pCFDStorager, lstCFDBarInfo);
@@ -93,17 +93,12 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 	if (0 != nFunRes)
 	{
 		//get data from db no data then try to create data and save to db
-		LOG_DEBUG<<"DB have not save CFD Bar info yet!"
+		LOG_DEBUG<<"DB have not save CFD Bar info yet! begin create CFD Bar info"
 			<<" "<<"m_nInstrumentIDFirst="<<m_nCFDRequest.m_nCFDInstrumentIDFirst
 			<<" "<<"m_nInstrumentIDSecond="<<m_nCFDRequest.m_nCFDInstrumentIDSecond
 			<<" "<<"m_nInterval="<<m_nCFDRequest.m_nCFDInterval;
 
-		LOG_DEBUG<<"begin create CFD Bar info "
-			<<" "<<"m_nInstrumentIDFirst="<<m_nCFDRequest.m_nCFDInstrumentIDFirst
-			<<" "<<"m_nInstrumentIDSecond="<<m_nCFDRequest.m_nCFDInstrumentIDSecond
-			<<" "<<"m_nInterval="<<m_nCFDRequest.m_nCFDInterval;
-
-		pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo(m_nCFDRequest.m_nCFDInstrumentIDFirst, m_nCFDRequest.m_nCFDInstrumentIDSecond);
+		pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo(m_nCFDRequest);
 		//use MarketData to calc  CFD 1mins bar Info
 		nFunRes = pCreateCFDInstrumentBarInfo->createCFDbarInfoByMarketData();
 
@@ -117,10 +112,10 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 
 	if (0 == nFunRes)
 	{
-		pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest.m_nCFDInstrumentIDFirst, m_nCFDRequest.m_nCFDInstrumentIDSecond);
+		pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest);
 
 		//create data and save to db ok! then get data from db again
-		nFunRes = pCFDStorager->beginGetBarInfo(m_nCFDRequest.m_nCFDInstrumentIDFirst, m_nCFDRequest.m_nCFDInstrumentIDSecond, m_nCFDRequest.m_nCFDInterval);
+		nFunRes = pCFDStorager->beginGetBarInfo(m_nCFDRequest);
 		if (0 == nFunRes)
 		{
 			nFunRes = _GetCFDBarInfoFromStorager(pCFDStorager, lstCFDBarInfo);

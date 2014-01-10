@@ -27,9 +27,7 @@ public:
 	~CCreateCFDInstrumentBarInfo(void);
 public:
 	int createCFDbarInfoByMarketData();
-	void createCFDbarInfoByLst(LstBarInfoT& lstBarFirst, LstBarInfoT& lstBarSecond);
-public:
-	void doOneTest();
+	void createCFDbarInfoByLst(LstMarketDataT& lstBarFirst, LstMarketDataT& lstBarSecond);
 
 private:
 	int _UpdateCFDMarketData(CSyncMarketDataForCFD::LstCFDBarInfoT& lstCFDBarInfo);

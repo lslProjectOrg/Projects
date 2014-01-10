@@ -28,7 +28,13 @@ public:
 	int m_nXValue;
 	int m_nYValue;
 	int m_nCFDInterval;//CFD bar info
+public:
+	//c://TestData//HistoryMarketDataTotal   20131220.csv 
+	//C://TestData//HistoryMarketDataInstrument   3320.csv
+	//C://TestData//CFDBarInfoTotal   SQLiteDB_CFD_3320_3321.db
 
+	std::string m_strPathHistoryMarketDataInstrument;
+	std::string m_strCFDBarInfoTotal;
 
 };
 

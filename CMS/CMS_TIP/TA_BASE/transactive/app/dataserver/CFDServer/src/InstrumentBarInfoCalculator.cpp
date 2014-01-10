@@ -16,28 +16,17 @@ using namespace TA_Base_Core;
 NS_BEGIN(TA_Base_App) 
 
 //////////////////////////////////////////////////////////////////////////
-CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrumentID)
+CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrumentID, const CInstrumentBarInfoRequest& instrumentBarInfoRequest)
 {	
 	BOOST_LOG_FUNCTION();
 	m_nInstrumentID = nInstrumentID;
+	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pStorager = new CInstrumentBarInfoStorager(m_nInstrumentID);
-	//m_pStorager = new CInstrumentBarInfoStoragerMysql(m_nInstrumentID);
+	m_pStorager = new CInstrumentBarInfoStorager(m_nInstrumentID, m_InstrumentBarInfoRequest);
 
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
-
-	m_pBarCalculator->onNewBar = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleNewBar, this, _1, _2);
-	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
-	
-	//TODO.
-	m_pBarCalculator->addBar(TIME_BASE_S_5S);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_1MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_5MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_30MIN);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_1HOUR);//seconds
-	m_pBarCalculator->addBar(TIME_BASE_S_1DAY);//seconds
-
+	_InitBarCalculator();
 }
 
 CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
@@ -76,6 +65,32 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 
 
 }
+
+
+
+int CInstrumentBarInfoCalculator::_InitBarCalculator()
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	std::list<int>::iterator  iterLst;
+	int nSeconds = 0;
+
+	m_pBarCalculator->onNewBar = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleNewBar, this, _1, _2);
+	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
+
+	iterLst = m_InstrumentBarInfoRequest.m_lstBarTime.begin();
+
+	while (iterLst != m_InstrumentBarInfoRequest.m_lstBarTime.end())
+	{
+		nSeconds = (*iterLst);
+		m_pBarCalculator->addBar(nSeconds);//seconds
+
+		iterLst++;
+	}//while
+
+	return nFunRes;
+}
+
 
 
 int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTimeBarInfo)
@@ -202,8 +217,6 @@ int CInstrumentBarInfoCalculator::updateMarketData(const MarketData& marketData)
 
 	return nFunRes;
 }
-
-
 
 NS_END(TA_Base_App) 
 

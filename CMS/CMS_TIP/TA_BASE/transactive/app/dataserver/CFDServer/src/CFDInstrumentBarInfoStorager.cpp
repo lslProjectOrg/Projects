@@ -18,6 +18,8 @@ NS_BEGIN(TA_Base_App)
 
 
 //////////////////////////////////////////////////////////////////////////
+static const std::string str_SQliteDb_CFD_BAR_DB_header = "SQLiteDB_CFD_";
+
 static const std::string str_Column_InstrumentIDFirst = "InstrumentIDFirst";
 static const std::string str_Column_InstrumentIDSecond = "InstrumentIDSecond";
 static const std::string str_Column_Timestamp = "Timestamp";
@@ -41,13 +43,13 @@ static const std::string str_Column_Volume_Value = ":Volume_Value";
 
 
 
-CCFDInstrumentBarInfoStorager::CCFDInstrumentBarInfoStorager(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond)
+CCFDInstrumentBarInfoStorager::CCFDInstrumentBarInfoStorager(const CCFDRequest& cfdRequest)
 {
 	BOOST_LOG_FUNCTION();
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pmapIntervalDBTableName = new MapIntervalDBTableNameT();
-	m_nInstrumentIDFirst = nInstrumentIDFirst;
-	m_nInstrumentIDSecond = nInstrumentIDSecond;
+	m_CFDRequest = cfdRequest;
+
 	m_strDBType = defSQLiteDBName;
 	m_nDBType = TA_Base_Core::enumSqliteDb;
 
@@ -55,7 +57,7 @@ CCFDInstrumentBarInfoStorager::CCFDInstrumentBarInfoStorager(unsigned int nInstr
 	//m_strDBType = defMysqlDBName;
 	//m_nDBType = TA_Base_Core::enumMysqlDb;
 
-	m_strDBName = getCFDBarInfoDBName(m_nInstrumentIDFirst, m_nInstrumentIDSecond);
+	m_strDBName = getCFDBarInfoDBName(m_CFDRequest);
 	m_pQSqlDataBase = NULL;
 	m_pQSqlQuery = NULL;
 	_InitDataBase();
@@ -141,25 +143,29 @@ void CCFDInstrumentBarInfoStorager::_UnInitDataBase()
 }
 
 
-std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond)
+std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBName(const CCFDRequest& cfdRequest)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
 	std::string strInstrumentSQLDBName;
 	sreaamTmp.str("");
 
-	//SQLiteDB_CFD_3320_3321.db
-	//mysqldb_CFD_3320_3321
+	//C://TestData//CFDBarInfoTotal   SQLiteDB_CFD_3320_3321.db
+
 	switch (m_nDBType)
 	{
 	case TA_Base_Core::enumSqliteDb:
-		sreaamTmp<<"SQLiteDB_CFD_"<<nInstrumentIDFirst<<"_"<<nInstrumentIDSecond<<".db";
+		sreaamTmp<<cfdRequest.m_strCFDBarInfoTotal<<"//"
+			<<str_SQliteDb_CFD_BAR_DB_header
+			<<cfdRequest.m_nCFDInstrumentIDFirst<<"_"<<cfdRequest.m_nCFDInstrumentIDSecond<<".db";
 		break;
 	case TA_Base_Core::enumMysqlDb:
-		sreaamTmp<<"mysqldb_cfd_"<<nInstrumentIDFirst<<"_"<<nInstrumentIDSecond;
+		sreaamTmp<<"mysqldb_cfd_"<<cfdRequest.m_nCFDInstrumentIDFirst<<"_"<<cfdRequest.m_nCFDInstrumentIDSecond;
 		break;
 	default:
-		sreaamTmp<<"SQLiteDB_CFD_"<<nInstrumentIDFirst<<"_"<<nInstrumentIDSecond<<".db";
+		sreaamTmp<<cfdRequest.m_strCFDBarInfoTotal<<"//"
+			<<str_SQliteDb_CFD_BAR_DB_header
+			<<cfdRequest.m_nCFDInstrumentIDFirst<<"_"<<cfdRequest.m_nCFDInstrumentIDSecond<<".db";
 		break;
 	}
 
@@ -169,13 +175,13 @@ std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBName(unsigned int nIns
 	return strInstrumentSQLDBName;
 }
 
-std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval)
+std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(const CCFDRequest& cfdRequest)
 {
 	BOOST_LOG_FUNCTION();	
 	std::string strBarDataTableName;
 	std::ostringstream sreaamTmp;
 
-	switch (interval)
+	switch (cfdRequest.m_nCFDInterval)
 	{
 	case TIME_BASE_S_1S:
 		sreaamTmp<<"cfd_bar_data_1seconds";
@@ -208,7 +214,7 @@ std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(unsigned int
 		sreaamTmp<<"cfd_bar_data_1years";
 		break;
 	default:
-		sreaamTmp<<"cfd_bar_data_"<<interval;
+		sreaamTmp<<"cfd_bar_data_"<<cfdRequest.m_nCFDInterval;
 		break;
 	}
 
@@ -230,7 +236,7 @@ std::string CCFDInstrumentBarInfoStorager::_CheckAndInitDBTable(unsigned int nIn
 		return strTableName;
 	}
 
-	strTableName = getCFDBarInfoDBTableName(nInstrumentIDFirst, nInstrumentIDSecond, interval);
+	strTableName = getCFDBarInfoDBTableName(m_CFDRequest);
 	_CreateDBTable(strTableName);
 	m_pmapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(interval, strTableName));
 	return strTableName;
@@ -428,13 +434,13 @@ int CCFDInstrumentBarInfoStorager::_InsertData(int interval, Bar* pBarInfo)
 
 	std::string strDBTableName;
 	std::string strSQL;
-	strDBTableName = _CheckAndInitDBTable(m_nInstrumentIDFirst, m_nInstrumentIDSecond, interval);
+	strDBTableName = _CheckAndInitDBTable(m_CFDRequest.m_nCFDInstrumentIDFirst, m_CFDRequest.m_nCFDInstrumentIDSecond, interval);
 	strSQL = _BuildInsertSQL(strDBTableName);
 	LOG_DEBUG<<"strSQL="<<strSQL;
 
 	query.prepare(strSQL.c_str());
-	query.bindValue(str_Column_InstrumentIDFirst_Value.c_str(), m_nInstrumentIDFirst);
-	query.bindValue(str_Column_InstrumentIDSecond_Value.c_str(), m_nInstrumentIDSecond);
+	query.bindValue(str_Column_InstrumentIDFirst_Value.c_str(), m_CFDRequest.m_nCFDInstrumentIDFirst);
+	query.bindValue(str_Column_InstrumentIDSecond_Value.c_str(), m_CFDRequest.m_nCFDInstrumentIDSecond);
 	strTimeStr = m_pUtilityFun->dataTimeToStr(pBarInfo->Time);
 	query.bindValue(str_Column_Timestamp_Value.c_str(), strTimeStr.c_str());
 	query.bindValue(str_Column_Open_Value.c_str(), pBarInfo->Open);
@@ -484,7 +490,7 @@ int CCFDInstrumentBarInfoStorager::storeBarInfo(int interval, Bar* pBarInfo)
 
 
 //////////////////////////////////////////////////////////////////////////
-int CCFDInstrumentBarInfoStorager::beginGetBarInfo(unsigned int nInstrumentIDFirst, unsigned int nInstrumentIDSecond, int interval)
+int CCFDInstrumentBarInfoStorager::beginGetBarInfo(const CCFDRequest& cfdRequest)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -505,7 +511,7 @@ int CCFDInstrumentBarInfoStorager::beginGetBarInfo(unsigned int nInstrumentIDFir
 		nFunRes = -1;
 		return nFunRes;
 	}
-	strTableName = getCFDBarInfoDBTableName(nInstrumentIDFirst, nInstrumentIDSecond, interval);
+	strTableName = getCFDBarInfoDBTableName(cfdRequest);
 	strSQL = _BuildSelectSQL(strTableName);
 	LOG_DEBUG<<"begin Exec sql="<<strSQL;
 

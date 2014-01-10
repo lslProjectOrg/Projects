@@ -18,6 +18,8 @@ NS_BEGIN(TA_Base_App)
 
 
 //////////////////////////////////////////////////////////////////////////
+static const std::string str_SQliteDb_Instrument_BAR_DB_header = "SQLiteDB_";//SQLiteDB_3320.db
+
 static const std::string str_Column_InstrumentID = "InstrumentID";
 static const std::string str_Column_Timestamp = "Timestamp";
 static const std::string str_Column_Open = "Open";
@@ -39,12 +41,15 @@ static const std::string str_Column_Volume_Value = ":Volume_Value";
 
 
 
-CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentID)
+CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentID, const CInstrumentBarInfoRequest& instrumentBarInfoRequest)
 {
 	BOOST_LOG_FUNCTION();
+	m_nInstrumentID = nInstrumentID;
+	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
+
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pmapIntervalDBTableName = new MapIntervalDBTableNameT();
-	m_nInstrumentID = nInstrumentID;
+	
 
 	m_strDBType = defSQLiteDBName;
 	m_nDBType = TA_Base_Core::enumSqliteDb;
@@ -53,7 +58,7 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager(unsigned int nInstrumentI
 	//m_strDBType = defMysqlDBName;
 	//m_nDBType = TA_Base_Core::enumMysqlDb;
 
-	m_strDBName = getBarInfoDBName(nInstrumentID);
+	m_strDBName = getBarInfoDBName(m_nInstrumentID, m_InstrumentBarInfoRequest);
 	m_pQSqlDataBase = NULL;
 	m_pQSqlQuery = NULL;
 	_InitDataBase();
@@ -140,7 +145,7 @@ void CInstrumentBarInfoStorager::_UnInitDataBase()
 }
 
 
-std::string CInstrumentBarInfoStorager::getBarInfoDBName(unsigned int nInstrumentID)
+std::string CInstrumentBarInfoStorager::getBarInfoDBName(unsigned int nInstrumentID, const CInstrumentBarInfoRequest& instrumentBarInfoRequest)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -152,13 +157,15 @@ std::string CInstrumentBarInfoStorager::getBarInfoDBName(unsigned int nInstrumen
 	switch (m_nDBType)
 	{
 	case TA_Base_Core::enumSqliteDb:
-		sreaamTmp<<"SQLiteDB_"<<nInstrumentID<<".db";
+		sreaamTmp<<instrumentBarInfoRequest.m_strInstrumetBarInfoTotal<<"//"
+			<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
 		break;
 	case TA_Base_Core::enumMysqlDb:
 		sreaamTmp<<"mysqldb_"<<nInstrumentID;
 		break;
 	default:
-		sreaamTmp<<"SQLiteDB_"<<nInstrumentID<<".db";
+		sreaamTmp<<instrumentBarInfoRequest.m_strInstrumetBarInfoTotal<<"//"
+			<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
 		break;
 	}
 

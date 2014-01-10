@@ -250,9 +250,25 @@
 				RelativePath=".\src\FileSystemManager.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\MarketDataFileManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataFileManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataPathManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataPathManager.h"
+				>
+			</File>
 		</Filter>
 		<Filter
-			Name="BarInfo"
+			Name="InstrumentBarInfo"
 			>
 			<File
 				RelativePath=".\src\InstrumentBarInfoCalculator.cpp"
@@ -260,6 +276,14 @@
 			</File>
 			<File
 				RelativePath=".\src\InstrumentBarInfoCalculator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentBarInfoRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentBarInfoRequest.h"
 				>
 			</File>
 			<File
@@ -284,22 +308,6 @@
 			</File>
 			<File
 				RelativePath=".\src\MarketDataFileAnalier.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataFileManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataFileManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataPathManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataPathManager.h"
 				>
 			</File>
 		</Filter>
@@ -364,6 +372,26 @@
 			</File>
 			<File
 				RelativePath=".\src\SyncMarketDataForCFD.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="InstrumentMarketData"
+			>
+			<File
+				RelativePath=".\src\InstrumentMarketDataRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentMarketDataRequest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataLineDispatcher.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MarketDataLineDispatcher.h"
 				>
 			</File>
 		</Filter>

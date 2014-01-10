@@ -21,8 +21,8 @@ CCreateCFDInstrumentBarInfo::CCreateCFDInstrumentBarInfo(const CCFDRequest& cfdR
 	BOOST_LOG_FUNCTION();
 	m_CFDRequest = cfdRequest;
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_CSyncMarketDataForCFD = new CSyncMarketDataForCFD();
-	m_pCFDBarInfoCalculator = new CCFDInstrumentBarInfoCalculator(cfdRequest);
+	m_CSyncMarketDataForCFD = new CSyncMarketDataForCFD(m_CFDRequest);
+	m_pCFDBarInfoCalculator = new CCFDInstrumentBarInfoCalculator(m_CFDRequest);
 	
 }
 
@@ -87,8 +87,7 @@ void CCreateCFDInstrumentBarInfo::createCFDbarInfoByLst(LstMarketDataT& lstBarFi
 	LstMarketDataIterT  iterLstSecond;
 
 	//get CFD bar
-	m_CSyncMarketDataForCFD->setCFDInstrumentIDFirst(m_nInstrumentIDFirst);
-	m_CSyncMarketDataForCFD->setCFDInstrumentIDSecond(m_nInstrumentIDSecond);
+	m_CSyncMarketDataForCFD->setCFDRequest(m_CFDRequest);
 
 	iterLstFirst = lstBarFirst.begin();
 	iterLstSecond = lstBarSecond.begin();
@@ -132,7 +131,8 @@ void CCreateCFDInstrumentBarInfo::createCFDbarInfoByLst(LstMarketDataT& lstBarFi
 			else
 			{
 				//last data
-				BarInfoFirst.Time = BarInfoSecond.Time;
+				//BarInfoFirst.Time = BarInfoSecond.Time;
+				break;
 			}
 		}
 		else if (nNextWorkType == CSyncMarketDataForCFD::NextWorkType_ReUseFirst_UseNewSecond)
@@ -144,7 +144,8 @@ void CCreateCFDInstrumentBarInfo::createCFDbarInfoByLst(LstMarketDataT& lstBarFi
 			else
 			{
 				//last data
-				BarInfoSecond.Time = BarInfoFirst.Time;
+				//BarInfoSecond.Time = BarInfoFirst.Time;
+				break;
 			}
 		}
 
@@ -153,11 +154,11 @@ void CCreateCFDInstrumentBarInfo::createCFDbarInfoByLst(LstMarketDataT& lstBarFi
 
 std::string CCreateCFDInstrumentBarInfo::_GetInstrumentPriceFileName(unsigned int nInstrumentID)
 {
-	BOOST_LOG_FUNCTION;
+	BOOST_LOG_FUNCTION();
 	std::string strInstrumentPriceFileName;
 	std::ostringstream streamTmp;
 
-	streamTmp<<nInstrumentID<<".csv";//3320.csv
+	streamTmp<<m_CFDRequest.m_strPathHistoryMarketDataInstrument<<nInstrumentID<<".csv";//3320.csv
 
 	strInstrumentPriceFileName = streamTmp.str();
 
@@ -167,7 +168,7 @@ std::string CCreateCFDInstrumentBarInfo::_GetInstrumentPriceFileName(unsigned in
 
 int CCreateCFDInstrumentBarInfo::_InitInstrumentDataSource(unsigned int nInstrumentID, std::ifstream** ppStorager)
 {
-	BOOST_LOG_FUNCTION;
+	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
 	std::string strInstrumentPriceFileName;
 
@@ -193,6 +194,8 @@ int CCreateCFDInstrumentBarInfo::_InitInstrumentDataSource(unsigned int nInstrum
 }
 int CCreateCFDInstrumentBarInfo::_UnInitInstrumentDataSource(unsigned int nInstrumentID, std::ifstream** ppStorager)
 {
+	BOOST_LOG_FUNCTION();
+
 	int nFunRes = 0;
 
 	if (NULL == ppStorager)
@@ -211,6 +214,8 @@ int CCreateCFDInstrumentBarInfo::_UnInitInstrumentDataSource(unsigned int nInstr
 
 int CCreateCFDInstrumentBarInfo::_GetNextBarInfo( std::ifstream* pStorager, bool& bIsLstEnd, MarketData& BarInfoGet)
 {
+	BOOST_LOG_FUNCTION();
+
 	int nFunRes = 0;
 
 	if (NULL == pStorager)
@@ -251,33 +256,32 @@ int CCreateCFDInstrumentBarInfo::createCFDbarInfoByMarketData()
 	MarketData BarInfoFirstGetTmp;
 	MarketData BarInfoSecondGetTmp;
 
-	strFirstInstrumentPriceFileName = _GetInstrumentPriceFileName(m_nInstrumentIDFirst);
-	strSecondInstrumentPriceFileName = _GetInstrumentPriceFileName(m_nInstrumentIDSecond);
+	strFirstInstrumentPriceFileName = _GetInstrumentPriceFileName(m_CFDRequest.m_nCFDInstrumentIDFirst);
+	strSecondInstrumentPriceFileName = _GetInstrumentPriceFileName(m_CFDRequest.m_nCFDInstrumentIDSecond);
 
 
-	nFunRes = _InitInstrumentDataSource(m_nInstrumentIDFirst, &pFirstInstrumentPriceFile);
+	nFunRes = _InitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDFirst, &pFirstInstrumentPriceFile);
 	if (0 != nFunRes)
 	{
-		_UnInitInstrumentDataSource(m_nInstrumentIDFirst, &pFirstInstrumentPriceFile);
+		_UnInitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDFirst, &pFirstInstrumentPriceFile);
 		pFirstInstrumentPriceFile = NULL;
 		nFunRes = -1;
 		return nFunRes;
 	}
 
-	nFunRes = _InitInstrumentDataSource(m_nInstrumentIDSecond, m_nInterval, &pSecondInstrumentPriceFile);
+	nFunRes = _InitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDSecond, &pSecondInstrumentPriceFile);
 	if (0 != nFunRes)
 	{
-		_UnInitInstrumentDataSource(m_nInstrumentIDFirst, m_nInterval, &pFirstInstrumentPriceFile);
+		_UnInitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDFirst, &pFirstInstrumentPriceFile);
 		pFirstInstrumentPriceFile = NULL;
-		_UnInitInstrumentDataSource(m_nInstrumentIDSecond, m_nInterval, &pSecondInstrumentPriceFile);
+		_UnInitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDSecond, &pSecondInstrumentPriceFile);
 		pSecondInstrumentPriceFile = NULL;
 		nFunRes = -1;
 		return nFunRes;
 	}
 
 	//get CFD bar
-	m_CSyncMarketDataForCFD->setCFDInstrumentIDFirst(m_nInstrumentIDFirst);
-	m_CSyncMarketDataForCFD->setCFDInstrumentIDSecond(m_nInstrumentIDSecond);
+	m_CSyncMarketDataForCFD->setCFDRequest(m_CFDRequest);
 	bIsLstFirstEnd = false;
 	bIsLstSecondEnd = false;
 
@@ -323,7 +327,8 @@ int CCreateCFDInstrumentBarInfo::createCFDbarInfoByMarketData()
 			else
 			{
 				//last data
-				BarInfoFirst.Time = BarInfoSecond.Time;
+				//BarInfoFirst.Time = BarInfoSecond.Time;
+				break;
 			}
 		}
 		else if (CSyncMarketDataForCFD::NextWorkType_ReUseFirst_UseNewSecond == nNextWorkType)
@@ -335,79 +340,18 @@ int CCreateCFDInstrumentBarInfo::createCFDbarInfoByMarketData()
 			else
 			{
 				//last data
-				BarInfoSecond.Time = BarInfoFirst.Time;
+				//BarInfoSecond.Time = BarInfoFirst.Time;
+				break;
 			}
 		}
 
 	}//while
 
-	_UnInitInstrumentDataSource(m_nInstrumentIDFirst, m_nInterval, &pFirstInstrumentPriceFile);
+	_UnInitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDFirst, &pFirstInstrumentPriceFile);
 	pFirstInstrumentPriceFile = NULL;
-	_UnInitInstrumentDataSource(m_nInstrumentIDSecond, m_nInterval, &pSecondInstrumentPriceFile);
+	_UnInitInstrumentDataSource(m_CFDRequest.m_nCFDInstrumentIDSecond, &pSecondInstrumentPriceFile);
 	pSecondInstrumentPriceFile = NULL;
 	return nFunRes;
-}
-
-void CCreateCFDInstrumentBarInfo::doOneTest()
-{
-	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
-
-	//prepare data
-	Bar BarInfo_First;
-	Bar BarInfo_Second;
-	std::list<Bar>  lstBarFirst;
-	std::list<Bar>  lstBarSecond;
-
-	BarInfo_First.Time = 1387502100;
-	BarInfo_First.Open = 2346;
-	BarInfo_First.Close = 2345;
-	BarInfo_First.High = 2347;
-	BarInfo_First.Low = 2344;
-	BarInfo_First.Volume = 0;
-
-	BarInfo_Second.Time = 1387502110;
-	BarInfo_Second.Open = 2336;
-	BarInfo_Second.Close = 2335;
-	BarInfo_Second.High = 2337;
-	BarInfo_Second.Low = 2334;
-	BarInfo_Second.Volume = 0;
-
-	//type1 small
-	BarInfo_First.Time = 1387502100;
-	BarInfo_Second.Time = 1387502110;
-	lstBarFirst.push_back(BarInfo_First);
-	lstBarSecond.push_back(BarInfo_Second);	
-
-	//type2 bigger
-	BarInfo_First.Time = 1387502115;
-	BarInfo_Second.Time = 1387502112;
-	lstBarFirst.push_back(BarInfo_First);
-	lstBarSecond.push_back(BarInfo_Second);	
-
-	//type3 equal
-	BarInfo_First.Time = 1387502120;
-	BarInfo_Second.Time = 1387502120;
-	lstBarFirst.push_back(BarInfo_First);
-	lstBarSecond.push_back(BarInfo_Second);
-
-	//type3 equal
-	BarInfo_First.Time = 1387502130;
-	BarInfo_Second.Time = 1387502130;
-	lstBarFirst.push_back(BarInfo_First);
-	lstBarSecond.push_back(BarInfo_Second);	
-
-	//type3 equal
-	BarInfo_First.Time = 1387502135;
-	BarInfo_Second.Time = 1387502140;
-	lstBarFirst.push_back(BarInfo_First);
-	lstBarSecond.push_back(BarInfo_Second);	
-
-	createCFDbarInfoByLst(lstBarFirst, lstBarSecond);
-	lstBarFirst.clear();
-	lstBarSecond.clear();
-
-
 }
 
 NS_END(TA_Base_App)

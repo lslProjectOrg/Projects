@@ -10,7 +10,9 @@ manager MarketData history Data All Files in one Path. sort by time
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-
+#include "InstrumentBarInfoRequest.h"
+#include "InstrumentMarketDataRequest.h"
+#include "MarketDataFileManager.h"
 
 NS_BEGIN(TA_Base_App) 
 
@@ -24,14 +26,20 @@ public:
 	CMarketDataPathManager(void);
 	~CMarketDataPathManager(void);
 public:
-	int setPathName(const std::string& strFolderPath);
+	int setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
+	int setInstrumentMarketDataRequest(const CInstrumentMarketDataRequest& instrumentMarketDataRequest);
+
 	int analieAllFiles();
 private:
-
+	int _SetAnalieType(CMarketDataFileManager::enAnalierType nAnalierType);
+	int _AnalieAllFilesTypeMarketDataLine();
+	int _AnalieAllFilesTypeMarketData();
 private:
-	std::string m_strFolderPath;
 	CMarketDataFileManager*  m_pMarketDataFileManager;
 	CFileSystemManager*    m_pFileSystemManager;
+	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
+	CInstrumentMarketDataRequest m_InstrumentMarketDataRequest;
+	CMarketDataFileManager::enAnalierType  m_nAnalierType;
 };
 
 NS_END(TA_Base_App) 
