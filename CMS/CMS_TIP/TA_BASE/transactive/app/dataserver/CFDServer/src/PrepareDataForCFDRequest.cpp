@@ -23,12 +23,6 @@ CPrepareDataForCFDRequest::CPrepareDataForCFDRequest(const CCFDRequest& cfdReque
 CPrepareDataForCFDRequest::~CPrepareDataForCFDRequest(void)
 {
 	BOOST_LOG_FUNCTION();
-
-	if (NULL != m_pUtilityFun)
-	{
-		delete m_pUtilityFun;
-		m_pUtilityFun = NULL;
-	}
 }
 
 
@@ -65,13 +59,12 @@ int CPrepareDataForCFDRequest::_GetCFDBarInfoFromStorager(CCFDInstrumentBarInfoS
 	return nFunRes;
 }
 
-
-int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
+int CPrepareDataForCFDRequest::_TryGetCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
+
 	CCFDInstrumentBarInfoStorager*  pCFDStorager = NULL;
-	CCreateCFDInstrumentBarInfo*  pCreateCFDInstrumentBarInfo = NULL;
 
 	//check data is in db
 	pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest);
@@ -83,15 +76,36 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 		nFunRes = _GetCFDBarInfoFromStorager(pCFDStorager, lstCFDBarInfo);
 	}
 
+	if (0 == nFunRes)
+	{
+		//get data from db
+	}
+
 	if (NULL != pCFDStorager)
 	{
 		delete pCFDStorager;
 		pCFDStorager = NULL;
 	}
 
-	//data is not in db then create
-	if (0 != nFunRes)
+	return nFunRes;
+}
+
+
+int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	CCreateCFDInstrumentBarInfo*  pCreateCFDInstrumentBarInfo = NULL;
+
+	nFunRes = _TryGetCFDBarInfo(lstCFDBarInfo);	
+
+	if (0 == nFunRes)
 	{
+		return nFunRes;
+	}
+	else
+	{
+		//data is not in db then create
 		//get data from db no data then try to create data and save to db
 		LOG_DEBUG<<"DB have not save CFD Bar info yet! begin create CFD Bar info"
 			<<" "<<"m_nInstrumentIDFirst="<<m_nCFDRequest.m_nCFDInstrumentIDFirst
@@ -101,7 +115,6 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 		pCreateCFDInstrumentBarInfo = new CCreateCFDInstrumentBarInfo(m_nCFDRequest);
 		//use MarketData to calc  CFD 1mins bar Info
 		nFunRes = pCreateCFDInstrumentBarInfo->createCFDbarInfoByMarketData();
-
 	}
 
 	if (NULL != pCreateCFDInstrumentBarInfo)
@@ -112,14 +125,8 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 
 	if (0 == nFunRes)
 	{
-		pCFDStorager = new CCFDInstrumentBarInfoStorager(m_nCFDRequest);
-
-		//create data and save to db ok! then get data from db again
-		nFunRes = pCFDStorager->beginGetBarInfo(m_nCFDRequest);
-		if (0 == nFunRes)
-		{
-			nFunRes = _GetCFDBarInfoFromStorager(pCFDStorager, lstCFDBarInfo);
-		}
+		//create data ok, then get data again
+		nFunRes = _TryGetCFDBarInfo(lstCFDBarInfo);	
 	}
 	else
 	{
@@ -131,28 +138,6 @@ int CPrepareDataForCFDRequest::getCFDBarInfo(LstBarInfoT&  lstCFDBarInfo)
 
 	}
 
-
-	//check data
-	if (lstCFDBarInfo.empty())
-	{
-		nFunRes = -1;
-	}
-	else
-	{
-		nFunRes = 0;
-	}
-
-
-	if (NULL != pCreateCFDInstrumentBarInfo)
-	{
-		delete pCreateCFDInstrumentBarInfo;
-		pCreateCFDInstrumentBarInfo = NULL;
-	}
-	if (NULL != pCFDStorager)
-	{
-		delete pCFDStorager;
-		pCFDStorager = NULL;
-	}
 	return nFunRes;
 
 }

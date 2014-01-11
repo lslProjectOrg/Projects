@@ -25,8 +25,8 @@ public:
 
 private:
 	int _GetCFDBarInfoFromStorager(CCFDInstrumentBarInfoStorager* pCFDStorager, LstBarInfoT& lstCFDBarInfo);
+	int _TryGetCFDBarInfo(LstBarInfoT& lstCFDBarInfo);
 private:
-	CCFDServerUtilityFun*    m_pUtilityFun;
 	CCFDRequest   m_nCFDRequest;
 };
 

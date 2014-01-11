@@ -175,13 +175,13 @@ std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBName(const CCFDRequest
 	return strInstrumentSQLDBName;
 }
 
-std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(const CCFDRequest& cfdRequest)
+std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(int interval)
 {
 	BOOST_LOG_FUNCTION();	
 	std::string strBarDataTableName;
 	std::ostringstream sreaamTmp;
 
-	switch (cfdRequest.m_nCFDInterval)
+	switch (interval)
 	{
 	case TIME_BASE_S_1S:
 		sreaamTmp<<"cfd_bar_data_1seconds";
@@ -214,7 +214,7 @@ std::string CCFDInstrumentBarInfoStorager::getCFDBarInfoDBTableName(const CCFDRe
 		sreaamTmp<<"cfd_bar_data_1years";
 		break;
 	default:
-		sreaamTmp<<"cfd_bar_data_"<<cfdRequest.m_nCFDInterval;
+		sreaamTmp<<"cfd_bar_data_"<<interval;
 		break;
 	}
 
@@ -236,7 +236,7 @@ std::string CCFDInstrumentBarInfoStorager::_CheckAndInitDBTable(unsigned int nIn
 		return strTableName;
 	}
 
-	strTableName = getCFDBarInfoDBTableName(m_CFDRequest);
+	strTableName = getCFDBarInfoDBTableName(interval);
 	_CreateDBTable(strTableName);
 	m_pmapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(interval, strTableName));
 	return strTableName;
@@ -511,7 +511,7 @@ int CCFDInstrumentBarInfoStorager::beginGetBarInfo(const CCFDRequest& cfdRequest
 		nFunRes = -1;
 		return nFunRes;
 	}
-	strTableName = getCFDBarInfoDBTableName(cfdRequest);
+	strTableName = getCFDBarInfoDBTableName(cfdRequest.m_nCFDInterval);
 	strSQL = _BuildSelectSQL(strTableName);
 	LOG_DEBUG<<"begin Exec sql="<<strSQL;
 

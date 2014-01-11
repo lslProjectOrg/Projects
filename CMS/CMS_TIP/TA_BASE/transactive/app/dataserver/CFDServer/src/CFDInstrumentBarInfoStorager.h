@@ -44,7 +44,7 @@ public:
 public:
 	int storeBarInfo(int interval, Bar* pBarInfo);
 	std::string getCFDBarInfoDBName(const CCFDRequest& cfdRequest);
-	std::string getCFDBarInfoDBTableName(const CCFDRequest& cfdRequest);
+	std::string getCFDBarInfoDBTableName(int interval);
 	int beginGetBarInfo(const CCFDRequest& cfdRequest);
 	int getNextBarInfo(Bar& getNextBarInfo);
 

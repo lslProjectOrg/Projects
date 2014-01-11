@@ -70,7 +70,6 @@ void Test_CInstrumentBarInfoRequest()
 	CInstrumentBarInfoRequest instrumentBarInfoRequest; 
 	instrumentBarInfoRequest.m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
 	instrumentBarInfoRequest.m_strInstrumetBarInfoTotal = "C://TestData//InstrumetBarInfoTotal";
-	instrumentBarInfoRequest.addBarTimeNormal();
 
 	pWorkTime = new TA_Base_Core::CWorkTimeNoLock();
 	pWorkTime->workBegin();
@@ -189,8 +188,8 @@ int main( int argc, char* argv[])
 	signal(SIGHUP, usr_signal);	//close putty
 #endif
 
-	Test_CInstrumentBarInfoRequest();
-	Test_CInstrumentMarketDataRequest();
+	//Test_CInstrumentBarInfoRequest();
+	//Test_CInstrumentMarketDataRequest();
 	Test_CCFDRequest();
 
 	//sleep

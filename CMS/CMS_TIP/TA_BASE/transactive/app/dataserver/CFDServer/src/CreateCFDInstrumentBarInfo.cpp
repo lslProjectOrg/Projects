@@ -158,7 +158,7 @@ std::string CCreateCFDInstrumentBarInfo::_GetInstrumentPriceFileName(unsigned in
 	std::string strInstrumentPriceFileName;
 	std::ostringstream streamTmp;
 
-	streamTmp<<m_CFDRequest.m_strPathHistoryMarketDataInstrument<<nInstrumentID<<".csv";//3320.csv
+	streamTmp<<m_CFDRequest.m_strPathHistoryMarketDataInstrument<<"//"<<nInstrumentID<<".csv";//3320.csv
 
 	strInstrumentPriceFileName = streamTmp.str();
 

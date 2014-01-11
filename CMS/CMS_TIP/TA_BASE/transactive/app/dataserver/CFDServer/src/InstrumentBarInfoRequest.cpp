@@ -18,7 +18,7 @@ CInstrumentBarInfoRequest::CInstrumentBarInfoRequest(void)
 	m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
 	m_strInstrumetBarInfoTotal = "C://TestData//InstrumetBarInfoTotal";
 	m_strCurrentAnalierFileName = m_strHistoryMarketDataTotal + "//" + "20131220.csv";
-	
+	_AddBarTimeNormal();
 }
 
 CInstrumentBarInfoRequest::~CInstrumentBarInfoRequest(void)
@@ -27,14 +27,14 @@ CInstrumentBarInfoRequest::~CInstrumentBarInfoRequest(void)
 }
 
 
-CInstrumentBarInfoRequest& CInstrumentBarInfoRequest::operator=( const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
+CInstrumentBarInfoRequest& CInstrumentBarInfoRequest::operator=(const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
 {
 	BOOST_LOG_FUNCTION();
 	m_strCurrentAnalierFileName = instrumentBarInfoRequest.m_strCurrentAnalierFileName;
 	m_strHistoryMarketDataTotal = instrumentBarInfoRequest.m_strHistoryMarketDataTotal;
 	m_strInstrumetBarInfoTotal = instrumentBarInfoRequest.m_strInstrumetBarInfoTotal;
 
-	instrumentBarInfoRequest.getLstBarTime(m_lstBarTime);
+	_AddBarTimeNormal();
 
 
 	return *this;
@@ -50,7 +50,7 @@ void CInstrumentBarInfoRequest::logInfo()
 	return;
 }
 
-void CInstrumentBarInfoRequest::addBarTimeNormal()
+void CInstrumentBarInfoRequest::_AddBarTimeNormal()
 {
 	BOOST_LOG_FUNCTION();
 	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_5S);//seconds

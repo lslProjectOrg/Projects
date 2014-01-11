@@ -35,6 +35,9 @@ CCFDRequest& CCFDRequest::operator=( const CCFDRequest& cfdRequest )
 	m_nXValue = cfdRequest.m_nXValue;
 	m_nYValue = cfdRequest.m_nYValue;
 	m_nCFDInterval = cfdRequest.m_nCFDInterval;
+	m_strPathHistoryMarketDataInstrument = cfdRequest.m_strPathHistoryMarketDataInstrument;
+	m_strCFDBarInfoTotal = cfdRequest.m_strCFDBarInfoTotal;
+
 	return *this;
 }
 

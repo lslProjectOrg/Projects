@@ -19,9 +19,11 @@ public:
 
 public:
 	void logInfo();
-	void addBarTimeNormal();
 	void addBarTime(int nSeconds);
 	void getLstBarTime(std::list<int>& lstBarTime);
+private:
+	void _AddBarTimeNormal();
+
 public:
 	//c://TestData//HistoryMarketDataTotal   20131220.csv 
 	//C://TestData//InstrumetBarInfoTotal   SQLiteDB_3320.db

@@ -92,7 +92,7 @@ int CMarketDataLineDispatcher::_AnalyseOneLine(const std::string& strOneLine)
 
 	if (NULL != pFileHandle)
 	{
-		(*pFileHandle)<<strOneLine;
+		(*pFileHandle)<<strOneLine<<std::endl;
 	}
 	
 	return nFunRes;
