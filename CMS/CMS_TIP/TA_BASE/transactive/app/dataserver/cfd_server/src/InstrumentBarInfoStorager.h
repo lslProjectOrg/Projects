@@ -78,18 +78,17 @@ private:
 	std::string _GetBarInfoDBName(const std::string& strPathInstrumentBarInfoTotal, unsigned int nInstrumentID);
 	std::string _GetBarInfoDBTableName(int interval);
 
-	int _InsertData(int interval, Bar& barInfo);
-	std::string _CheckAndInitDBTable(unsigned int nInstrumentID, int interval);
+	int _CheckAndInitDBTable(CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	int _CreateDBTable(const std::string& strDbTableName);
-	std::string _BuildInsertSQL(const std::string& strTableName);
+	std::string _BuildInsertSQLBatchMode(const std::string& strTableName);
 	std::string _BuildSelectSQL(const std::string& strTableName);
 	std::string _BuildCreateDBTableSQL(const std::string& strTableName);
 	std::string _BuildDropDBTableSQL(const std::string& strDbTableName);
 
-	void _ClearMapIntervalDBarLst(MapIntervalBarLstT* pMapIntervalBarLstT);
-	void _ClearInstrumentBarInfoLst(LstInstrumentBarInfoT* plstInstrumentBarInfo);
+	void _ClearMapIntervalBarLst(MapIntervalBarLstT* pMapIntervalBarLstT);
+	void _ClearLstInstrumentBarInfo(LstInstrumentBarInfoT* plstInstrumentBarInfo);
 	int _StoreMapIntervalBarLstBatchMode(MapIntervalBarLstT* pMapIntervalBarLst);
-	int _StoreLstInstrumentBarInfoBatchMode(LstInstrumentBarInfoT* pLstInstrumentBarInfo);
+	int _StoreLstInstrumentBarInfoBatchMode(int nInterval, LstInstrumentBarInfoT* pLstInstrumentBarInfo);
 	int _InitMapIntervalBarInfoLst(const CInstrumentBarInfoRequest& instrumentBarInfoRequest, MapIntervalBarLstT* pMapIntervalBarLstT);
 private:
 	unsigned int m_nInstrumentID;
@@ -99,6 +98,7 @@ private:
 
 private:
 	QSqlDatabase*		m_pQSqlDataBase;
+	QSqlQuery*          m_pQSqlQueryForInseert;
 	QSqlQuery*			m_pQSqlQueryForSelect;
 	CCFDServerUtilityFun*   m_pUtilityFun;
 	MapIntervalDBTableNameT* m_pmapIntervalDBTableName;

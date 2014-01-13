@@ -41,8 +41,8 @@ void logInit()
 
 	std::string strLogPath = "ALL_CFDServer_LOG_PATH";
 	std::string strLogFileName = "CFDServer_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
-	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
-	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
+	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
+	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
 
 
 	TA_Base_App::CBoostLogger::getInstance().setLogPath(strLogPath);

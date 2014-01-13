@@ -63,6 +63,9 @@ int CBoostLogger::logInit()
 {
 	std::string strLogPath = m_strLogPath;
 	std::string strLogFileName = m_strLogFileName;
+	int nMaxLogSize = 10*1024*1024*1024;   //maxth log size 10GB
+	int nMinFreeSpace = 100*1024*1024;  //min free size
+
 
 	shared_ptr< sinks::synchronous_sink< sinks::text_file_backend > > file_sink =
 		logging::add_file_log
@@ -93,8 +96,8 @@ int CBoostLogger::logInit()
 		sinks::file::make_collector(
 		keywords::target=strLogPath,   //path  		
 		//keywords::target="ALL_Server_LOG",   //path     
-		keywords::max_size=10*1024*1024*1024,    //maxth log size 10GB
-		keywords::min_free_space=100*1024*1024  //min free size
+		keywords::max_size = nMaxLogSize,    //maxth log size 10GB
+		keywords::min_free_space = nMinFreeSpace  //min free size
 		));
 
 
