@@ -2,7 +2,7 @@
 
  
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include "MarketData.h"
 #include "BarCalculator.h"

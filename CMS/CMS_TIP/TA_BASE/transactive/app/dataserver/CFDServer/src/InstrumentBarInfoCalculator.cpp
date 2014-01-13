@@ -1,11 +1,8 @@
+#include "CFDServerCommonData.h"
 #include "InstrumentBarInfoCalculator.h"
-
-#include "core/utilities/src/UtilitiesCommonData.h"
-
 #include "MarketData.h"
 #include "BarCalculator.h"
 #include "InstrumentBarInfoStorager.h"
-//#include "InsteumentBarInfoStoragerMysql.h"
 #include "CFDServerUtilityFun.h"
 
 #include "core/utilities/src/BoostLogger.h"
@@ -23,8 +20,7 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pStorager = new CInstrumentBarInfoStorager(m_nInstrumentID, m_InstrumentBarInfoRequest);
-
+	m_pStorager = new CInstrumentBarInfoStorager(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal, m_nInstrumentID);
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
 	_InitBarCalculator();
 }
@@ -61,9 +57,6 @@ CInstrumentBarInfoCalculator::~CInstrumentBarInfoCalculator(void)
 		m_pBarCalculator = NULL;
 	}
 	LOG_DEBUG<<"end delete m_pBarCalculator";
-
-
-
 }
 
 
@@ -72,21 +65,25 @@ int CInstrumentBarInfoCalculator::_InitBarCalculator()
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
+	std::list<int> lstBarTime;
 	std::list<int>::iterator  iterLst;
 	int nSeconds = 0;
-
+	
 	m_pBarCalculator->onNewBar = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleNewBar, this, _1, _2);
 	m_pBarCalculator->onBarUpdate = boost::bind(&TA_Base_App::CInstrumentBarInfoCalculator::HandleUpdateBar, this, _1, _2);
 
-	iterLst = m_InstrumentBarInfoRequest.m_lstBarTime.begin();
+	m_InstrumentBarInfoRequest.getLstBarTime(lstBarTime);
+	iterLst = lstBarTime.begin();
 
-	while (iterLst != m_InstrumentBarInfoRequest.m_lstBarTime.end())
+	while (iterLst != lstBarTime.end())
 	{
 		nSeconds = (*iterLst);
 		m_pBarCalculator->addBar(nSeconds);//seconds
 
 		iterLst++;
 	}//while
+
+	lstBarTime.clear();
 
 	return nFunRes;
 }
@@ -117,7 +114,7 @@ int CInstrumentBarInfoCalculator::_ClearDataInMap(MapIntervalBarInfoT*  pMapTime
 		strLogInfo = sreaamTmp.str();
 		m_pUtilityFun->logBarInfo(strLogInfo, nInterval, pBar);
 		//save to db
-		m_pStorager->storeBarInfo(nInterval, pBar);
+		m_pStorager->storeBarInfo(nInterval, *pBar);
 
 		delete pBar;
 		pBar = NULL;
@@ -149,7 +146,7 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 		strLogInfo=sreaamTmp.str();
 		m_pUtilityFun->logBarInfo(strLogInfo, interval, pBar);
 		//save to db
-		m_pStorager->storeBarInfo(interval, pBar);
+		m_pStorager->storeBarInfo(interval, *pBar);
 
 		//reset bar
 		pBar->update(0, 0, 0);

@@ -2,7 +2,7 @@
 #define __CLASS_CFD_INSTRUMENT_BAR_INFO_H__ 
 
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 #include "BarCalculator.h"
 #include "CFDRequest.h"
 

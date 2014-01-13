@@ -14,7 +14,7 @@
 
 #include "FileSystemItem.h"
 
-#include "core/utilities/src/BoostLogger.h"
+#include "BoostLogger.h"
 USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App)

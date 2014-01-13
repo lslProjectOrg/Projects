@@ -1,14 +1,7 @@
 #ifndef __CLASS_MARKET_DATA_LINE_DISPATCHER__HH__
 #define __CLASS_MARKET_DATA_LINE_DISPATCHER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
-
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
-#include <fstream>
-#include <sstream>
-
+#include "CFDServerCommonData.h"
 #include "InstrumentMarketDataRequest.h"
 
 

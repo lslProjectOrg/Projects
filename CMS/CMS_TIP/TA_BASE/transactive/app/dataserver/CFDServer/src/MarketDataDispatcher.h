@@ -4,7 +4,7 @@ Dispatcher MarketData class by SecurityID(InstumentID)
 #ifndef __CLASS_MARKET_DATA_DISPATCHER__HH__
 #define __CLASS_MARKET_DATA_DISPATCHER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>

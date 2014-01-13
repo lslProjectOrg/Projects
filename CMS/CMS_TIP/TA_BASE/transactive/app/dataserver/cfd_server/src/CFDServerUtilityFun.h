@@ -2,7 +2,7 @@
 #define __CLASS_CFDSERVER_UTILITY_FUN_H__ 
 
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include "MarketData.h"
 #include "BarCalculator.h"

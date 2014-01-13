@@ -6,7 +6,7 @@
 #include "FileSystemManager.h"
 
 
-#include "core/utilities/src/BoostLogger.h"
+#include "BoostLogger.h"
 USING_BOOST_LOG;
 
 
@@ -17,8 +17,7 @@ NS_BEGIN(TA_Base_App)
 
 CMarketDataPathManager::CMarketDataPathManager(void)
 {
-	m_strFolderPath.clear();
-	m_pMarketDataFileManager = new CMarketDataFileManager();
+	m_pMarketDataFileManager = new CMarketDataFileManager(CMarketDataFileManager::AnalierType_Begin);
 	m_pFileSystemManager = new CFileSystemManager();
 
 }
@@ -40,11 +39,14 @@ CMarketDataPathManager::~CMarketDataPathManager(void)
 	}
 
 }
-int CMarketDataPathManager::setPathName(const std::string& strFolderPath)
-{
+int CMarketDataPathManager::_SetAnalieType(CMarketDataFileManager::enAnalierType nAnalierType)
+{	
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
-	m_strFolderPath = strFolderPath;
+
+	m_nAnalierType = nAnalierType;
+	m_pMarketDataFileManager->setAnalieType(m_nAnalierType);
+
 	return nFunRes;
 }
 
@@ -52,36 +54,63 @@ int CMarketDataPathManager::analieAllFiles()
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
+
+	switch (m_nAnalierType)
+	{
+	case CMarketDataFileManager::AnalierType_Dispatch_MarkketData:
+		_AnalieAllFilesTypeMarketData();
+		break;
+	}
+	return nFunRes;
+}
+
+
+
+int CMarketDataPathManager::_AnalieAllFilesTypeMarketData()
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
 	CFileSystemManager::MapTimeFileSystemItemT mapTimeFileSystemItemTmp;
 	CFileSystemManager::MapTimeFileSystemItemIterT iterMap;
 	CFileSystemItem* pFileSystemItem = NULL;
-	std::string strOneFileName;
 
-	LOG_DEBUG<<"analies Folder m_strFolderPath="<<m_strFolderPath;
+	if (CMarketDataFileManager::AnalierType_Dispatch_MarkketData != m_nAnalierType)
+	{
+		nFunRes = -1;
+		return nFunRes;
+	}
 
-	m_pFileSystemManager->getAllFileSystemItemInPath(m_strFolderPath, mapTimeFileSystemItemTmp);
+	LOG_DEBUG<<"analies Folder m_strFolderPath="<<m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal;
+	m_pFileSystemManager->getAllFileSystemItemInPath(m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal, mapTimeFileSystemItemTmp);
 
 	iterMap = mapTimeFileSystemItemTmp.begin();
 	while (iterMap != mapTimeFileSystemItemTmp.end())
 	{
 		pFileSystemItem = iterMap->second;
 
-		strOneFileName = pFileSystemItem->getFileFullPath();
-		m_pMarketDataFileManager->setFileName(strOneFileName);
+		m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName = pFileSystemItem->getFileFullPath();
+
+		m_pMarketDataFileManager->setInstrumentBarInfoRequest(m_InstrumentBarInfoRequest);
 		nFunRes = m_pMarketDataFileManager->analierFile();
 
 		iterMap++;
 	}
 
 
- 	m_pFileSystemManager->freeData(mapTimeFileSystemItemTmp);
+	m_pFileSystemManager->freeData(mapTimeFileSystemItemTmp);
 	mapTimeFileSystemItemTmp.clear();
 
 	return nFunRes;
 }
 
-
-
+int CMarketDataPathManager::setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
+	_SetAnalieType(CMarketDataFileManager::AnalierType_Dispatch_MarkketData);
+	return nFunRes;
+}
 
 
 NS_END(TA_Base_App) 

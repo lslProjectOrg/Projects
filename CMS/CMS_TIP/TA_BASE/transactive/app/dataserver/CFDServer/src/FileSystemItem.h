@@ -2,7 +2,7 @@
 #define __CLASS_FILE_SYSTEM_ITEM_H__ 
 
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/filesystem.hpp>
 #include "boost/filesystem/operations.hpp"

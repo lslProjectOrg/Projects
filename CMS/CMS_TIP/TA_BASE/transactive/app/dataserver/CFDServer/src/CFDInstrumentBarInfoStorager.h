@@ -1,7 +1,7 @@
 #ifndef __CLASS_CFD_INSTUMENT_BAR_INFO_STORAGER__HH__
 #define __CLASS_CFD_INSTUMENT_BAR_INFO_STORAGER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <iostream>
 #include <map>

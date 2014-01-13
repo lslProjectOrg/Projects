@@ -5,12 +5,13 @@ Analie each line  to MarketData class
 #ifndef __CLASS_MARKET_DATA_FILE_ANALIER__HH__
 #define __CLASS_MARKET_DATA_FILE_ANALIER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
+#include "InstrumentBarInfoRequest.h"
 
 
 NS_BEGIN(TA_Base_App) 
@@ -21,15 +22,15 @@ class CCFDServerUtilityFun;
 class CMarketDataFileAnalier 
 {
 public:
-	CMarketDataFileAnalier();
+	CMarketDataFileAnalier(void);
 	~CMarketDataFileAnalier(void);
 
 public:
-	void setFileName(const std::string& strFileName);
+	void setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	int analierFile();
 
 private:
-	std::string m_strFileName;
+	CInstrumentBarInfoRequest		m_InstrumentBarInfoRequest;
 	CMarketDataDispatcher*			m_pMarketDataDispatcher;
 	CCFDServerUtilityFun*           m_pUtilityFun;
 

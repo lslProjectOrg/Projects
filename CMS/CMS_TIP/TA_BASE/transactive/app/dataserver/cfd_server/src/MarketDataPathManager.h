@@ -4,13 +4,15 @@ manager MarketData history Data All Files in one Path. sort by time
 #ifndef __CLASS_MARKET_DATA_PATH_MANAGER__HH__
 #define __CLASS_MARKET_DATA_PATH_MANAGER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-
+#include "InstrumentBarInfoRequest.h"
+#include "InstrumentMarketDataRequest.h"
+#include "MarketDataFileManager.h"
 
 NS_BEGIN(TA_Base_App) 
 
@@ -24,14 +26,17 @@ public:
 	CMarketDataPathManager(void);
 	~CMarketDataPathManager(void);
 public:
-	int setPathName(const std::string& strFolderPath);
+	int setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
+
 	int analieAllFiles();
 private:
-
+	int _SetAnalieType(CMarketDataFileManager::enAnalierType nAnalierType);
+	int _AnalieAllFilesTypeMarketData();
 private:
-	std::string m_strFolderPath;
 	CMarketDataFileManager*  m_pMarketDataFileManager;
 	CFileSystemManager*    m_pFileSystemManager;
+	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
+	CMarketDataFileManager::enAnalierType  m_nAnalierType;
 };
 
 NS_END(TA_Base_App) 

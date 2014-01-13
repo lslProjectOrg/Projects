@@ -2,7 +2,7 @@
 
 #include "InstrumentBarInfoCalculator.h"
 
-#include "core/utilities/src/BoostLogger.h"
+#include "BoostLogger.h"
 USING_BOOST_LOG;
 
 
@@ -12,7 +12,7 @@ NS_BEGIN(TA_Base_App)
 //////////////////////////////////////////////////////////////////////////
 CMarketDataDispatcher::CMarketDataDispatcher(void)
 {	
-	BOOST_LOG_FUNCTION();	
+	BOOST_LOG_FUNCTION();
 	m_mapInstrumentIDBarInfoCalc = new MapInstrumentIDBarInfoCalcT();
 	
 }
@@ -76,7 +76,7 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 	{
 		//not find
 		unsigned int nInstrumentID = nSecurityIDValue;		
-		pBarInfoCalc = new CInstrumentBarInfoCalculator(nInstrumentID);
+		pBarInfoCalc = new CInstrumentBarInfoCalculator(nInstrumentID, m_InstrumentBarInfoRequest);
 		m_mapInstrumentIDBarInfoCalc->insert(MapInstrumentIDBarInfoCalcValueTypeT(nInstrumentID, pBarInfoCalc));
 		nFunRes = pBarInfoCalc->updateMarketData(marketData);
 	}
@@ -84,6 +84,11 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 	return nFunRes;
 }
 
+void CMarketDataDispatcher::setInstrumentBarInfoRequest( const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
+{
+	BOOST_LOG_FUNCTION();
+	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
+}
 
 
 NS_END(TA_Base_App) 

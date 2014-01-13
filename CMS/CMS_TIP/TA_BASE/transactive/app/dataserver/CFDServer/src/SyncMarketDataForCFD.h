@@ -2,7 +2,7 @@
 #define __CLASS_SYNC_MARKET_DATA_FOR_CFD_H__ 
 
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include "BarCalculator.h"
 #include "CFDRequest.h"

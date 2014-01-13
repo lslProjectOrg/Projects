@@ -1,6 +1,6 @@
 #include "InstrumentBarInfoRequest.h"
 
-#include "core/utilities/src/BoostLogger.h"
+#include "BoostLogger.h"
 USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App)
@@ -49,12 +49,12 @@ void CInstrumentBarInfoRequest::logInfo()
 void CInstrumentBarInfoRequest::_AddBarTimeNormal()
 {
 	BOOST_LOG_FUNCTION();
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_5S);//seconds
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_1MIN);//seconds
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_5MIN);//seconds
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_30MIN);//seconds
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_1HOUR);//seconds
-	m_lstBarTime.push_back(TA_Base_Core::TIME_BASE_S_1DAY);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5S);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1MIN);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5MIN);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_30MIN);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1HOUR);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1DAY);//seconds
 	return;
 }
 

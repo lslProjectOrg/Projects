@@ -2,7 +2,7 @@
 #define __CLASS_FILE_SYSTEM_MANAGER_H__ 
 
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <list>
 #include <map>

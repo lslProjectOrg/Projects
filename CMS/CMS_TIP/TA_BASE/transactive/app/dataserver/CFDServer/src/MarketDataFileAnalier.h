@@ -5,7 +5,7 @@ Analie each line  to MarketData class
 #ifndef __CLASS_MARKET_DATA_FILE_ANALIER__HH__
 #define __CLASS_MARKET_DATA_FILE_ANALIER__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>

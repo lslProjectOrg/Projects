@@ -4,7 +4,7 @@ Calculator Instument's Bar Info
 #ifndef __CLASS_INSTUMENT_BAR_INFO_CALCULATOR__HH__
 #define __CLASS_INSTUMENT_BAR_INFO_CALCULATOR__HH__
 
-#include "app/dataserver/cfd_server/src/CFDServerCommonData.h"
+#include "CFDServerCommonData.h"
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
@@ -20,7 +20,7 @@ class CInstrumentBarInfoStorager;
 
 class CInstrumentBarInfoCalculator 
 {
-public:
+private:
 	typedef std::map<int, Bar*>              MapIntervalBarInfoT;//seconds
 	typedef std::map<int, Bar*>::iterator    MapIntervalBarInfoIterT;
 	typedef std::map<int, Bar*>::value_type    MapIntervalBarInfoValueTypeT;

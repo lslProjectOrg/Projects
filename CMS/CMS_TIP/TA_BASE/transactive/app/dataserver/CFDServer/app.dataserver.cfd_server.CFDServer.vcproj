@@ -271,6 +271,14 @@
 			Name="InstrumentBarInfo"
 			>
 			<File
+				RelativePath=".\src\InstrumentBarInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\InstrumentBarInfo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\InstrumentBarInfoCalculator.cpp"
 				>
 			</File>
