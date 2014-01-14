@@ -21,6 +21,13 @@ typedef signed long long		UBigInt64;
 #endif
 
 
+
+
+#define  defOracleDBName          "ORACLE"
+#define  defMysqlDBName           "MYSQL"
+#define  defSQLiteDBName          "SQLITE"
+
+
 NS_END(TA_Base_App)
 
 #endif  // __DEF__CFDSEVER_COMMON_DEF_H_

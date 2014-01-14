@@ -22,7 +22,6 @@ save data to SQLite
 #ifndef __CLASS_INSTUMENT_BAR_INFO_STORAGER__HH__
 #define __CLASS_INSTUMENT_BAR_INFO_STORAGER__HH__
 
-#include "core/DataAccess/src/DataAccessCommonData.h"
 #include "CFDServerCommonData.h"
 
 #include <QtSql/QtSql>
@@ -66,7 +65,7 @@ public:
 	~CInstrumentBarInfoStorager(void);
 public:
 	int storeBarInfo(int interval, Bar& barInfo);
-	void setSoreBatchSize(unsigned int nBatchSize);
+	void setStoreBatchSize(unsigned int nBatchSize);
 	/*fetch data, if no data will return -1*/
 	int getBarInfo(int interval, Bar& getBarInfo);
 private:

@@ -49,8 +49,8 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_nDBType = TA_Base_App::enumSqliteDb;
 
 	//qt not mysql driver need complie
-	//m_strDBType = defMysqlDBName;
-	//m_nDBType = TA_Base_Core::enumMysqlDb;
+	m_strDBType = defMysqlDBName;
+	m_nDBType = enumMysqlDb;
 
 	m_strDBName = _GetBarInfoDBName(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal, nInstrumentID);
 	m_pQSqlDataBase = NULL;
@@ -490,7 +490,7 @@ int CInstrumentBarInfoStorager::storeBarInfo(int interval, Bar& barInfo)
 	return nFunRes;
 }
 
-void CInstrumentBarInfoStorager::setSoreBatchSize(unsigned int nBatchSize)
+void CInstrumentBarInfoStorager::setStoreBatchSize(unsigned int nBatchSize)
 {
 	BOOST_LOG_FUNCTION();
 	m_nBatchSize = nBatchSize;
