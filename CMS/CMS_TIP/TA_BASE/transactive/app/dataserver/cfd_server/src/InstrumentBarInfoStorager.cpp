@@ -60,7 +60,7 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_pMapIntervalBarLst->clear();
 	_InitMapIntervalBarInfoLst(m_InstrumentBarInfoRequest, m_pMapIntervalBarLst);
 	
-	m_nBatchSize = 1000;//TODO.
+	m_nBatchSize = 10000;//TODO.
 	m_nBuffNum = 0;
 	_InitDataBase();
 	_CheckAndInitDBTable(m_InstrumentBarInfoRequest);
@@ -137,11 +137,12 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 	switch (m_nDBType)
 	{
 	case TA_Base_App::enumSqliteDb:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
+		//m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	case TA_Base_App::enumMysqlDb:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL", m_strDBName.c_str()));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL"));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		m_pQSqlDataBase->setHostName("127.0.0.1");
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
@@ -149,7 +150,7 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 		m_pQSqlDataBase->setPassword("root");
 		break;
 	default:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	}
@@ -505,6 +506,28 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 	MapIntervalBarLstIterT iterMap;
 	int nInterval = 0;
 	LstInstrumentBarInfoT* pLstInstrumentBarInfo = NULL;
+	bool bStartTransaction = false;
+
+	bStartTransaction = false;
+	//if (!QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions)) 
+	if (!m_pQSqlDataBase->driver()->hasFeature(QSqlDriver::Transactions)) 
+	{
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" not support Transactions";
+	}
+	else
+	{
+		if (!QSqlDatabase::database().transaction())
+		{
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" support Transactions but start transaction error!"
+				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+		}
+		else
+		{
+			bStartTransaction = true;
+		}
+	}
+
+
 
 	iterMap = pMapIntervalBarLst->begin();
 	while (iterMap != pMapIntervalBarLst->end())
@@ -515,6 +538,21 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 		_ClearLstInstrumentBarInfo(pLstInstrumentBarInfo);//just clean data
 		iterMap++;
 	}//while
+
+	if (bStartTransaction)
+	{
+		if(!QSqlDatabase::database().commit())  
+		{  
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" commit error!"
+				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+
+			if(!QSqlDatabase::database().rollback())  
+			{  
+				LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" rollback error!"
+					<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+			}//if 
+		}//if
+	}//if
 
 	return nFunRes;
 }
