@@ -80,7 +80,10 @@ int CMarketDataPathManager::_AnalieAllFilesTypeMarketData()
 		return nFunRes;
 	}
 
-	LOG_DEBUG<<"analies Folder m_strFolderPath="<<m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal;
+	LOG_INFO<<"check and create Directory ="<<m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal;
+	m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal);
+
+	LOG_INFO<<"analies Directory ="<<m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal;
 	m_pFileSystemManager->getAllFileSystemItemInPath(m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal, mapTimeFileSystemItemTmp);
 
 	iterMap = mapTimeFileSystemItemTmp.begin();

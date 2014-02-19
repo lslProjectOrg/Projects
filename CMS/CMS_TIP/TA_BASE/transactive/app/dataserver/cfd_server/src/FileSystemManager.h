@@ -26,6 +26,8 @@ public:
 	~CFileSystemManager(void);
 
 public:
+	bool checkDirectory(const std::string& strFolderPath);
+	int createDirectory(const std::string& strFolderPath);
 	int getAllFileSystemItemInPath(const std::string& strFolderPath, MapTimeFileSystemItemT& mapTimeFileSystemItem);
 	int freeData(MapTimeFileSystemItemT& mapTimeFileSystemItem );
 

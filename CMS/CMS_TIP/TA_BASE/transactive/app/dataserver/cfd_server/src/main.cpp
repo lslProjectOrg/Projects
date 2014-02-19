@@ -41,8 +41,8 @@ void logInit()
 
 	std::string strLogPath = "ALL_CFDServer_LOG_PATH";
 	std::string strLogFileName = "CFDServer_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
-	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
-	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
+	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
+	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
 
 
 	TA_Base_App::CBoostLogger::getInstance().setLogPath(strLogPath);
@@ -66,8 +66,13 @@ void Test_CInstrumentBarInfoRequest()
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 
 	CInstrumentBarInfoRequest instrumentBarInfoRequest; 
-	instrumentBarInfoRequest.m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
-	instrumentBarInfoRequest.m_strInstrumetBarInfoTotal = "C://TestData//InstrumetBarInfoTotal";
+	//D://HistData//data01
+	//C://TestData//HisData
+	//C://TestData//HistoryMarketDataTotal
+	instrumentBarInfoRequest.m_strHistoryMarketDataTotal = "C://TestData//HisData";
+	//C://TestData//savedata
+	//C://TestData//InstrumetBarInfoTotal
+	instrumentBarInfoRequest.m_strInstrumetBarInfoTotal = "C://TestData//savedata";
 
 	pWorkTime = new TA_Base_App::CWorkTimeNoLock();
 	pWorkTime->workBegin();

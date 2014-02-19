@@ -32,7 +32,51 @@ CFileSystemManager::~CFileSystemManager( void )
 
 }
 
+bool CFileSystemManager::checkDirectory(const std::string& strFolderPath)
+{
+	bool bDirectoryExist = false;
 
+	boost::filesystem::path fFullPath = boost::filesystem::system_complete(boost::filesystem::path(strFolderPath, boost::filesystem::native ));
+	std::string strFullFolderPath = fFullPath.generic_string();
+
+	if (boost::filesystem::exists(fFullPath) )
+	{
+		LOG_DEBUG<<"strFolderPath="<<strFolderPath<<" "<<"strFullFolderPath="<<strFullFolderPath<<" is exists";
+		bDirectoryExist = true;
+	}
+	else
+	{
+		LOG_DEBUG<<"strFolderPath="<<strFolderPath<<" "<<"strFullFolderPath="<<strFullFolderPath<<" not exists";
+		bDirectoryExist = false;
+	}
+
+	return bDirectoryExist;
+}
+int CFileSystemManager::createDirectory(const std::string& strFolderPath)
+{
+	int nFunRes = 0;
+
+	boost::filesystem::path fFullPath = boost::filesystem::system_complete(boost::filesystem::path(strFolderPath, boost::filesystem::native ));
+	std::string strFullFolderPath = fFullPath.generic_string();
+
+	if (!boost::filesystem::exists(fFullPath) )
+	{
+		boost::filesystem::create_directory(fFullPath);
+	}
+
+	if (boost::filesystem::exists(fFullPath) )
+	{
+		LOG_DEBUG<<"strFolderPath="<<strFolderPath<<" "<<"strFullFolderPath="<<strFullFolderPath<<" create directory ok!";
+		nFunRes = 0;
+	}
+	else
+	{
+		LOG_ERROR<<"strFolderPath="<<strFolderPath<<" "<<"strFullFolderPath="<<strFullFolderPath<<" create directory error!";
+		nFunRes = -1;
+	}
+
+	return nFunRes;
+}
 int CFileSystemManager::getAllFileSystemItemInPath( const std::string& strFolderPath, MapTimeFileSystemItemT& mapTimeFileSystemItem )
 {
 	BOOST_LOG_FUNCTION();
@@ -78,10 +122,22 @@ int CFileSystemManager::_GetAllFileNameInPath( const std::string& strFolderPath,
 				//boost::filesystem::directory_entry
 				std::string strfileName = item_begin->path().filename().generic_string();//20121220.csv
 
-				CFileSystemItem* pFileSystemItem = NULL;
-				pFileSystemItem = new CFileSystemItem(strFileFullPath);
-				lstFileSystemItemsInPath.push_back(pFileSystemItem);
-				pFileSystemItem = NULL;
+				if (std::string::npos != strfileName.find(".zip")
+					|| std::string::npos != strfileName.find(".7z")
+					|| std::string::npos != strfileName.find(".tar")
+					|| std::string::npos != strfileName.find(".bz2")
+					|| std::string::npos != strfileName.find(".gz"))
+				{
+					//not process zip files
+				} 
+				else
+				{
+					CFileSystemItem* pFileSystemItem = NULL;
+					pFileSystemItem = new CFileSystemItem(strFileFullPath);
+					lstFileSystemItemsInPath.push_back(pFileSystemItem);
+					pFileSystemItem = NULL;
+				}//if
+
 			}
 		}//for
 	}

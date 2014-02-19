@@ -49,10 +49,12 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_nDBType = TA_Base_App::enumSqliteDb;
 
 	//qt not mysql driver need complie
-	m_strDBType = defMysqlDBName;
-	m_nDBType = enumMysqlDb;
+	//m_strDBType = defMysqlDBName;
+	//m_nDBType = enumMysqlDb;
 
 	m_strDBName = _GetBarInfoDBName(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal, nInstrumentID);
+	m_strDBFileName = _GetBarInfoDBFileName(nInstrumentID);
+
 	m_pQSqlDataBase = NULL;
 	m_pQSqlQueryForSelect = NULL;
 	m_pQSqlQueryForInseert = NULL;
@@ -60,7 +62,7 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_pMapIntervalBarLst->clear();
 	_InitMapIntervalBarInfoLst(m_InstrumentBarInfoRequest, m_pMapIntervalBarLst);
 	
-	m_nBatchSize = 10000;//TODO.
+	m_nBatchSize = 100;//TODO.
 	m_nBuffNum = 0;
 	_InitDataBase();
 	_CheckAndInitDBTable(m_InstrumentBarInfoRequest);
@@ -137,8 +139,9 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 	switch (m_nDBType)
 	{
 	case TA_Base_App::enumSqliteDb:
-		//m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", m_strDBName.c_str()));
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+		//SQLiteDB_3306.db
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(m_strDBFileName.c_str())));
+		//d://savedata//SQLiteDB_3306.db
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	case TA_Base_App::enumMysqlDb:
@@ -150,7 +153,7 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 		m_pQSqlDataBase->setPassword("root");
 		break;
 	default:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(m_strDBFileName.c_str())));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	}
@@ -159,6 +162,27 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 	if (!bExecRes)
 	{
 		LOG_ERROR<<"Fail to open db:"<<m_strDBName<<" error:"<<m_pQSqlDataBase->lastError().text().toStdString();
+	}
+
+
+	//check
+	if (false == m_pQSqlDataBase->isValid())
+	{
+		LOG_ERROR<<"db="<<m_strDBName<<" is not Valid";
+	}
+	else
+	{
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" is Valid";
+	}
+
+	if (false == m_pQSqlDataBase->driver()->hasFeature(QSqlDriver::Transactions)) 
+	{
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" not support Transactions";
+	}
+	else
+	{
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" support Transactions";
+
 	}
 }
 
@@ -186,12 +210,11 @@ void CInstrumentBarInfoStorager::_UnInitDataBase()
 }
 
 
-
-std::string CInstrumentBarInfoStorager::_GetBarInfoDBName(const std::string& strPathInstrumentBarInfoTotal, unsigned int nInstrumentID)
+std::string CInstrumentBarInfoStorager::_GetBarInfoDBFileName(unsigned int nInstrumentID)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
-	std::string strInstrumentSQLDBName;
+	std::string strInstrumentSQLDBFileName;
 	sreaamTmp.str("");
 
 	//SQLiteDB_3306.db
@@ -199,15 +222,43 @@ std::string CInstrumentBarInfoStorager::_GetBarInfoDBName(const std::string& str
 	switch (m_nDBType)
 	{
 	case TA_Base_App::enumSqliteDb:
-		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"
-			<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
+		sreaamTmp<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
 		break;
 	case TA_Base_App::enumMysqlDb:
 		sreaamTmp<<"mysqldb_"<<nInstrumentID;
 		break;
 	default:
-		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"
-			<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
+		sreaamTmp<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
+		break;
+	}
+
+	strInstrumentSQLDBFileName = sreaamTmp.str();
+
+	return strInstrumentSQLDBFileName;
+}
+
+std::string CInstrumentBarInfoStorager::_GetBarInfoDBName(const std::string& strPathInstrumentBarInfoTotal, unsigned int nInstrumentID)
+{
+	BOOST_LOG_FUNCTION();
+	std::ostringstream sreaamTmp;
+	std::string strInstrumentSQLDBName;
+	std::string strDBFileName;
+
+	strDBFileName = _GetBarInfoDBFileName(nInstrumentID);
+	sreaamTmp.str("");
+
+	//SQLiteDB_3306.db
+	//mysqldb_3306
+	switch (m_nDBType)
+	{
+	case TA_Base_App::enumSqliteDb:
+		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"<<strDBFileName;
+		break;
+	case TA_Base_App::enumMysqlDb:
+		sreaamTmp<<"mysqldb_"<<nInstrumentID;
+		break;
+	default:
+		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"<<strDBFileName;
 		break;
 	}
 
@@ -510,15 +561,17 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 
 	bStartTransaction = false;
 	//if (!QSqlDatabase::database().driver()->hasFeature(QSqlDriver::Transactions)) 
-	if (!m_pQSqlDataBase->driver()->hasFeature(QSqlDriver::Transactions)) 
+	if (false == m_pQSqlDataBase->driver()->hasFeature(QSqlDriver::Transactions)) 
 	{
-		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" not support Transactions";
+		bStartTransaction = false;
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" not support Transactions";
 	}
 	else
 	{
-		if (!QSqlDatabase::database().transaction())
+		if (false == m_pQSqlDataBase->transaction())
+		//if (false == QSqlDatabase::database().transaction())
 		{
-			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" support Transactions but start transaction error!"
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" support Transactions but start transaction error!"
 				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
 		}
 		else
@@ -541,14 +594,16 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 
 	if (bStartTransaction)
 	{
-		if(!QSqlDatabase::database().commit())  
+		if(false == m_pQSqlDataBase->commit())  
+		//if(!QSqlDatabase::database().commit())  
 		{  
-			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" commit error!"
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" commit error!"
 				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
 
-			if(!QSqlDatabase::database().rollback())  
+			if(false == m_pQSqlDataBase->rollback())  
+			//if(!QSqlDatabase::database().rollback())  
 			{  
-				LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" rollback error!"
+				LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" rollback error!"
 					<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
 			}//if 
 		}//if

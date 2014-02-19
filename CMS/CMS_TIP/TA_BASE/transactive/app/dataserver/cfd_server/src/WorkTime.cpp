@@ -48,37 +48,60 @@ std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 {
 	std::string	strTimeString;
 	int pos = 0;
-	std::string strFormatTmp;
+	std::string strSubTmp;
+	std::string strYear;
+	std::string strMonth;
+	std::string strDay;
+	std::string strHour;
+	std::string strMin;
+	std::string strSecond;
+	std::string strMicSecond;
 
 	if (NULL == pfbtime)
 	{
 		return strTimeString;
 	}
 
-
-	//YYYYMMDDTHHMMSS  T
+	//20140218T150717.514548
+	//YYYYMMDDTHHMMSS.SSSSSS
 	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
 	strTimeString = boost::posix_time::to_iso_string(*pfbtime);
 
-	//YYYYMMDDTHHMM:SS
-	strFormatTmp = "YYYYMMDDTHHMM";
-	strTimeString.replace(strFormatTmp.length(), 0, std::string(":"));
+	//YYYY
+	strYear = strTimeString.substr(0, 4);
+	//MMDDTHHMMSS.SSSSSS
+	strSubTmp = strTimeString.substr(4);
+	
+	//MM
+	strMonth = strSubTmp.substr(0, 2);
+	//DDTHHMMSS.SSSSSS
+	strSubTmp = strSubTmp.substr(2);
+    
+	//DD
+	strDay = strSubTmp.substr(0, 2);
+	//HHMMSS.SSSSSS
+	strSubTmp = strSubTmp.substr(3);
 
-	//YYYYMMDDTHH:MM:SS
-	strFormatTmp = "YYYYMMDDTHH";
-	strTimeString.replace(strFormatTmp.length(), 0, std::string(":"));
+	//HH
+	strHour = strSubTmp.substr(0, 2);
+	//MMSS.SSSSSS
+	strSubTmp = strSubTmp.substr(2);
+	
+	//MM
+	strMin = strSubTmp.substr(0, 2);
+	//SS.SSSSSS
+	strSubTmp = strSubTmp.substr(2);
 
-	//YYYYMMDD HH:MM:SS
-	strFormatTmp = "YYYYMMDD";
-	strTimeString.replace(strFormatTmp.length(), 1, std::string(" "));
+	//SS
+	strSecond = strSubTmp.substr(0, 2);
+	//SSSSSS
+	strSubTmp = strSubTmp.substr(3);
 
-	//YYYYMM-DD HH:MM:SS
-	strFormatTmp = "YYYYMM";
-	strTimeString.replace(strFormatTmp.length(), 1, std::string("-"));
+	strMicSecond = strSubTmp;
 
-	//YYYY-MM-DD HH:MM:SS
-	strFormatTmp = "YYYY";
-	strTimeString.replace(strFormatTmp.length(), 1, std::string("-"));
+	//YYYY-MM-DD HH:MM:SSSSSS
+	strTimeString = strYear + "-" + strMonth + "-" + strDay + " " 
+		+ strHour + ":" + strMin + ":" + strSecond + "." + strMicSecond;
 
 	return strTimeString;
 }
@@ -88,8 +111,7 @@ std::string CAWorkTime::getTimeNow(void)
 {
 	std::string	strCurrentTime;
 	boost::posix_time::ptime timeNow;
-	getCurrentTime(&timeNow);
-	strCurrentTime = getTimeString(&timeNow);
+	strCurrentTime = getCurrentTime(&timeNow);
 	return strCurrentTime;
 }
 std::string CAWorkTime::getBeginTime(void)

@@ -2,6 +2,7 @@
 
 #include "MarketDataDispatcher.h"
 #include "CFDServerUtilityFun.h"
+#include "WorkTime.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -50,7 +51,8 @@ int CMarketDataFileAnalier::analierFile()
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
-	
+	int nLineIndex = 0;
+	CAWorkTime* pTime = new CWorkTimeNoLock();
 	std::string filename = m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName;
 	std::ifstream priceFile(filename.c_str());
 	std::string strLogInfo = "get data from file";
@@ -60,6 +62,13 @@ int CMarketDataFileAnalier::analierFile()
 
 	while (!priceFile.eof())
 	{
+		nLineIndex++;
+		if ((1 == nLineIndex) || (nLineIndex % 5000) == 0)
+		{
+			LOG_INFO<<"TimeNow="<<pTime->getTimeNow()<<"   "<<nLineIndex;
+
+			printf("getTimeNow=%s  nLineIndex=%d\n", pTime->getTimeNow().c_str(), nLineIndex);
+		}
 		MarketData marketDataTmp(0);
 		priceFile >> marketDataTmp;
 		//process price ....
@@ -70,6 +79,12 @@ int CMarketDataFileAnalier::analierFile()
 	}
 
 	priceFile.close();
+
+	if (NULL != pTime)
+	{
+		delete pTime;
+		pTime = NULL;
+	}
 
 	return nFunRes;
 }

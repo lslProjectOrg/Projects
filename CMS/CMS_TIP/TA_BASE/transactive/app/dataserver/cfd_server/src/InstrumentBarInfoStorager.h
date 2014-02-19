@@ -74,6 +74,7 @@ private:
 	void _InitDataBase();
 	void _UnInitDataBase();
 
+	std::string _GetBarInfoDBFileName(unsigned int nInstrumentID);
 	std::string _GetBarInfoDBName(const std::string& strPathInstrumentBarInfoTotal, unsigned int nInstrumentID);
 	std::string _GetBarInfoDBTableName(int interval);
 
@@ -91,7 +92,8 @@ private:
 	int _InitMapIntervalBarInfoLst(const CInstrumentBarInfoRequest& instrumentBarInfoRequest, MapIntervalBarLstT* pMapIntervalBarLstT);
 private:
 	unsigned int m_nInstrumentID;
-	std::string m_strDBName;//SQLiteDB_3306.db
+	std::string m_strDBFileName;//SQLiteDB_3306.db
+	std::string m_strDBName;//d://savedata//SQLiteDB_3306.db
 	std::string m_strDBType;// defSQLiteDBName defMysqlDBName
 	TA_Base_App::DbServerType m_nDBType;//enumSqliteDb enumMysqlDb
 
