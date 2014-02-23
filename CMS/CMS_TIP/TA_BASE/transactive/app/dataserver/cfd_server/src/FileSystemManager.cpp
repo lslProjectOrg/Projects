@@ -77,6 +77,7 @@ int CFileSystemManager::createDirectory(const std::string& strFolderPath)
 
 	return nFunRes;
 }
+
 int CFileSystemManager::getAllFileSystemItemInPath( const std::string& strFolderPath, MapTimeFileSystemItemT& mapTimeFileSystemItem )
 {
 	BOOST_LOG_FUNCTION();
@@ -93,6 +94,39 @@ int CFileSystemManager::getAllFileSystemItemInPath( const std::string& strFolder
 	return nFunRes;
 }
 
+
+int CFileSystemManager::removeOldFile(time_t nStarTime, MapTimeFileSystemItemT& mapTimeFileSystemItem )
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	MapTimeFileSystemItemIterT iterMap;
+	time_t nFileTime;
+	CFileSystemItem* pFileSystemItem = NULL;
+
+	iterMap = mapTimeFileSystemItem.begin();
+	
+	while (iterMap != mapTimeFileSystemItem.end())
+	{
+		nFileTime = iterMap->first;
+		pFileSystemItem = iterMap->second;
+
+		if (nFileTime <= nStarTime)
+		{
+			delete pFileSystemItem;
+			pFileSystemItem = NULL;
+
+			mapTimeFileSystemItem.erase(iterMap);
+			iterMap = mapTimeFileSystemItem.begin();
+		}
+		else
+		{
+			iterMap++;
+		}
+
+	}
+
+	return nFunRes;
+}
 
 int CFileSystemManager::_GetAllFileNameInPath( const std::string& strFolderPath, LstFileSystemItemsInPathT& lstFileSystemItemsInPath )
 {

@@ -4,6 +4,9 @@
 #include "CFDServerCommonData.h"
 
 //////////////////////////////////////////////////////////////////////////
+#include <boost/chrono.hpp>
+#include <boost/thread.hpp>
+
 #include <boost/filesystem.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>

@@ -20,17 +20,22 @@ public:
 public:
 	void logInfo();
 	void getLstBarTime(std::list<int>& lstBarTime);
+	void initData();
 private:
 	void _AddBarTimeNormal();
-	void _AddBarTime(int nSeconds);
 
 public:
 	//c://TestData//HistoryMarketDataTotal   20131220.csv 
-	std::string m_strHistoryMarketDataTotal;
+	std::string m_strHistoryDataDirectory;
 
 	//C://TestData//InstrumetBarInfoTotal   SQLiteDB_3320.db
-	std::string m_strInstrumetBarInfoTotal;
+	std::string m_strSaveDataDirectory;
 
+	std::string m_strDbType;
+	std::string m_strStartTime;
+
+	time_t m_nStartTime;
+	TA_Base_App::DbServerType m_nDBType;
 public:
 	//c://TestData//HistoryMarketDataTotal//20131220.csv 
 	std::string m_strCurrentAnalierFileName;	

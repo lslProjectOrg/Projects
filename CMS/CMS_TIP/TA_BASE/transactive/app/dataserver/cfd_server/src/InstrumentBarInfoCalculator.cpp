@@ -21,7 +21,8 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pStorager = new CInstrumentBarInfoStorager(m_InstrumentBarInfoRequest, m_nInstrumentID);
-	m_pBarCalculator = new BarCalculator(m_nInstrumentID);
+	//BarCalculator second param use false
+	m_pBarCalculator = new BarCalculator(m_nInstrumentID, false);
 	_InitBarCalculator();
 }
 
@@ -130,6 +131,8 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 {
 	BOOST_LOG_FUNCTION();
 
+	//LOG_INFO<<"HandleNewBar"<<"interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
+
 	std::string strLogInfo;
 	std::ostringstream sreaamTmp;
 
@@ -178,6 +181,9 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 
 void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 {
+
+	//LOG_INFO<<"HandleUpdateBar"<<"interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
+
 	std::string strLogInfo;
 
 	MapIntervalBarInfoIterT  iterMap;

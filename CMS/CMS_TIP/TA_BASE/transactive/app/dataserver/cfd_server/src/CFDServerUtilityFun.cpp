@@ -29,6 +29,7 @@ CCFDServerUtilityFun::~CCFDServerUtilityFun( void )
 
 
 //"%d-%d-%d %d:%d:%d"
+//YYYY-MM-DD HH:MM:SS
 time_t CCFDServerUtilityFun::strToDateTime(const std::string& strTimeValue)
 {
 	tm tmTime;
@@ -112,6 +113,8 @@ void CCFDServerUtilityFun::logBarInfo(const std::string& strInfo, int interval, 
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->High="<<pBarInfo->High;
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Low="<<pBarInfo->Low;
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
+
+	//LOG_INFO<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
 }
 
 
@@ -156,6 +159,8 @@ void CCFDServerUtilityFun::logMarketDataInfo(const std::string& strInfo, const M
 	LOG_DEBUG<<"strTimeValue="<<strTimeValue;
 	LOG_DEBUG<<"nVolumeValue="<<nVolumeValue;
 	LOG_DEBUG<<"fPriceValue="<<fPriceValue;
+
+	//LOG_INFO<<"nTimeValue="<<nTimeValue<<" strTimeValue="<<strTimeValue<<" nVolumeValue="<<nVolumeValue<<" fPriceValue="<<fPriceValue;
 
 
 

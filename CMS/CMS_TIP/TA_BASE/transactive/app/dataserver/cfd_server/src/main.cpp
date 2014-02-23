@@ -2,12 +2,15 @@
 #include <signal.h>
 #include <iostream>
 
+#include <QtSql/QSqlDatabase>
+
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
 #include "CFDServerCommonData.h"
 #include "MarketDataPathManager.h"
 #include "WorkTime.h"
+#include "ConfigInfo.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -18,6 +21,7 @@ std::string g_string_strServerAddress = "tcp://127.0.0.1:5555";
 
 boost::mutex g_mutexMainRun;
 boost::condition_variable g_conditionMainRun;
+
 
 void usr_signal(int SigNo)
 {
@@ -62,24 +66,28 @@ void logUnInit()
 
 void Test_CInstrumentBarInfoRequest()
 {
+	int nFunRes = 0;
+	CConfigInfo::getInstance().loadDefaultConfigInfo();
 	TA_Base_App::CAWorkTime* pWorkTime = NULL;
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 
-	CInstrumentBarInfoRequest instrumentBarInfoRequest; 
-	//D://HistData//data01
-	//C://TestData//HisData
-	//C://TestData//HistoryMarketDataTotal
-	instrumentBarInfoRequest.m_strHistoryMarketDataTotal = "C://TestData//HisData";
-	//C://TestData//savedata
-	//C://TestData//InstrumetBarInfoTotal
-	instrumentBarInfoRequest.m_strInstrumetBarInfoTotal = "C://TestData//savedata";
+	CInstrumentBarInfoRequest requestBarInfo; 
+	requestBarInfo.m_strHistoryDataDirectory = CConfigInfo::getInstance().getHistoryDataDirectory();
+	requestBarInfo.m_strSaveDataDirectory = CConfigInfo::getInstance().getSaveDataDirectory();
+	requestBarInfo.m_strDbType =  CConfigInfo::getInstance().getDbType();
+	requestBarInfo.m_strStartTime = CConfigInfo::getInstance().getStartTime();
+	requestBarInfo.initData();
+	requestBarInfo.logInfo();
 
 	pWorkTime = new TA_Base_App::CWorkTimeNoLock();
 	pWorkTime->workBegin();
 
 	pMarketDataPathManager = new CMarketDataPathManager();
-	pMarketDataPathManager->setInstrumentBarInfoRequest(instrumentBarInfoRequest);
-	pMarketDataPathManager->analieAllFiles();
+	nFunRes = pMarketDataPathManager->setInstrumentBarInfoRequest(requestBarInfo);
+	if (0 == nFunRes)
+	{
+		pMarketDataPathManager->analieAllFiles();
+	}
 	
 	if (NULL != pMarketDataPathManager)
 	{

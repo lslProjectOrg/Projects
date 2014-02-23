@@ -11,7 +11,6 @@ manager MarketData history Data in one File
 #include <boost/bind.hpp>
 
 #include "InstrumentBarInfoRequest.h"
-#include "InstrumentMarketDataRequest.h"
 
 NS_BEGIN(TA_Base_App) 
 

@@ -1,11 +1,14 @@
 #include "MarketDataDispatcher.h"
+#include <QtSql/QSqlDatabase>
 
 #include "InstrumentBarInfoCalculator.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
-
+extern boost::mutex g_mutex_Database_Mysql;
+extern bool g_bool_NeedToCheckAndInditMysqlDb;
+extern QSqlDatabase*	g_SqlDataBase_Mysql;
 
 NS_BEGIN(TA_Base_App) 
 
@@ -27,6 +30,20 @@ CMarketDataDispatcher::~CMarketDataDispatcher(void)
 		m_mapInstrumentIDBarInfoCalc->clear();
 		delete 	m_mapInstrumentIDBarInfoCalc;
 		m_mapInstrumentIDBarInfoCalc = NULL;
+	}
+
+	if (enumMysqlDb ==  m_InstrumentBarInfoRequest.m_nDBType)
+	{
+		boost::mutex::scoped_lock lock(g_mutex_Database_Mysql);
+		if (NULL != g_SqlDataBase_Mysql)
+		{
+			delete g_SqlDataBase_Mysql;
+			g_SqlDataBase_Mysql = NULL;
+
+			LOG_INFO<<"delete Database QMYSQL";
+		}
+		g_bool_NeedToCheckAndInditMysqlDb = true;
+
 	}
 
 }

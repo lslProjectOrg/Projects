@@ -243,6 +243,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ConfigInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ConfigInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ConfigInfoHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ConfigInfoHelper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FileSystemItem.cpp"
 				>
 			</File>
@@ -272,6 +288,14 @@
 			</File>
 			<File
 				RelativePath=".\src\MarketDataPathManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ParamItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ParamItem.h"
 				>
 			</File>
 			<File

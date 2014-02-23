@@ -4,15 +4,45 @@
 #include "BarCalculator.h"
 #include "CFDServerUtilityFun.h"
 
+#include <boost/algorithm/string.hpp>
+
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
 using namespace TA_Base_App;
 
+
+boost::mutex g_mutex_Database_Mysql;
+bool g_bool_NeedToCheckAndInditMysqlDb = false;
+QSqlDatabase*	g_SqlDataBase_Mysql = NULL;
+
+
 NS_BEGIN(TA_Base_App)
 
 
 //////////////////////////////////////////////////////////////////////////
+// static const std::string str_Mysql_DBName="oms";
+// static const std::string str_Mysql_IP="192.168.1.1";
+// static const std::string str_Mysql_User="jadeserver";
+// static const std::string str_Mysql_PWD="JadeServer123";
+
+static const std::string str_Mysql_DBName="oms";
+static const std::string str_Mysql_IP="127.0.0.1";
+static const std::string str_Mysql_User="root";
+static const std::string str_Mysql_PWD="root";
+
+static const std::string str_Table_bar_data_5second = "bar_data_5second";
+static const std::string str_Table_bar_data_5min = "bar_data_5min";
+static const std::string str_Table_bar_data_15min = "bar_data_15min";
+static const std::string str_Table_bar_data_1min = "bar_data_1min";
+static const std::string str_Table_bar_data_30min = "bar_data_30min";
+static const std::string str_Table_bar_data_60min = "bar_data_60min";
+static const std::string str_Table_bar_data_1day = "bar_data_1day";
+static const std::string str_Table_bar_data_30day = "bar_data_30day";
+static const std::string str_Table_bar_data_1year = "bar_data_1year";
+
+
+
 static const std::string str_SQliteDb_Instrument_BAR_DB_header = "SQLiteDB_";//SQLiteDB_3320.db
 
 static const std::string str_Column_InstrumentID = "InstrumentID";
@@ -43,17 +73,11 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 
 	m_pUtilityFun = new CCFDServerUtilityFun();
 	m_pmapIntervalDBTableName = new MapIntervalDBTableNameT();
+
+	m_strDBType = m_InstrumentBarInfoRequest.m_strDbType;
+	m_nDBType = m_InstrumentBarInfoRequest.m_nDBType;
 	
-
-	m_strDBType = defSQLiteDBName;
-	m_nDBType = TA_Base_App::enumSqliteDb;
-
-	//qt not mysql driver need complie
-	//m_strDBType = defMysqlDBName;
-	//m_nDBType = enumMysqlDb;
-
-	m_strDBName = _GetBarInfoDBName(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal, nInstrumentID);
-	m_strDBFileName = _GetBarInfoDBFileName(nInstrumentID);
+	m_strDBName = _GetBarInfoDBName(m_InstrumentBarInfoRequest.m_strSaveDataDirectory, m_nInstrumentID);
 
 	m_pQSqlDataBase = NULL;
 	m_pQSqlQueryForSelect = NULL;
@@ -62,10 +86,23 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_pMapIntervalBarLst->clear();
 	_InitMapIntervalBarInfoLst(m_InstrumentBarInfoRequest, m_pMapIntervalBarLst);
 	
-	m_nBatchSize = 100;//TODO.
+	m_nBatchSize = 10000;//TODO.
 	m_nBuffNum = 0;
+
 	_InitDataBase();
-	_CheckAndInitDBTable(m_InstrumentBarInfoRequest);
+
+	if (enumMysqlDb == m_nDBType)
+	{
+		boost::mutex::scoped_lock lock(g_mutex_Database_Mysql);
+		if (g_bool_NeedToCheckAndInditMysqlDb)
+		{
+			_CheckAndInitDBTable(m_InstrumentBarInfoRequest);
+		}
+	}
+	else
+	{
+		_CheckAndInitDBTable(m_InstrumentBarInfoRequest);
+	}
 }
 
 CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
@@ -131,6 +168,9 @@ int CInstrumentBarInfoStorager::_InitMapIntervalBarInfoLst(const CInstrumentBarI
 void CInstrumentBarInfoStorager::_InitDataBase()
 {
 	bool bExecRes = false;
+	std::string strDBFileName;
+	boost::mutex::scoped_lock lock(g_mutex_Database_Mysql);
+
 
 	_UnInitDataBase();
 	
@@ -140,20 +180,44 @@ void CInstrumentBarInfoStorager::_InitDataBase()
 	{
 	case TA_Base_App::enumSqliteDb:
 		//SQLiteDB_3306.db
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(m_strDBFileName.c_str())));
+		strDBFileName = _GetBarInfoDBFileName(m_nInstrumentID);
+		//SQLiteDB_3306.db
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(strDBFileName.c_str())));
 		//d://savedata//SQLiteDB_3306.db
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
+
+		LOG_INFO<<"new Database  m_nDBType="<<m_nDBType<<" QSQLITE db="<<m_strDBName;
+
 		break;
 	case TA_Base_App::enumMysqlDb:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL"));
-		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
-		m_pQSqlDataBase->setHostName("127.0.0.1");
-		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
-		m_pQSqlDataBase->setUserName("root");
-		m_pQSqlDataBase->setPassword("root");
+		if (NULL != g_SqlDataBase_Mysql)
+		{
+			m_pQSqlDataBase = g_SqlDataBase_Mysql;
+			g_bool_NeedToCheckAndInditMysqlDb = false;
+		}
+		else
+		{
+			m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QMYSQL"));
+			m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());//oms
+			m_pQSqlDataBase->setHostName(str_Mysql_IP.c_str());
+			m_pQSqlDataBase->setUserName(str_Mysql_User.c_str());
+			m_pQSqlDataBase->setPassword(str_Mysql_PWD.c_str());
+			g_SqlDataBase_Mysql = m_pQSqlDataBase;
+			g_bool_NeedToCheckAndInditMysqlDb = true;
+
+			LOG_INFO<<"new Database  m_nDBType="<<m_nDBType<<" QMYSQL db="<<m_strDBName
+				<<" IP="<<str_Mysql_IP
+				<<" User="<<str_Mysql_User
+				<<" Pwd="<<str_Mysql_PWD;
+		}
+
 		break;
 	default:
-		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(m_strDBFileName.c_str())));
+		m_strDBType = defSQLiteDBName;
+		m_nDBType = TA_Base_App::enumSqliteDb;
+		//SQLiteDB_3306.db
+		strDBFileName = _GetBarInfoDBFileName(m_nInstrumentID);
+		m_pQSqlDataBase = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", QLatin1String(strDBFileName.c_str())));
 		m_pQSqlDataBase->setDatabaseName(m_strDBName.c_str());
 		break;
 	}
@@ -200,12 +264,21 @@ void CInstrumentBarInfoStorager::_UnInitDataBase()
 		m_pQSqlQueryForInseert = NULL;
 	}	
 
-	if (NULL != m_pQSqlDataBase)
+	if (m_nDBType == enumMysqlDb)
 	{
-		m_pQSqlDataBase->close();
-		delete m_pQSqlDataBase;
 		m_pQSqlDataBase = NULL;
-		//QSqlDatabase::removeDatabase(m_strDBName.c_str());
+	}
+	else
+	{
+		if (NULL != m_pQSqlDataBase)
+		{
+			LOG_INFO<<"delete Database  m_nDBType="<<m_nDBType<<" QSQLITE db="<<m_strDBName;
+
+			m_pQSqlDataBase->close();
+			delete m_pQSqlDataBase;
+			m_pQSqlDataBase = NULL;
+			//QSqlDatabase::removeDatabase(m_strDBName.c_str());
+		}
 	}
 }
 
@@ -218,14 +291,14 @@ std::string CInstrumentBarInfoStorager::_GetBarInfoDBFileName(unsigned int nInst
 	sreaamTmp.str("");
 
 	//SQLiteDB_3306.db
-	//mysqldb_3306
+	//oms
 	switch (m_nDBType)
 	{
 	case TA_Base_App::enumSqliteDb:
 		sreaamTmp<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
 		break;
 	case TA_Base_App::enumMysqlDb:
-		sreaamTmp<<"mysqldb_"<<nInstrumentID;
+		sreaamTmp<<str_Mysql_DBName;
 		break;
 	default:
 		sreaamTmp<<str_SQliteDb_Instrument_BAR_DB_header<<nInstrumentID<<".db";
@@ -248,14 +321,14 @@ std::string CInstrumentBarInfoStorager::_GetBarInfoDBName(const std::string& str
 	sreaamTmp.str("");
 
 	//SQLiteDB_3306.db
-	//mysqldb_3306
+	//oms
 	switch (m_nDBType)
 	{
 	case TA_Base_App::enumSqliteDb:
 		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"<<strDBFileName;
 		break;
 	case TA_Base_App::enumMysqlDb:
-		sreaamTmp<<"mysqldb_"<<nInstrumentID;
+		sreaamTmp<<str_Mysql_DBName;
 		break;
 	default:
 		sreaamTmp<<strPathInstrumentBarInfoTotal<<"//"<<strDBFileName;
@@ -275,35 +348,32 @@ std::string CInstrumentBarInfoStorager::_GetBarInfoDBTableName(int interval)
 
 	switch (interval)
 	{
-	case TIME_BASE_S_1S:
-		sreaamTmp<<"bar_data_1seconds";
-		break;
 	case TIME_BASE_S_5S:
-		sreaamTmp<<"bar_data_5seconds";
+		sreaamTmp<<str_Table_bar_data_5second;
 		break;
 	case TIME_BASE_S_1MIN:
-		sreaamTmp<<"bar_data_1mins";
+		sreaamTmp<<str_Table_bar_data_1min;
 		break;
 	case TIME_BASE_S_5MIN:
-		sreaamTmp<<"bar_data_5mins";
+		sreaamTmp<<str_Table_bar_data_5min;
 		break;
 	case TIME_BASE_S_15MIN:
-		sreaamTmp<<"bar_data_15mins";
+		sreaamTmp<<str_Table_bar_data_15min;
 		break;
 	case TIME_BASE_S_30MIN:
-		sreaamTmp<<"bar_data_30mins";
+		sreaamTmp<<str_Table_bar_data_30min;
 		break;
 	case TIME_BASE_S_1HOUR:
-		sreaamTmp<<"bar_data_1hours";
+		sreaamTmp<<str_Table_bar_data_60min;
 		break;
 	case TIME_BASE_S_1DAY:
-		sreaamTmp<<"bar_data_1days";
+		sreaamTmp<<str_Table_bar_data_1day;
 		break;
 	case TIME_BASE_S_1MON:
-		sreaamTmp<<"bar_data_1mons";
+		sreaamTmp<<str_Table_bar_data_30day;
 		break;
 	case TIME_BASE_S_1YEAR:
-		sreaamTmp<<"bar_data_1years";
+		sreaamTmp<<str_Table_bar_data_1year;
 		break;
 	default:
 		sreaamTmp<<"bar_data_"<<interval;
@@ -348,7 +418,27 @@ std::string CInstrumentBarInfoStorager::_BuildCreateDBTableSQL(const std::string
 	std::string strSQL;
 
 	/*
-	CREATE TABLE IF NOT EXISTS bar_data_15mins
+	enumMysqlDb
+	CREATE TABLE IF NOT EXISTS bar_data_1day
+	(
+	`InstrumentID` int(10) unsigned NOT NULL,
+	`Timestamp` datetime NOT NULL,
+	`Open` decimal(25,10) NOT NULL,
+	`Close` decimal(25,10) NOT NULL,
+	`High` decimal(25,10) NOT NULL,
+	`Low` decimal(25,10) NOT NULL,
+	`Volume` int(10) unsigned NOT NULL,
+	`LastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`InstrumentID`,`Timestamp`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+	//TIMESTR--%Y%m%d%H%M%S
+	//%04d-%02d-%02d %02d:%02d:%02d
+	*/
+
+	/*
+	enumSqliteDb
+	CREATE TABLE IF NOT EXISTS bar_data_15min
 	(
 	InstrumentID INTEGER NOT NULL, 
 	Timestamp TIMESTAMP NOT NULL, 
@@ -359,22 +449,44 @@ std::string CInstrumentBarInfoStorager::_BuildCreateDBTableSQL(const std::string
 	Volume NUMBER,
 	PRIMARY KEY (InstrumentID, Timestamp)
 	)
-	//TIMESTR--%Y%m%d%H%M%S
-	//%04d-%02d-%02d %02d:%02d:%02d
 	*/
 
-	sreaamTmp.str("");
-	sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
-		<<" "<<"("
-		<<" "<<str_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
-		<<" "<<str_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
-		<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<str_Column_Volume<<" "<<"decimal(25,10) NOT NULL"<<","
-		<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
-		<<" "<<")";
+
+	if (TA_Base_App::enumMysqlDb == m_nDBType)
+	{
+		sreaamTmp.str("");
+		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
+			<<" "<<"("
+			<<" "<<str_Column_InstrumentID<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_Column_Timestamp<<" "<<"datetime NOT NULL"<<","
+			<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Volume<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_Column_LastModified<<" "<<"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"<<","
+			<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
+			<<" "<<")";
+	}
+	//else if (TA_Base_App::enumSqliteDb == m_nDBType)
+	else
+	{
+		sreaamTmp.str("");
+		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
+			<<" "<<"("
+			<<" "<<str_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
+			<<" "<<str_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
+			<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Column_Volume<<" "<<"int NOT NULL"<<","
+			<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
+			<<" "<<")";
+	}
+	
+
+
 
 	strSQL = sreaamTmp.str();
 	return strSQL;
@@ -423,7 +535,7 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQLBatchMode(const std::stri
 	std::string strSQL;
 
 	/*
-	INSERT INTO bar_data_15mins
+	INSERT INTO bar_data_15min
 	(
 	InstrumentID, 
 	Timestamp, 
@@ -488,7 +600,7 @@ std::string CInstrumentBarInfoStorager::_BuildSelectSQL(const std::string& strTa
 	High,
 	Low, 
 	Volume
-	FROM bar_data_15mins
+	FROM bar_data_15min
 	order by Timestamp
 	;
 	*/

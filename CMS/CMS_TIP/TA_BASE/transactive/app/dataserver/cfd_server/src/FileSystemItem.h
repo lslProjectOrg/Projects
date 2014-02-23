@@ -18,12 +18,17 @@ class CCFDServerUtilityFun;
 class CFileSystemItem
 {
 public:
+	typedef std::list<std::string>                      LstLineT;
+	typedef std::list<std::string>::iterator            LstLineIterT;
+
+public:
 	CFileSystemItem(const std::string& strFilePath);	
 	~CFileSystemItem(void);
 
 public:
 	time_t getFileNameTime();
 	std::string getFileFullPath();
+	int    getAllLinesInFile(LstLineT& lstLine);
 private:
 	std::string _GetFileNameTimeStrValue(const std::string& strFileName);
 
@@ -36,6 +41,7 @@ private:
 	std::string m_strFileExten;//csv
 	std::string m_strFileNameTimeStrValue;//2012-12-20 09:00:00
 	time_t      m_nFileNameTimeIntValue;
+	boost::filesystem::path m_fFileFullPath;
 
 private:
 	CCFDServerUtilityFun*			m_pUtilityFun;

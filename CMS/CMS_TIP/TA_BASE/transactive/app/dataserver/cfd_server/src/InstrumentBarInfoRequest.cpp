@@ -1,5 +1,7 @@
 #include "InstrumentBarInfoRequest.h"
 
+#include "CFDServerUtilityFun.h"
+#include <boost/algorithm/string.hpp>
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
@@ -10,14 +12,14 @@ CInstrumentBarInfoRequest::CInstrumentBarInfoRequest(void)
 {
 	BOOST_LOG_FUNCTION();
 
-	//c://TestData//HistoryMarketDataTotal   20131220.csv 
-	//C://TestData//HistoryMarketDataInstrument   3320.csv
-	//C://TestData//CFDBarInfoTotal   SQLiteDB_CFD_3320_3321.db
-	//C://TestData//InstrumetBarInfoTotal   SQLiteDB_3320.db
+	m_strHistoryDataDirectory.clear();
+	m_strSaveDataDirectory.clear();
+	m_strCurrentAnalierFileName.clear();
+	m_strDbType.clear();
+	m_nDBType = enumSqliteDb;
+	m_strStartTime.clear();
+	m_nStartTime = 0;
 
-	m_strHistoryMarketDataTotal = "c://TestData//HistoryMarketDataTotal";
-	m_strInstrumetBarInfoTotal = "C://TestData//InstrumetBarInfoTotal";
-	m_strCurrentAnalierFileName = m_strHistoryMarketDataTotal + "//" + "20131220.csv";
 	m_lstBarTime.clear();
 	_AddBarTimeNormal();
 }
@@ -33,8 +35,13 @@ CInstrumentBarInfoRequest& CInstrumentBarInfoRequest::operator=(const CInstrumen
 {
 	BOOST_LOG_FUNCTION();
 	m_strCurrentAnalierFileName = instrumentBarInfoRequest.m_strCurrentAnalierFileName;
-	m_strHistoryMarketDataTotal = instrumentBarInfoRequest.m_strHistoryMarketDataTotal;
-	m_strInstrumetBarInfoTotal = instrumentBarInfoRequest.m_strInstrumetBarInfoTotal;
+	m_strHistoryDataDirectory = instrumentBarInfoRequest.m_strHistoryDataDirectory;
+	m_strSaveDataDirectory = instrumentBarInfoRequest.m_strSaveDataDirectory;
+	m_strDbType = instrumentBarInfoRequest.m_strDbType;
+	m_nDBType = instrumentBarInfoRequest.m_nDBType;
+	m_strStartTime = instrumentBarInfoRequest.m_strStartTime;
+	m_nStartTime = instrumentBarInfoRequest.m_nStartTime;
+
 	_AddBarTimeNormal();
 	return *this;
 }
@@ -43,26 +50,41 @@ void CInstrumentBarInfoRequest::logInfo()
 {
 	BOOST_LOG_FUNCTION();
 
+	LOG_INFO<<"m_strHistoryDataDirectory="<<m_strHistoryDataDirectory;
+	LOG_INFO<<"m_strSaveDataDirectory="<<m_strSaveDataDirectory;
+	LOG_INFO<<"m_strDbType="<<m_strDbType;
+	LOG_INFO<<"m_nDBType="<<m_nDBType;
+	LOG_INFO<<"m_sttStartTime="<<m_strStartTime;
+
+	LOG_INFO<<"Calculator TIME_BASE_S_5S="<<TA_Base_App::TIME_BASE_S_5S;
+	LOG_INFO<<"Calculator TIME_BASE_S_1MIN="<<TA_Base_App::TIME_BASE_S_1MIN;
+	LOG_INFO<<"Calculator TIME_BASE_S_5MIN="<<TA_Base_App::TIME_BASE_S_5MIN;
+	LOG_INFO<<"Calculator TIME_BASE_S_30MIN="<<TA_Base_App::TIME_BASE_S_30MIN;
+	LOG_INFO<<"Calculator TIME_BASE_S_1HOUR="<<TA_Base_App::TIME_BASE_S_1HOUR;
+	LOG_INFO<<"Calculator TIME_BASE_S_1DAY="<<TA_Base_App::TIME_BASE_S_1DAY;
+	LOG_INFO<<"Calculator TIME_BASE_S_1MON="<<TA_Base_App::TIME_BASE_S_1MON;
+	LOG_INFO<<"Calculator TIME_BASE_S_1YEAR="<<TA_Base_App::TIME_BASE_S_1YEAR;
+
 	return;
 }
 
 void CInstrumentBarInfoRequest::_AddBarTimeNormal()
 {
 	BOOST_LOG_FUNCTION();
+
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5S);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_30MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1HOUR);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1DAY);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1MON);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1YEAR);//seconds
+
 	return;
 }
 
-void CInstrumentBarInfoRequest::_AddBarTime(int nSeconds)
-{
-	m_lstBarTime.push_back(nSeconds);//seconds
 
-}
 
 
 
@@ -75,6 +97,39 @@ void CInstrumentBarInfoRequest::getLstBarTime( std::list<int>& lstBarTime )
 		int nSeconds = *iterList;
 		lstBarTime.push_back(nSeconds);
 		iterList++;
+	}
+}
+
+void CInstrumentBarInfoRequest::initData()
+{
+	CCFDServerUtilityFun* pUtilityFun = new CCFDServerUtilityFun();
+	boost::algorithm::trim(m_strDbType);
+	boost::algorithm::to_upper(m_strDbType);
+	//defSQLiteDBName defMysqlDBName
+	if (std::string::npos != m_strDbType.find(defSQLiteDBName))
+	{
+		m_strDbType = defSQLiteDBName;
+		m_nDBType = TA_Base_App::enumSqliteDb;
+	}
+	else if (std::string::npos != m_strDbType.find(defMysqlDBName))
+	{
+		m_strDbType = defMysqlDBName;
+		//qt not mysql driver need complie
+		m_nDBType = enumMysqlDb;
+	}
+	else
+	{
+		m_strDbType = defSQLiteDBName;
+		m_nDBType = TA_Base_App::enumSqliteDb;
+	}
+
+
+	m_nStartTime = pUtilityFun->strToDateTime(m_strStartTime);
+
+	if (NULL != pUtilityFun)
+	{
+		delete pUtilityFun;
+		pUtilityFun = NULL;
 	}
 }
 

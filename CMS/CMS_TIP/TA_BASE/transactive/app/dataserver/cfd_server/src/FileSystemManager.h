@@ -29,6 +29,7 @@ public:
 	bool checkDirectory(const std::string& strFolderPath);
 	int createDirectory(const std::string& strFolderPath);
 	int getAllFileSystemItemInPath(const std::string& strFolderPath, MapTimeFileSystemItemT& mapTimeFileSystemItem);
+	int removeOldFile(time_t nStarTime, MapTimeFileSystemItemT& mapTimeFileSystemItem );
 	int freeData(MapTimeFileSystemItemT& mapTimeFileSystemItem );
 
 private:

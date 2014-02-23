@@ -80,11 +80,12 @@ int CMarketDataPathManager::_AnalieAllFilesTypeMarketData()
 		return nFunRes;
 	}
 
-	LOG_INFO<<"check and create Directory ="<<m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal;
-	m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strInstrumetBarInfoTotal);
 
-	LOG_INFO<<"analies Directory ="<<m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal;
-	m_pFileSystemManager->getAllFileSystemItemInPath(m_InstrumentBarInfoRequest.m_strHistoryMarketDataTotal, mapTimeFileSystemItemTmp);
+	LOG_INFO<<"analies Directory ="<<m_InstrumentBarInfoRequest.m_strHistoryDataDirectory;
+	m_pFileSystemManager->getAllFileSystemItemInPath(m_InstrumentBarInfoRequest.m_strHistoryDataDirectory, 
+		mapTimeFileSystemItemTmp);
+	m_pFileSystemManager->removeOldFile(m_InstrumentBarInfoRequest.m_nStartTime, 
+		mapTimeFileSystemItemTmp);
 
 	iterMap = mapTimeFileSystemItemTmp.begin();
 	while (iterMap != mapTimeFileSystemItemTmp.end())
@@ -110,8 +111,26 @@ int CMarketDataPathManager::setInstrumentBarInfoRequest(const CInstrumentBarInfo
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
+	
 	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 	_SetAnalieType(CMarketDataFileManager::AnalierType_Dispatch_MarkketData);
+
+	LOG_INFO<<"check HisData Directory ="<<m_InstrumentBarInfoRequest.m_strHistoryDataDirectory;
+	if (m_pFileSystemManager->checkDirectory(m_InstrumentBarInfoRequest.m_strHistoryDataDirectory))
+	{
+		//hisData Directory exists
+		if (m_InstrumentBarInfoRequest.m_nDBType == enumSqliteDb)
+		{
+			LOG_INFO<<"check and create savedata Directory ="<<m_InstrumentBarInfoRequest.m_strSaveDataDirectory;
+			m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strSaveDataDirectory);
+		}
+	}
+	else
+	{
+		nFunRes = -1;
+		LOG_ERROR<<"HisData Directory="<<m_InstrumentBarInfoRequest.m_strHistoryDataDirectory<<" not exists!!";
+	}
+
 	return nFunRes;
 }
 

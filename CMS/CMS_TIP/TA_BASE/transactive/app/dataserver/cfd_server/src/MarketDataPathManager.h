@@ -11,7 +11,6 @@ manager MarketData history Data All Files in one Path. sort by time
 #include <boost/bind.hpp>
 
 #include "InstrumentBarInfoRequest.h"
-#include "InstrumentMarketDataRequest.h"
 #include "MarketDataFileManager.h"
 
 NS_BEGIN(TA_Base_App) 
