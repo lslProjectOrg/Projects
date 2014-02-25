@@ -41,6 +41,8 @@ static const std::string str_Table_bar_data_1day = "bar_data_1day";
 static const std::string str_Table_bar_data_30day = "bar_data_30day";
 static const std::string str_Table_bar_data_1year = "bar_data_1year";
 
+static const std::string str_Table_tick_data = "tick_data";
+
 
 
 static const std::string str_SQliteDb_Instrument_BAR_DB_header = "SQLiteDB_";//SQLiteDB_3320.db
@@ -63,6 +65,24 @@ static const std::string str_Column_High_Value = ":High_Value";
 static const std::string str_Column_Low_Value = ":Low_Value";
 static const std::string str_Column_Volume_Value = ":Volume_Value";
 
+static const std::string str_Tick_Column_InstrumentID = "InstrumentID";
+static const std::string str_Tick_Column_Timestamp = "Timestamp";
+static const std::string str_Tick_Column_BidPx = "BidPx";
+static const std::string str_Tick_Column_AskPx = "AskPx";
+static const std::string str_Tick_Column_LastPx = "LastPx";
+static const std::string str_Tick_Column_BidVol = "BidVol";
+static const std::string str_Tick_Column_AskVol = "AskVol";
+static const std::string str_Tick_Column_LastVol = "LastVol";
+
+static const std::string str_Tick_Column_InstrumentID_Value = ":InstrumentID_Value";
+static const std::string str_Tick_Column_Timestamp_Value = ":Timestamp_Value";
+static const std::string str_Tick_Column_BidPx_Value = ":BidPx_Value";
+static const std::string str_Tick_Column_AskPx_Value = ":AskPx_Value";
+static const std::string str_Tick_Column_LastPx_Value = ":LastPx_Value";
+static const std::string str_Tick_Column_BidVol_Value = ":BidVol_Value";
+static const std::string str_Tick_Column_AskVol_Value = ":AskVol_Value";
+static const std::string str_Tick_Column_LastVol_Value = ":LastVol_Value";
+
 
 
 CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfoRequest& instrumentBarInfoRequest, unsigned int nInstrumentID )
@@ -72,7 +92,8 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pmapIntervalDBTableName = new MapIntervalDBTableNameT();
+	m_pMapIntervalDBTableName = new MapIntervalDBTableNameT();
+	m_pLstInstrumentTickInfo = new LstInstrumentTickInfoT();
 
 	m_strDBType = m_InstrumentBarInfoRequest.m_strDbType;
 	m_nDBType = m_InstrumentBarInfoRequest.m_nDBType;
@@ -86,7 +107,7 @@ CInstrumentBarInfoStorager::CInstrumentBarInfoStorager( const CInstrumentBarInfo
 	m_pMapIntervalBarLst->clear();
 	_InitMapIntervalBarInfoLst(m_InstrumentBarInfoRequest, m_pMapIntervalBarLst);
 	
-	m_nBatchSize = 10000;//TODO.
+	m_nBatchSize = 20000;//TODO.
 	m_nBuffNum = 0;
 
 	_InitDataBase();
@@ -111,11 +132,20 @@ CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
 
 	if (NULL != m_pMapIntervalBarLst)
 	{
-		_StoreMapIntervalBarLstBatchMode(m_pMapIntervalBarLst);
+		_StartStransactionForMapBarInfoLstBatchMode(m_pMapIntervalBarLst);
 		_ClearMapIntervalBarLst(m_pMapIntervalBarLst);
 		m_pMapIntervalBarLst->clear();
 		delete m_pMapIntervalBarLst;
 		m_pMapIntervalBarLst = NULL;
+	}
+
+	if (NULL != m_pLstInstrumentTickInfo)
+	{
+		_StartStransactionForLstTickInfoBatchMode(m_pLstInstrumentTickInfo);
+		_ClearLstInstrumentTickInfoT(m_pLstInstrumentTickInfo);//just clean data
+		m_pLstInstrumentTickInfo->clear();
+		delete m_pLstInstrumentTickInfo;
+		m_pLstInstrumentTickInfo = NULL;
 	}
 
 	if (NULL != m_pUtilityFun)
@@ -124,11 +154,11 @@ CInstrumentBarInfoStorager::~CInstrumentBarInfoStorager(void)
 		m_pUtilityFun = NULL;
 	}
 
-	if (NULL != m_pmapIntervalDBTableName)
+	if (NULL != m_pMapIntervalDBTableName)
 	{
-		m_pmapIntervalDBTableName->clear();
-		delete m_pmapIntervalDBTableName;
-		m_pmapIntervalDBTableName = NULL;
+		m_pMapIntervalDBTableName->clear();
+		delete m_pMapIntervalDBTableName;
+		m_pMapIntervalDBTableName = NULL;
 	}
 
 	_UnInitDataBase();
@@ -383,6 +413,18 @@ std::string CInstrumentBarInfoStorager::_GetBarInfoDBTableName(int interval)
 	strBarDataTableName = sreaamTmp.str();
 	return strBarDataTableName;
 }
+
+std::string CInstrumentBarInfoStorager::_GetTickInfoDBTableName(unsigned int strInstrumentID)
+{
+	BOOST_LOG_FUNCTION();	
+	std::string strTableName;
+	std::ostringstream sreaamTmp;
+	sreaamTmp<<str_Table_tick_data;
+
+	strTableName = sreaamTmp.str();
+	return strTableName;
+}
+
 int CInstrumentBarInfoStorager::_CheckAndInitDBTable(CInstrumentBarInfoRequest& instrumentBarInfoRequest)
 {
 	BOOST_LOG_FUNCTION();
@@ -400,18 +442,23 @@ int CInstrumentBarInfoStorager::_CheckAndInitDBTable(CInstrumentBarInfoRequest& 
 		nInterval = (*iterLst);
 
 		strTableName = _GetBarInfoDBTableName(nInterval);
-		_CreateDBTable(strTableName);
-		m_pmapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(nInterval, strTableName));
+		_CreateDBTableForBarInfo(strTableName);
+		m_pMapIntervalDBTableName->insert(MapIntervalDBTableNameValueTypeT(nInterval, strTableName));
 
 		iterLst++;
 	}//while
 	lstBarTime.clear();
 
+
+	strTableName.clear();
+	strTableName = _GetTickInfoDBTableName(m_nInstrumentID);
+	_CreateDBTableForTickInfo(strTableName);
+
 	return nFunRes;
 }
 
 
-std::string CInstrumentBarInfoStorager::_BuildCreateDBTableSQL(const std::string& strTableName)
+std::string CInstrumentBarInfoStorager::_BuildSQLForCreateDBTableBarInfo(const std::string& strTableName)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -491,7 +538,96 @@ std::string CInstrumentBarInfoStorager::_BuildCreateDBTableSQL(const std::string
 	strSQL = sreaamTmp.str();
 	return strSQL;
 }
-int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName)
+
+
+std::string CInstrumentBarInfoStorager::_BuildSQLForCreateDBTableTickInfo(const std::string& strTableName)
+{
+	BOOST_LOG_FUNCTION();
+	std::ostringstream sreaamTmp;
+	std::string strSQL;
+
+
+	static const std::string str_Tick_Column_InstrumentID = "InstrumentID";
+	static const std::string str_Tick_Column_Timestamp = "Timestamp";
+	static const std::string str_Tick_Column_BidPx = "BidPx";
+	static const std::string str_Tick_Column_AskPx = "AskPx";
+	static const std::string str_Tick_Column_LastPx = "LastPx";
+	static const std::string str_Tick_Column_BidVol = "BidVol";
+	static const std::string str_Tick_Column_AskVol = "AskVol";
+	static const std::string str_Tick_Column_LastVol = "LastVol";
+
+	/*
+	enumMysqlDb
+	CREATE TABLE IF NOT EXISTS tick_data
+	(
+	`InstrumentID` int(10) unsigned NOT NULL,
+	`Timestamp` datetime NOT NULL,
+	`BidPx` decimal(25,10) NOT NULL,
+	`AskPx` decimal(25,10) NOT NULL,
+	`LastPx` decimal(25,10) NOT NULL,
+	`BidVol` int(10) unsigned NOT NULL,
+	`AskVol` int(10) unsigned NOT NULL,
+	`LastVol` int(10) unsigned NOT NULL,
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+	//TIMESTR--%Y%m%d%H%M%S
+	//%04d-%02d-%02d %02d:%02d:%02d
+	*/
+
+	/*
+	enumSqliteDb
+	CREATE TABLE IF NOT EXISTS tick_data
+	(
+	InstrumentID INTEGER NOT NULL,
+	Timestamp TIMESTAMP NOT NULL,
+	BidPx decimal(25,10) NOT NULL,
+	AskPx decimal(25,10) NOT NULL,
+	LastPx decimal(25,10) NOT NULL,
+	BidVol int NOT NULL,
+	AskVol int NOT NULL,
+	LastVol int NOT NULL,
+	)
+	*/
+
+
+	if (TA_Base_App::enumMysqlDb == m_nDBType)
+	{
+		sreaamTmp.str("");
+		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
+			<<" "<<"("
+			<<" "<<str_Tick_Column_InstrumentID<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_Tick_Column_Timestamp<<" "<<"datetime NOT NULL"<<","
+			<<" "<<str_Tick_Column_BidPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_AskPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_LastPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_BidVol<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_Tick_Column_AskVol<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_Tick_Column_LastVol<<" "<<"int(10) unsigned NOT NULL"
+			<<" "<<")";		
+
+	}
+	//else if (TA_Base_App::enumSqliteDb == m_nDBType)
+	else
+	{
+		sreaamTmp.str("");
+		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
+			<<" "<<"("
+			<<" "<<str_Tick_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
+			<<" "<<str_Tick_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
+			<<" "<<str_Tick_Column_BidPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_AskPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_LastPx<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_Tick_Column_BidVol<<" "<<"int NOT NULL"<<","
+			<<" "<<str_Tick_Column_AskVol<<" "<<"int NOT NULL"<<","
+			<<" "<<str_Tick_Column_LastVol<<" "<<"int NOT NULL"
+			<<" "<<")";
+	}
+	
+	strSQL = sreaamTmp.str();
+	return strSQL;
+}
+
+int CInstrumentBarInfoStorager::_CreateDBTableForBarInfo(const std::string& strDbTableName)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -500,7 +636,30 @@ int CInstrumentBarInfoStorager::_CreateDBTable(const std::string& strDbTableName
 
 	QSqlQuery query(*m_pQSqlDataBase);
 
-	strSQL = _BuildCreateDBTableSQL(strDbTableName);
+	strSQL = _BuildSQLForCreateDBTableBarInfo(strDbTableName);
+
+	LOG_DEBUG<<"exec strSQL="<<strSQL;
+	bExecRes = query.exec(strSQL.c_str());
+	if (!bExecRes)
+	{
+		nFunRes = -1;
+		LOG_ERROR<<"Fail to exec sql:"<<strSQL<<" error:"<<query.lastError().text().toStdString();
+	}
+
+	return nFunRes;
+}
+
+
+int CInstrumentBarInfoStorager::_CreateDBTableForTickInfo(const std::string& strDbTableName)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	bool bExecRes = true;
+	std::string strSQL;
+
+	QSqlQuery query(*m_pQSqlDataBase);
+
+	strSQL = _BuildSQLForCreateDBTableTickInfo(strDbTableName);
 
 	LOG_DEBUG<<"exec strSQL="<<strSQL;
 	bExecRes = query.exec(strSQL.c_str());
@@ -528,7 +687,7 @@ std::string CInstrumentBarInfoStorager::_BuildDropDBTableSQL(const std::string& 
 }
 
 
-std::string CInstrumentBarInfoStorager::_BuildInsertSQLBatchMode(const std::string& strTableName)
+std::string CInstrumentBarInfoStorager::_BuildSQLForInsertBarInfoBatchMode(const std::string& strTableName)
 {
 	BOOST_LOG_FUNCTION();
 	std::ostringstream sreaamTmp;
@@ -570,6 +729,67 @@ std::string CInstrumentBarInfoStorager::_BuildInsertSQLBatchMode(const std::stri
 		<<" "<<")"
 		<<" "<<"VALUES"
 		<<" "<<"("
+		<<" "<<"?"<<","
+		<<" "<<"?"<<","
+		<<" "<<"?"<<","
+		<<" "<<"?"<<","
+		<<" "<<"?"<<","
+		<<" "<<"?"<<","
+		<<" "<<"?"
+		<<" "<<")";
+
+
+	strSQL = sreaamTmp.str();
+	return strSQL;	
+}
+
+
+std::string CInstrumentBarInfoStorager::_BuildSQLForInsertTickInfoBatchMode(const std::string& strTableName)
+{
+	BOOST_LOG_FUNCTION();
+	std::ostringstream sreaamTmp;
+	std::string strSQL;	
+
+	/*
+	INSERT INTO tick_data
+	(
+	InstrumentID, 
+	Timestamp, 
+	BidPx, 
+	AskPx, 
+	LastPx, 
+	BidVol, 
+	AskVol, 
+	LastVol
+	) 
+	VALUES 
+	(
+	:InstrumentID_Value, 
+	:Timestamp_Value,
+	:BidPx_Value,
+	:AskPx_Value,
+	:LastPx_Value,
+	:BidVol_Value,
+	:AskVol_Value,
+	:LastVol_Value 
+	);
+	*/
+
+	sreaamTmp.str("");
+	sreaamTmp<<"INSERT INTO "<<strTableName
+		<<" "<<"("
+		<<" "<<str_Tick_Column_InstrumentID<<","
+		<<" "<<str_Tick_Column_Timestamp<<","
+		<<" "<<str_Tick_Column_BidPx<<","
+		<<" "<<str_Tick_Column_AskPx<<","
+		<<" "<<str_Tick_Column_LastPx<<","
+		<<" "<<str_Tick_Column_BidVol<<","
+		<<" "<<str_Tick_Column_AskVol<<","
+		<<" "<<str_Tick_Column_LastVol
+		<<" "<<")"
+		<<" "<<"VALUES"
+		<<" "<<"("
+		<<" "<<"?"<<","
 		<<" "<<"?"<<","
 		<<" "<<"?"<<","
 		<<" "<<"?"<<","
@@ -647,8 +867,28 @@ int CInstrumentBarInfoStorager::storeBarInfo(int interval, Bar& barInfo)
 		return nFunRes;
 	}
 
-	nFunRes = _StoreMapIntervalBarLstBatchMode(m_pMapIntervalBarLst);
+	nFunRes = _StartStransactionForMapBarInfoLstBatchMode(m_pMapIntervalBarLst);
+	nFunRes = _StartStransactionForLstTickInfoBatchMode(m_pLstInstrumentTickInfo);
+
 	m_nBuffNum = 0;
+
+	return nFunRes;
+}
+
+
+int CInstrumentBarInfoStorager::storeTickInfo(CMyTick& tickInfo)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	CInstrumentTickInfo* pInstrumentTickInfo = NULL;
+
+	m_nBuffNum++;
+
+	pInstrumentTickInfo = new CInstrumentTickInfo(tickInfo);
+
+	m_pLstInstrumentTickInfo->push_back(pInstrumentTickInfo);
+	pInstrumentTickInfo = NULL;
+
 
 	return nFunRes;
 }
@@ -662,7 +902,7 @@ void CInstrumentBarInfoStorager::setStoreBatchSize(unsigned int nBatchSize)
 
 
 
-int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarLstT*  pMapIntervalBarLst)
+int CInstrumentBarInfoStorager::_StartStransactionForMapBarInfoLstBatchMode(MapIntervalBarLstT*  pMapIntervalBarLst)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -688,6 +928,7 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 		}
 		else
 		{
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"start Transaction";
 			bStartTransaction = true;
 		}
 	}
@@ -719,6 +960,10 @@ int CInstrumentBarInfoStorager::_StoreMapIntervalBarLstBatchMode(MapIntervalBarL
 					<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
 			}//if 
 		}//if
+		else
+		{
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"commit Transaction";
+		}
 	}//if
 
 	return nFunRes;
@@ -751,8 +996,9 @@ int CInstrumentBarInfoStorager::_StoreLstInstrumentBarInfoBatchMode(int nInterva
 	m_pQSqlQueryForInseert = new QSqlQuery(*m_pQSqlDataBase);
 
 	strDBTableName = _GetBarInfoDBTableName(nInterval);
-	strSQL = _BuildInsertSQLBatchMode(strDBTableName);
-	LOG_DEBUG<<"strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size();
+	strSQL = _BuildSQLForInsertBarInfoBatchMode(strDBTableName);
+	LOG_DEBUG<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size();
+	LOG_INFO<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size();
 
 	m_pQSqlQueryForInseert->prepare(strSQL.c_str());
 
@@ -761,26 +1007,13 @@ int CInstrumentBarInfoStorager::_StoreLstInstrumentBarInfoBatchMode(int nInterva
 	{
 		pInstrumentBarInfo = (*iterLst);
 
-		//m_pQSqlQueryForInseert->bindValue(str_Column_InstrumentID_Value.c_str(), m_nInstrumentID);
 		lstInstrumentID<<m_nInstrumentID;
-
 		strTimeStr = m_pUtilityFun->dataTimeToStr(pInstrumentBarInfo->m_BarInfo.Time);
-		//m_pQSqlQueryForInseert->bindValue(str_Column_Timestamp_Value.c_str(), strTimeStr.c_str());
 		lstTimestamp << strTimeStr.c_str();
-
-		//m_pQSqlQueryForInseert->bindValue(str_Column_Open_Value.c_str(), pInstrumentBarInfo->m_BarInfo.Open);
 		lstOpen<<pInstrumentBarInfo->m_BarInfo.Open;
-
-		//m_pQSqlQueryForInseert->bindValue(str_Column_Close_Value.c_str(), pInstrumentBarInfo->m_BarInfo.Close);
 		lstClose<<pInstrumentBarInfo->m_BarInfo.Close;
-
-		//m_pQSqlQueryForInseert->bindValue(str_Column_High_Value.c_str(), pInstrumentBarInfo->m_BarInfo.High);
 		lstHigh<<pInstrumentBarInfo->m_BarInfo.High;
-
-		//m_pQSqlQueryForInseert->bindValue(str_Column_Low_Value.c_str(), pInstrumentBarInfo->m_BarInfo.Low);
 		lstLow<<pInstrumentBarInfo->m_BarInfo.Low;
-
-		//m_pQSqlQueryForInseert->bindValue(str_Column_Volume_Value.c_str(), pInstrumentBarInfo->m_BarInfo.Volume);
 		lstVolume<<pInstrumentBarInfo->m_BarInfo.Volume;
 
 		iterLst++;
@@ -798,7 +1031,7 @@ int CInstrumentBarInfoStorager::_StoreLstInstrumentBarInfoBatchMode(int nInterva
 	if (!bExecRes)
 	{
 		nFunRes = -1;
-		LOG_DEBUG<<"execBatch strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size()
+		LOG_ERROR<<"execBatch strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size()
 			<<" "<<"error:"<<m_pQSqlQueryForInseert->lastError().text().toStdString();
 	}
 
@@ -950,6 +1183,160 @@ int CInstrumentBarInfoStorager::getBarInfo(int interval, Bar& getBarInfo)
 		m_pQSqlQueryForSelect = NULL;
 	}
 	return nFunRes;
+}
+
+int CInstrumentBarInfoStorager::_StartStransactionForLstTickInfoBatchMode( LstInstrumentTickInfoT* pLstInstrumentTickInfo )
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	bool bStartTransaction = false;
+
+	bStartTransaction = false;
+
+	if (false == m_pQSqlDataBase->driver()->hasFeature(QSqlDriver::Transactions)) 
+	{
+		bStartTransaction = false;
+		LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" not support Transactions";
+	}
+	else
+	{
+		if (false == m_pQSqlDataBase->transaction())
+		{
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" support Transactions but start transaction error!"
+				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+		}
+		else
+		{
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"start Transaction";
+			bStartTransaction = true;
+		}
+	}
+
+
+	_StoreLstInstrumentTickInfoTBatchMode(pLstInstrumentTickInfo);
+	_ClearLstInstrumentTickInfoT(pLstInstrumentTickInfo);//just clean data
+
+
+	if (bStartTransaction)
+	{
+		if(false == m_pQSqlDataBase->commit())  
+		{  
+			LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" commit error!"
+				<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+
+			if(false == m_pQSqlDataBase->rollback())  
+			{  
+				LOG_ERROR<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<" rollback error!"
+					<<" error: "<<QSqlDatabase::database().lastError().text().toStdString();
+			}//if 
+		}//if
+		else
+		{
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"commit Transaction";
+		}
+	}//if
+
+	return nFunRes;
+}
+
+
+
+int CInstrumentBarInfoStorager::_StoreLstInstrumentTickInfoTBatchMode(LstInstrumentTickInfoT* pLstInstrumentTickInfo)
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+	bool bExecRes = false;
+	std::string strDBTableName;
+	std::string strSQL;
+	std::string strTimeStr;
+	LstInstrumentTickInfoIterT iterLst;
+	CInstrumentTickInfo* pInstrumentTickInfo = NULL;
+	QVariantList lstInstrumentID;
+	QVariantList lstTimestamp;
+	QVariantList lstBidPx;
+	QVariantList lstAskPx;
+	QVariantList lstLastPx;
+	QVariantList lstBidVol;
+	QVariantList lstAskVol;
+	QVariantList lstLastVol;
+
+	if (NULL != m_pQSqlQueryForInseert)
+	{
+		delete m_pQSqlQueryForInseert;
+		m_pQSqlQueryForInseert = NULL;
+	}
+
+	m_pQSqlQueryForInseert = new QSqlQuery(*m_pQSqlDataBase);
+
+	strDBTableName = _GetTickInfoDBTableName(m_nInstrumentID);
+	strSQL = _BuildSQLForInsertTickInfoBatchMode(strDBTableName);
+
+	LOG_DEBUG<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentTickInfo.size="<<pLstInstrumentTickInfo->size();
+	LOG_INFO<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentTickInfo.size="<<pLstInstrumentTickInfo->size();
+
+	m_pQSqlQueryForInseert->prepare(strSQL.c_str());
+
+	iterLst = pLstInstrumentTickInfo->begin();
+	while (iterLst != pLstInstrumentTickInfo->end())
+	{
+		pInstrumentTickInfo = (*iterLst);
+		strTimeStr = m_pUtilityFun->dataTimeToStr(pInstrumentTickInfo->m_TickInfo.Time);
+
+		lstInstrumentID<<m_nInstrumentID;
+		lstTimestamp << strTimeStr.c_str();
+		lstBidPx << pInstrumentTickInfo->m_TickInfo.BidPx;
+		lstAskPx << pInstrumentTickInfo->m_TickInfo.AskPx;
+		lstLastPx << pInstrumentTickInfo->m_TickInfo.LastPx;
+		lstBidVol << pInstrumentTickInfo->m_TickInfo.BidVol;
+		lstAskVol << pInstrumentTickInfo->m_TickInfo.AskVol;
+		lstLastVol << pInstrumentTickInfo->m_TickInfo.LastVol;
+
+		iterLst++;
+	}//while
+
+	m_pQSqlQueryForInseert->addBindValue(lstInstrumentID);
+	m_pQSqlQueryForInseert->addBindValue(lstTimestamp);
+	m_pQSqlQueryForInseert->addBindValue(lstBidPx);
+	m_pQSqlQueryForInseert->addBindValue(lstAskPx);
+	m_pQSqlQueryForInseert->addBindValue(lstLastPx);
+	m_pQSqlQueryForInseert->addBindValue(lstBidVol);
+	m_pQSqlQueryForInseert->addBindValue(lstAskVol);
+	m_pQSqlQueryForInseert->addBindValue(lstLastVol);
+
+	bExecRes = m_pQSqlQueryForInseert->execBatch();
+	if (!bExecRes)
+	{
+		nFunRes = -1;
+		LOG_ERROR<<"execBatch strSQL="<<strSQL<<" pLstInstrumentTickInfo.size="<<pLstInstrumentTickInfo->size()
+			<<" "<<"error:"<<m_pQSqlQueryForInseert->lastError().text().toStdString();
+	}
+
+	if (NULL != m_pQSqlQueryForInseert)
+	{
+		delete m_pQSqlQueryForInseert;
+		m_pQSqlQueryForInseert = NULL;
+	}
+	return nFunRes;
+}
+
+void CInstrumentBarInfoStorager::_ClearLstInstrumentTickInfoT( LstInstrumentTickInfoT* pLstInstrumentTickInfo )
+{
+	BOOST_LOG_FUNCTION();
+
+	LstInstrumentTickInfoIterT iterLst;
+	CInstrumentTickInfo* pData = NULL;
+
+	iterLst = pLstInstrumentTickInfo->begin();
+	while (iterLst != pLstInstrumentTickInfo->end())
+	{
+		pData = (*iterLst);
+
+		delete pData;
+		pData = NULL;
+
+		iterLst++;
+	}
+	pLstInstrumentTickInfo->clear();
 }
 
 

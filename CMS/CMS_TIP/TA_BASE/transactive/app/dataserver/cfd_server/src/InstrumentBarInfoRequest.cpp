@@ -59,6 +59,7 @@ void CInstrumentBarInfoRequest::logInfo()
 	LOG_INFO<<"Calculator TIME_BASE_S_5S="<<TA_Base_App::TIME_BASE_S_5S;
 	LOG_INFO<<"Calculator TIME_BASE_S_1MIN="<<TA_Base_App::TIME_BASE_S_1MIN;
 	LOG_INFO<<"Calculator TIME_BASE_S_5MIN="<<TA_Base_App::TIME_BASE_S_5MIN;
+	LOG_INFO<<"Calculator TIME_BASE_S_15MIN="<<TA_Base_App::TIME_BASE_S_15MIN;
 	LOG_INFO<<"Calculator TIME_BASE_S_30MIN="<<TA_Base_App::TIME_BASE_S_30MIN;
 	LOG_INFO<<"Calculator TIME_BASE_S_1HOUR="<<TA_Base_App::TIME_BASE_S_1HOUR;
 	LOG_INFO<<"Calculator TIME_BASE_S_1DAY="<<TA_Base_App::TIME_BASE_S_1DAY;
@@ -75,6 +76,7 @@ void CInstrumentBarInfoRequest::_AddBarTimeNormal()
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5S);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_5MIN);//seconds
+	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_15MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_30MIN);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1HOUR);//seconds
 	m_lstBarTime.push_back(TA_Base_App::TIME_BASE_S_1DAY);//seconds

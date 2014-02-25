@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="app.dataserver.cfd_server"
+	Name="app.dataserver.historydata_server"
 	ProjectGUID="{7596BCFC-B623-408D-8C9F-C77C9F9D42EB}"
-	RootNamespace="app.dataserver.cfd_server"
+	RootNamespace="app.dataserver.historydata_server"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nd"
-			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/app/dataserver/cfd_server"
+			IntermediateDirectory=".\../../../../../build/win32_nd/transactive/app/dataserver/historydata_server"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -39,7 +39,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nd/app.dataserver.cfd_server.CFDServer.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nd/app.dataserver.historydata_server.HistoryDataServer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -51,10 +51,10 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/app/dataserver/cfd_server/app.dataserver.cfd_server.CFDServer.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/app/dataserver/cfd_server/"
-				ObjectFile=".\../../../../../build/win32_nd/transactive/app/dataserver/cfd_server/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactiveapp/dataserver/cfd_server/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nd/transactive/app/dataserver/historydata_server/app.dataserver.historydata_server.HistoryDataServer.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nd/transactive/app/dataserver/historydata_server/"
+				ObjectFile=".\../../../../../build/win32_nd/transactive/app/dataserver/historydata_server/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nd/transactiveapp/dataserver/historydata_server/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -75,12 +75,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib MarketData.lib"
-				OutputFile="../../../../../bin/win32_nd/CFDServer.exe"
+				OutputFile="../../../../../bin/win32_nd/HistoryDataServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../../../../bin/win32_nd/CFDServer.pdb"
+				ProgramDatabaseFile=".\../../../../../bin/win32_nd/HistoryDataServer.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -98,7 +98,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nd/app.dataserver.cfd_server.CFDServer.bsc"
+				OutputFile=".\../../../../../bin/win32_nd/app.dataserver.historydata_server.HistoryDataServer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -113,7 +113,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\../../../../../bin/win32_nr"
-			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/app/dataserver/cfd_server"
+			IntermediateDirectory=".\../../../../../build/win32_nr/transactive/app/dataserver/historydata_server"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\../../../../../bin/win32_nr/app.dataserver.cfd_server.CFDServer.tlb"
+				TypeLibraryName=".\../../../../../bin/win32_nr/app.dataserver.historydata_server.HistoryDataServer.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -147,10 +147,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/app/dataserver/cfd_server/app.dataserver.cfd_server.CFDServer.pch"
-				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/app/dataserver/cfd_server/"
-				ObjectFile=".\../../../../../build/win32_nr/transactive/app/dataserver/cfd_server/"
-				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/app/dataserver/cfd_server/"
+				PrecompiledHeaderFile=".\../../../../../build/win32_nr/transactive/app/dataserver/historydata_server/app.dataserver.historydata_server.HistoryDataServer.pch"
+				AssemblerListingLocation=".\../../../../../build/win32_nr/transactive/app/dataserver/historydata_server/"
+				ObjectFile=".\../../../../../build/win32_nr/transactive/app/dataserver/historydata_server/"
+				ProgramDataBaseFileName=".\../../../../../build/win32_nr/transactive/app/dataserver/historydata_server/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DisableSpecificWarnings="4251"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib qtmaind.lib QtCore4.lib QtGuid4.lib QtSql4.lib MarketData.lib"
-				OutputFile="../../../../../bin/win32_nr/CFDServer.exe"
+				OutputFile="../../../../../bin/win32_nr/HistoryDataServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nr;..\..\..\..\..\build\win32_nr;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
@@ -191,7 +191,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../../bin/win32_nr/app.dataserver.cfd_server.CFDServer.bsc"
+				OutputFile=".\../../../../../bin/win32_nr/app.dataserver.historydata_server.HistoryDataServer.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -216,7 +216,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="common"
+			Name="CommonSystem"
 			>
 			<File
 				RelativePath=".\src\BoostLogger.cpp"
@@ -224,22 +224,6 @@
 			</File>
 			<File
 				RelativePath=".\src\BoostLogger.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDServerCommonData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDServerCommonDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDServerUtilityFun.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\CFDServerUtilityFun.h"
 				>
 			</File>
 			<File
@@ -259,43 +243,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\FileSystemItem.cpp"
+				RelativePath=".\src\DirectoryInfo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FileSystemItem.h"
+				RelativePath=".\src\DirectoryInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FileSystemManager.cpp"
+				RelativePath=".\src\FileInfo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FileSystemManager.h"
+				RelativePath=".\src\FileInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\MarketDataFileManager.cpp"
+				RelativePath=".\src\ParamInfo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\MarketDataFileManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataPathManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataPathManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ParamItem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ParamItem.h"
+				RelativePath=".\src\ParamInfo.h"
 				>
 			</File>
 			<File
@@ -308,74 +276,22 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="InstrumentBarInfo"
+			Name="CommonProject"
 			>
 			<File
-				RelativePath=".\src\InstrumentBarInfo.cpp"
+				RelativePath=".\src\HistoryDataServerCommonData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\InstrumentBarInfo.h"
+				RelativePath=".\src\HistoryDataServerCommonDef.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\InstrumentBarInfoCalculator.cpp"
+				RelativePath=".\src\HistoryDataServerUtilityFun.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\InstrumentBarInfoCalculator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InstrumentBarInfoRequest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InstrumentBarInfoRequest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InstrumentBarInfoStorager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InstrumentBarInfoStorager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataDispatcher.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataDispatcher.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataFileAnalier.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MarketDataFileAnalier.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="InstrumentTickInfo"
-			>
-			<File
-				RelativePath=".\src\InstrumentTickInfo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\InstrumentTickInfo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MyTick.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MyTick.h"
+				RelativePath=".\src\HistoryDataServerUtilityFun.h"
 				>
 			</File>
 		</Filter>

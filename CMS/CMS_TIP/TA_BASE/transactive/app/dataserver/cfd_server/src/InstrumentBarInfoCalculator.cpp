@@ -4,6 +4,7 @@
 #include "BarCalculator.h"
 #include "InstrumentBarInfoStorager.h"
 #include "CFDServerUtilityFun.h"
+#include "MyTick.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -131,7 +132,6 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 {
 	BOOST_LOG_FUNCTION();
 
-	//LOG_INFO<<"HandleNewBar"<<"interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
 
 	std::string strLogInfo;
 	std::ostringstream sreaamTmp;
@@ -181,9 +181,6 @@ void CInstrumentBarInfoCalculator::HandleNewBar(int interval, const Bar &bar)
 
 void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 {
-
-	//LOG_INFO<<"HandleUpdateBar"<<"interval="<<interval<<" "<<"bar.Volume="<<bar.Volume;
-
 	std::string strLogInfo;
 
 	MapIntervalBarInfoIterT  iterMap;
@@ -208,7 +205,7 @@ void CInstrumentBarInfoCalculator::HandleUpdateBar(int interval, const Bar &bar)
 
 
 
-int CInstrumentBarInfoCalculator::updateMarketData(const MarketData& marketData)
+int CInstrumentBarInfoCalculator::onMarketDataUpdateForBar(const MarketData& marketData)
 {
 	BOOST_LOG_FUNCTION();
 	int nFunRes = 0;
@@ -221,6 +218,29 @@ int CInstrumentBarInfoCalculator::updateMarketData(const MarketData& marketData)
 	return nFunRes;
 }
 
+
+int CInstrumentBarInfoCalculator::onMarketDataUpdateForTick(const MarketData& marketData)
+{
+	int nFunRes = 0;
+	CMyTick  newTick;
+
+	newTick.Time = marketData.getTime();
+
+	newTick.BidPx = marketData.getBidPx(1);
+	newTick.AskPx = marketData.getAskPx(1);
+	newTick.LastPx = marketData.getPrice(MarketData::LAST_TRADED_PRICE);
+
+	newTick.BidVol = marketData.getBidVol(1);
+	newTick.AskVol = marketData.getAskVol(1);
+	newTick.LastVol = marketData.getVolume(MarketData::LAST_TRADED_VOLUME);
+
+	if (NULL != m_pStorager)
+	{
+		m_pStorager->storeTickInfo(newTick);
+	}
+
+	return nFunRes;
+}
 NS_END(TA_Base_App) 
 
 

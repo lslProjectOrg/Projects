@@ -29,7 +29,8 @@ public:
 	~CInstrumentBarInfoCalculator(void);
 
 public:
-	int updateMarketData(const MarketData& marketData);
+	int onMarketDataUpdateForBar(const MarketData& marketData);
+	int onMarketDataUpdateForTick(const MarketData& marketData);
 
 private:
 	void HandleNewBar(int interval, const Bar &bar);

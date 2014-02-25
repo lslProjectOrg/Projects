@@ -87,7 +87,8 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 	{
 		//find ok
 		pBarInfoCalc = (iterMap->second);
-		nFunRes = pBarInfoCalc->updateMarketData(marketData);
+		nFunRes = pBarInfoCalc->onMarketDataUpdateForTick(marketData);
+		nFunRes = pBarInfoCalc->onMarketDataUpdateForBar(marketData);
 	}
 	else
 	{
@@ -95,7 +96,8 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 		unsigned int nInstrumentID = nSecurityIDValue;		
 		pBarInfoCalc = new CInstrumentBarInfoCalculator(nInstrumentID, m_InstrumentBarInfoRequest);
 		m_mapInstrumentIDBarInfoCalc->insert(MapInstrumentIDBarInfoCalcValueTypeT(nInstrumentID, pBarInfoCalc));
-		nFunRes = pBarInfoCalc->updateMarketData(marketData);
+		nFunRes = pBarInfoCalc->onMarketDataUpdateForTick(marketData);
+		nFunRes = pBarInfoCalc->onMarketDataUpdateForBar(marketData);
 	}
 
 	return nFunRes;

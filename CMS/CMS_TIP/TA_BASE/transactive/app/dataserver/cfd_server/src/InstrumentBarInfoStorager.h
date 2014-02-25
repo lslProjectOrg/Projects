@@ -36,6 +36,7 @@ save data to SQLite
 
 #include "InstrumentBarInfoRequest.h"
 #include "InstrumentBarInfo.h"
+#include "InstrumentTickInfo.h"
 #include "BarCalculator.h"
 
 NS_BEGIN(TA_Base_App) 
@@ -55,6 +56,10 @@ private:
 	typedef std::map<int, LstInstrumentBarInfoT*>				      MapIntervalBarLstT;
 	typedef std::map<int, LstInstrumentBarInfoT*>::iterator           MapIntervalBarLstIterT;
 	typedef std::map<int, LstInstrumentBarInfoT*>::value_type         MapIntervalBarLstValueTypeT;
+
+	typedef std::list<CInstrumentTickInfo*>							  LstInstrumentTickInfoT;
+	typedef std::list<CInstrumentTickInfo*>::iterator				  LstInstrumentTickInfoIterT;
+
 public:
 	/*
 	eg.		strPathInstrumentBarInfoTotal="C://TestData//InstrumetBarInfoTotal";
@@ -68,6 +73,9 @@ public:
 	void setStoreBatchSize(unsigned int nBatchSize);
 	/*fetch data, if no data will return -1*/
 	int getBarInfo(int interval, Bar& getBarInfo);
+
+	int storeTickInfo(CMyTick& tickInfo);
+
 private:
 	/*exec sql= SELECT *** */
 	int _GetBarInfoFromDB(unsigned int nInstrumentID, int interval);
@@ -79,19 +87,27 @@ private:
 	std::string _GetBarInfoDBTableName(int interval);
 
 	int _CheckAndInitDBTable(CInstrumentBarInfoRequest& instrumentBarInfoRequest);
-	int _CreateDBTable(const std::string& strDbTableName);
-	std::string _BuildInsertSQLBatchMode(const std::string& strTableName);
+	int _CreateDBTableForBarInfo(const std::string& strDbTableName);
+	std::string _BuildSQLForInsertBarInfoBatchMode(const std::string& strTableName);
 	std::string _BuildSelectSQL(const std::string& strTableName);
-	std::string _BuildCreateDBTableSQL(const std::string& strTableName);
+	std::string _BuildSQLForCreateDBTableBarInfo(const std::string& strTableName);
 	std::string _BuildDropDBTableSQL(const std::string& strDbTableName);
 
 	void _ClearMapIntervalBarLst(MapIntervalBarLstT* pMapIntervalBarLstT);
 	void _ClearLstInstrumentBarInfo(LstInstrumentBarInfoT* plstInstrumentBarInfo);
-	int _StoreMapIntervalBarLstBatchMode(MapIntervalBarLstT* pMapIntervalBarLst);
+	int _StartStransactionForMapBarInfoLstBatchMode(MapIntervalBarLstT* pMapIntervalBarLst);
 	int _StoreLstInstrumentBarInfoBatchMode(int nInterval, LstInstrumentBarInfoT* pLstInstrumentBarInfo);
 	int _InitMapIntervalBarInfoLst(const CInstrumentBarInfoRequest& instrumentBarInfoRequest, MapIntervalBarLstT* pMapIntervalBarLstT);
 private:
-	unsigned int m_nInstrumentID;
+	void _ClearLstInstrumentTickInfoT(LstInstrumentTickInfoT* pLstInstrumentTickInfo);
+	int _StartStransactionForLstTickInfoBatchMode( LstInstrumentTickInfoT* pLstInstrumentTickInfo );
+	int _StoreLstInstrumentTickInfoTBatchMode(LstInstrumentTickInfoT* pLstInstrumentTickInfo);
+	std::string _GetTickInfoDBTableName(unsigned int strInstrumentID);
+	std::string _BuildSQLForInsertTickInfoBatchMode(const std::string& strTableName);
+	std::string _BuildSQLForCreateDBTableTickInfo(const std::string& strTableName);
+	int _CreateDBTableForTickInfo(const std::string& strDbTableName);
+private:
+	unsigned int m_nInstrumentID;//3306
 	//std::string m_strDBFileName;//SQLiteDB_3306.db              //oms
 	std::string m_strDBName;//d://savedata//SQLiteDB_3306.db   //oms
 	std::string m_strDBType;// defSQLiteDBName defMysqlDBName   //mysql
@@ -102,12 +118,14 @@ private:
 	QSqlQuery*          m_pQSqlQueryForInseert;
 	QSqlQuery*			m_pQSqlQueryForSelect;
 	CCFDServerUtilityFun*   m_pUtilityFun;
-	MapIntervalDBTableNameT* m_pmapIntervalDBTableName;
+	MapIntervalDBTableNameT* m_pMapIntervalDBTableName;
 	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
 
 	MapIntervalBarLstT*    m_pMapIntervalBarLst;
 	unsigned int       m_nBatchSize;
 	unsigned int       m_nBuffNum;
+
+	LstInstrumentTickInfoT*  m_pLstInstrumentTickInfo;
 };
 
 NS_END(TA_Base_App) 

@@ -5,6 +5,8 @@
 #include <list> 
 #include <time.h>
 
+#include "BarCalculator.h"
+
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -114,7 +116,6 @@ void CCFDServerUtilityFun::logBarInfo(const std::string& strInfo, int interval, 
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Low="<<pBarInfo->Low;
 	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
 
-	//LOG_INFO<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
 }
 
 
@@ -138,31 +139,42 @@ void CCFDServerUtilityFun::logMarketDataInfo(const std::string& strInfo, const M
 	unsigned int nChangeBitsValue = 0;
 	//
 
-
-	//
 	nSecurityIDValue = marketData.getSecurityID();
 	nMarkerStatusValue = (MarketData::MarketStatus)(marketData.getMarketStatus());
+
+// 	Tick  newTick;
+// 	newTick.Time = marketData.getTime();//nTimeValue
+// 	newTick.BidPx = marketData.getBidPx(1);//fBidPxValue
+// 	newTick.AskPx = marketData.getAskPx(1);//fAskPxValue
+// 	newTick.LastPx = marketData.getPrice(MarketData::LAST_TRADED_PRICE);//fPriceValue
+// 	newTick.BidVol = marketData.getBidVol(1);//nBidVolValue
+// 	newTick.AskVol = marketData.getAskVol(1);//nAskVolValue
+// 	newTick.LastVol = marketData.getVolume(MarketData::LAST_TRADED_VOLUME);//nVolumeValue
+
+	//
 	nTimeValue = marketData.getTime();
 	strTimeValue = dataTimeToStr(nTimeValue);
-	nVolumeValue = marketData.getVolume(nVolumeTypeValue);
-	nBidVolValue = marketData.getBidVol(0);
-	nAskVolValue = marketData.getAskVol(0);
+	fBidPxValue = marketData.getBidPx(1);
+	fAskPxValue = marketData.getAskPx(1);
 	fPriceValue = marketData.getPrice(nPriceTypeValue);
-	fBidPxValue = marketData.getBidPx(0);
-	fAskPxValue = marketData.getAskPx(0);
+
+	nBidVolValue = marketData.getBidVol(1);
+	nAskVolValue = marketData.getAskVol(1);
+	nVolumeValue = marketData.getVolume(nVolumeTypeValue);
+
 	nDataBitsValue = marketData.getDataBits();
 	nChangeBitsValue = marketData.getChangeBits();
 	//
-	LOG_DEBUG<<"nSecurityIDValue="<<nSecurityIDValue;
-	LOG_DEBUG<<"nMarkerStatusValue="<<nMarkerStatusValue;
-	LOG_DEBUG<<"nTimeValue="<<nTimeValue;
-	LOG_DEBUG<<"strTimeValue="<<strTimeValue;
-	LOG_DEBUG<<"nVolumeValue="<<nVolumeValue;
-	LOG_DEBUG<<"fPriceValue="<<fPriceValue;
-
-	//LOG_INFO<<"nTimeValue="<<nTimeValue<<" strTimeValue="<<strTimeValue<<" nVolumeValue="<<nVolumeValue<<" fPriceValue="<<fPriceValue;
-
-
+	LOG_DEBUG<<"MarketData"<<"->"<<"nSecurityIDValue="<<nSecurityIDValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"nMarkerStatusValue="<<nMarkerStatusValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"nTimeValue="<<nTimeValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"strTimeValue="<<strTimeValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidPx="<<fBidPxValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskPx="<<fAskPxValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastPx="<<fPriceValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidVol="<<nBidVolValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskVol="<<nAskVolValue;
+	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastVol="<<nVolumeValue;
 
 }
 

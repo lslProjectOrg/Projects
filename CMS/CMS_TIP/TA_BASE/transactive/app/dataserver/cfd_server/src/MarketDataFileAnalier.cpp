@@ -57,7 +57,8 @@ int CMarketDataFileAnalier::analierFile()
 	std::ifstream priceFile(filename.c_str());
 	std::string strLogInfo = "get data from file";
 
-	LOG_INFO<<"AnalierFile: "<<m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName;
+	pTime->workBegin();
+	LOG_INFO<<"begin AnalierFile: "<<m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName;
 	m_pMarketDataDispatcher->setInstrumentBarInfoRequest(m_InstrumentBarInfoRequest);
 
 	while (!priceFile.eof())
@@ -79,6 +80,11 @@ int CMarketDataFileAnalier::analierFile()
 	}
 
 	priceFile.close();
+
+	pTime->workEnd();
+	LOG_INFO<<"end AnalierFile: "<<m_InstrumentBarInfoRequest.m_strCurrentAnalierFileName
+		<<" using="<<pTime->getWorkTime()<<" ms";
+
 
 	if (NULL != pTime)
 	{
