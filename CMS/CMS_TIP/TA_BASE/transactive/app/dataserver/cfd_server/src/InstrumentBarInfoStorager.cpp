@@ -47,41 +47,41 @@ static const std::string str_Table_tick_data = "tick_data";
 
 static const std::string str_SQliteDb_Instrument_BAR_DB_header = "SQLiteDB_";//SQLiteDB_3320.db
 
-static const std::string str_Column_InstrumentID = "InstrumentID";
-static const std::string str_Column_Timestamp = "Timestamp";
-static const std::string str_Column_Open = "Open";
-static const std::string str_Column_Close = "Close";
-static const std::string str_Column_High = "High";
-static const std::string str_Column_Low = "Low";
-static const std::string str_Column_Volume = "Volume";
-static const std::string str_Column_LastModified = "LastModified";
+static const std::string str_BarData_Column_InstrumentID = "InstrumentID";
+static const std::string str_BarData_Column_Timestamp = "Timestamp";
+static const std::string str_BarData_Column_Open = "Open";
+static const std::string str_BarData_Column_Close = "Close";
+static const std::string str_BarData_Column_High = "High";
+static const std::string str_BarData_Column_Low = "Low";
+static const std::string str_BarData_Column_Volume = "Volume";
+static const std::string str_BarData_Column_LastModified = "LastModified";
 
 
-static const std::string str_Column_InstrumentID_Value = ":InstrumentID_Value";
-static const std::string str_Column_Timestamp_Value = ":Timestamp_Value";
-static const std::string str_Column_Open_Value = ":Open_Value";
-static const std::string str_Column_Close_Value = ":Close_Value";
-static const std::string str_Column_High_Value = ":High_Value";
-static const std::string str_Column_Low_Value = ":Low_Value";
-static const std::string str_Column_Volume_Value = ":Volume_Value";
+static const std::string str_BarData_Column_InstrumentID_Value = ":InstrumentID_Value";
+static const std::string str_BarData_Column_Timestamp_Value = ":Timestamp_Value";
+static const std::string str_BarData_Column_Open_Value = ":Open_Value";
+static const std::string str_BarData_Column_Close_Value = ":Close_Value";
+static const std::string str_BarData_Column_High_Value = ":High_Value";
+static const std::string str_BarData_Column_Low_Value = ":Low_Value";
+static const std::string str_BarData_Column_Volume_Value = ":Volume_Value";
+////
+static const std::string str_TickData_Column_InstrumentID = "InstrumentID";
+static const std::string str_TickData_Column_Timestamp = "Timestamp";
+static const std::string str_TickData_Column_BidPx = "BidPx";
+static const std::string str_TickData_Column_AskPx = "AskPx";
+static const std::string str_TickData_Column_LastPx = "LastPx";
+static const std::string str_TickData_Column_BidVol = "BidVol";
+static const std::string str_TickData_Column_AskVol = "AskVol";
+static const std::string str_TickData_Column_LastVol = "LastVol";
 
-static const std::string str_Tick_Column_InstrumentID = "InstrumentID";
-static const std::string str_Tick_Column_Timestamp = "Timestamp";
-static const std::string str_Tick_Column_BidPx = "BidPx";
-static const std::string str_Tick_Column_AskPx = "AskPx";
-static const std::string str_Tick_Column_LastPx = "LastPx";
-static const std::string str_Tick_Column_BidVol = "BidVol";
-static const std::string str_Tick_Column_AskVol = "AskVol";
-static const std::string str_Tick_Column_LastVol = "LastVol";
-
-static const std::string str_Tick_Column_InstrumentID_Value = ":InstrumentID_Value";
-static const std::string str_Tick_Column_Timestamp_Value = ":Timestamp_Value";
-static const std::string str_Tick_Column_BidPx_Value = ":BidPx_Value";
-static const std::string str_Tick_Column_AskPx_Value = ":AskPx_Value";
-static const std::string str_Tick_Column_LastPx_Value = ":LastPx_Value";
-static const std::string str_Tick_Column_BidVol_Value = ":BidVol_Value";
-static const std::string str_Tick_Column_AskVol_Value = ":AskVol_Value";
-static const std::string str_Tick_Column_LastVol_Value = ":LastVol_Value";
+static const std::string str_TickData_Column_InstrumentID_Value = ":InstrumentID_Value";
+static const std::string str_TickData_Column_Timestamp_Value = ":Timestamp_Value";
+static const std::string str_TickData_Column_BidPx_Value = ":BidPx_Value";
+static const std::string str_TickData_Column_AskPx_Value = ":AskPx_Value";
+static const std::string str_TickData_Column_LastPx_Value = ":LastPx_Value";
+static const std::string str_TickData_Column_BidVol_Value = ":BidVol_Value";
+static const std::string str_TickData_Column_AskVol_Value = ":AskVol_Value";
+static const std::string str_TickData_Column_LastVol_Value = ":LastVol_Value";
 
 
 
@@ -504,15 +504,15 @@ std::string CInstrumentBarInfoStorager::_BuildSQLForCreateDBTableBarInfo(const s
 		sreaamTmp.str("");
 		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
 			<<" "<<"("
-			<<" "<<str_Column_InstrumentID<<" "<<"int(10) unsigned NOT NULL"<<","
-			<<" "<<str_Column_Timestamp<<" "<<"datetime NOT NULL"<<","
-			<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Volume<<" "<<"int(10) unsigned NOT NULL"<<","
-			<<" "<<str_Column_LastModified<<" "<<"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"<<","
-			<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
+			<<" "<<str_BarData_Column_InstrumentID<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_BarData_Column_Timestamp<<" "<<"datetime NOT NULL"<<","
+			<<" "<<str_BarData_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Volume<<" "<<"int(10) unsigned NOT NULL"<<","
+			<<" "<<str_BarData_Column_LastModified<<" "<<"timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"<<","
+			<<" "<<"PRIMARY KEY ("<<str_BarData_Column_InstrumentID<<", "<<str_BarData_Column_Timestamp<<")"
 			<<" "<<")";
 	}
 	//else if (TA_Base_App::enumSqliteDb == m_nDBType)
@@ -521,14 +521,14 @@ std::string CInstrumentBarInfoStorager::_BuildSQLForCreateDBTableBarInfo(const s
 		sreaamTmp.str("");
 		sreaamTmp<<"CREATE TABLE IF NOT EXISTS "<<strTableName
 			<<" "<<"("
-			<<" "<<str_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
-			<<" "<<str_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
-			<<" "<<str_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
-			<<" "<<str_Column_Volume<<" "<<"int NOT NULL"<<","
-			<<" "<<"PRIMARY KEY ("<<str_Column_InstrumentID<<", "<<str_Column_Timestamp<<")"
+			<<" "<<str_BarData_Column_InstrumentID<<" "<<"INTEGER NOT NULL"<<","
+			<<" "<<str_BarData_Column_Timestamp<<" "<<"TIMESTAMP NOT NULL"<<","
+			<<" "<<str_BarData_Column_Open<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Close<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_High<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Low<<" "<<"decimal(25,10) NOT NULL"<<","
+			<<" "<<str_BarData_Column_Volume<<" "<<"int NOT NULL"<<","
+			<<" "<<"PRIMARY KEY ("<<str_BarData_Column_InstrumentID<<", "<<str_BarData_Column_Timestamp<<")"
 			<<" "<<")";
 	}
 	
@@ -719,13 +719,13 @@ std::string CInstrumentBarInfoStorager::_BuildSQLForInsertBarInfoBatchMode(const
 	sreaamTmp.str("");
 	sreaamTmp<<"INSERT INTO "<<strTableName
 		<<" "<<"("
-		<<" "<<str_Column_InstrumentID<<","
-		<<" "<<str_Column_Timestamp<<","
-		<<" "<<str_Column_Open<<","
-		<<" "<<str_Column_Close<<","
-		<<" "<<str_Column_High<<","
-		<<" "<<str_Column_Low<<","
-		<<" "<<str_Column_Volume
+		<<" "<<str_BarData_Column_InstrumentID<<","
+		<<" "<<str_BarData_Column_Timestamp<<","
+		<<" "<<str_BarData_Column_Open<<","
+		<<" "<<str_BarData_Column_Close<<","
+		<<" "<<str_BarData_Column_High<<","
+		<<" "<<str_BarData_Column_Low<<","
+		<<" "<<str_BarData_Column_Volume
 		<<" "<<")"
 		<<" "<<"VALUES"
 		<<" "<<"("
@@ -778,14 +778,14 @@ std::string CInstrumentBarInfoStorager::_BuildSQLForInsertTickInfoBatchMode(cons
 	sreaamTmp.str("");
 	sreaamTmp<<"INSERT INTO "<<strTableName
 		<<" "<<"("
-		<<" "<<str_Tick_Column_InstrumentID<<","
-		<<" "<<str_Tick_Column_Timestamp<<","
-		<<" "<<str_Tick_Column_BidPx<<","
-		<<" "<<str_Tick_Column_AskPx<<","
-		<<" "<<str_Tick_Column_LastPx<<","
-		<<" "<<str_Tick_Column_BidVol<<","
-		<<" "<<str_Tick_Column_AskVol<<","
-		<<" "<<str_Tick_Column_LastVol
+		<<" "<<str_TickData_Column_InstrumentID<<","
+		<<" "<<str_TickData_Column_Timestamp<<","
+		<<" "<<str_TickData_Column_BidPx<<","
+		<<" "<<str_TickData_Column_AskPx<<","
+		<<" "<<str_TickData_Column_LastPx<<","
+		<<" "<<str_TickData_Column_BidVol<<","
+		<<" "<<str_TickData_Column_AskVol<<","
+		<<" "<<str_TickData_Column_LastVol
 		<<" "<<")"
 		<<" "<<"VALUES"
 		<<" "<<"("
@@ -827,15 +827,15 @@ std::string CInstrumentBarInfoStorager::_BuildSelectSQL(const std::string& strTa
 
 	sreaamTmp.str("");
 	sreaamTmp<<"SELECT"
-		<<" "<<str_Column_InstrumentID<<","
-		<<" "<<str_Column_Timestamp<<","
-		<<" "<<str_Column_Open<<","
-		<<" "<<str_Column_Close<<","
-		<<" "<<str_Column_High<<","
-		<<" "<<str_Column_Low<<","
-		<<" "<<str_Column_Volume
+		<<" "<<str_BarData_Column_InstrumentID<<","
+		<<" "<<str_BarData_Column_Timestamp<<","
+		<<" "<<str_BarData_Column_Open<<","
+		<<" "<<str_BarData_Column_Close<<","
+		<<" "<<str_BarData_Column_High<<","
+		<<" "<<str_BarData_Column_Low<<","
+		<<" "<<str_BarData_Column_Volume
 		<<" "<<"FROM"<<" "<<strTableName
-		<<" "<<"ORDER BY"<<" "<<str_Column_Timestamp;
+		<<" "<<"ORDER BY"<<" "<<str_BarData_Column_Timestamp;
 
 	strSQL = sreaamTmp.str();
 	return strSQL;	
@@ -868,7 +868,11 @@ int CInstrumentBarInfoStorager::storeBarInfo(int interval, Bar& barInfo)
 	}
 
 	nFunRes = _StartStransactionForMapBarInfoLstBatchMode(m_pMapIntervalBarLst);
+	_ClearMapIntervalBarLst(m_pMapIntervalBarLst);
+	m_pMapIntervalBarLst->clear();
 	nFunRes = _StartStransactionForLstTickInfoBatchMode(m_pLstInstrumentTickInfo);
+	_ClearLstInstrumentTickInfoT(m_pLstInstrumentTickInfo);//just clean data
+	m_pLstInstrumentTickInfo->clear();
 
 	m_nBuffNum = 0;
 
@@ -962,7 +966,7 @@ int CInstrumentBarInfoStorager::_StartStransactionForMapBarInfoLstBatchMode(MapI
 		}//if
 		else
 		{
-			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"commit Transaction";
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"  commit Transaction";
 		}
 	}//if
 
@@ -998,7 +1002,6 @@ int CInstrumentBarInfoStorager::_StoreLstInstrumentBarInfoBatchMode(int nInterva
 	strDBTableName = _GetBarInfoDBTableName(nInterval);
 	strSQL = _BuildSQLForInsertBarInfoBatchMode(strDBTableName);
 	LOG_DEBUG<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size();
-	LOG_INFO<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentBarInfo.size="<<pLstInstrumentBarInfo->size();
 
 	m_pQSqlQueryForInseert->prepare(strSQL.c_str());
 
@@ -1232,7 +1235,7 @@ int CInstrumentBarInfoStorager::_StartStransactionForLstTickInfoBatchMode( LstIn
 		}//if
 		else
 		{
-			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"commit Transaction";
+			LOG_INFO<<"Database  m_nDBType="<<m_nDBType<<" db="<<m_strDBName<<"  commit Transaction";
 		}
 	}//if
 
@@ -1272,7 +1275,6 @@ int CInstrumentBarInfoStorager::_StoreLstInstrumentTickInfoTBatchMode(LstInstrum
 	strSQL = _BuildSQLForInsertTickInfoBatchMode(strDBTableName);
 
 	LOG_DEBUG<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentTickInfo.size="<<pLstInstrumentTickInfo->size();
-	LOG_INFO<<"m_nInstrumentID="<<m_nInstrumentID<<" strSQL="<<strSQL<<" pLstInstrumentTickInfo.size="<<pLstInstrumentTickInfo->size();
 
 	m_pQSqlQueryForInseert->prepare(strSQL.c_str());
 

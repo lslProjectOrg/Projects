@@ -67,7 +67,7 @@ void logUnInit()
 void Test_CInstrumentBarInfoRequest()
 {
 	int nFunRes = 0;
-	CConfigInfo::getInstance().loadDefaultConfigInfo();
+	CConfigInfo::getInstance();
 	TA_Base_App::CAWorkTime* pWorkTime = NULL;
 	CMarketDataPathManager* pMarketDataPathManager = NULL;
 
@@ -104,6 +104,8 @@ void Test_CInstrumentBarInfoRequest()
 		delete pWorkTime;
 		pWorkTime = NULL;
 	}
+
+	CConfigInfo::removeInstance();
 
 }
 

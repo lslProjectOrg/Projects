@@ -62,6 +62,7 @@ CConfigInfo::CConfigInfo(void)
 	m_strSaveDataDirectory = DEF_VALUE_strSaveDataDirectory;
 	m_strDbType = DEF_VALUE_DbType;
 	m_strStartTime = DEF_VALUE_StartTime;
+	_LoadDefaultConfigInfo();
 }
 
 CConfigInfo::~CConfigInfo(void)
@@ -69,7 +70,7 @@ CConfigInfo::~CConfigInfo(void)
 	BOOST_LOG_FUNCTION();
 }
 
-void CConfigInfo::loadDefaultConfigInfo()
+void CConfigInfo::_LoadDefaultConfigInfo()
 {
 	BOOST_LOG_FUNCTION();
 	std::string strParamValue;

@@ -13,6 +13,9 @@ USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App)
 
+static const int DEF_VALUE_INT_MAXBUFFERSIZE = 1024;
+
+
 
 CCFDServerUtilityFun::CCFDServerUtilityFun( void )
 {
@@ -72,12 +75,11 @@ std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
 	BOOST_LOG_FUNCTION();
 	std::string	strTimeString;
 	char* pszCurTime = NULL;
-	int nBufferSize = 256;
 	struct tm* pTM = NULL;
 	time_t time_Value = (time_t)nTimeValue;
 
-	pszCurTime =new char[nBufferSize];
-	memset(pszCurTime, 0, nBufferSize);
+	pszCurTime =new char[DEF_VALUE_INT_MAXBUFFERSIZE];
+	memset(pszCurTime, 0, DEF_VALUE_INT_MAXBUFFERSIZE);
 
 	pTM = localtime(&(time_Value));
 
@@ -91,8 +93,12 @@ std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
 		strTimeString = pszCurTime;     
 	}
 
-	delete pszCurTime;
-	pszCurTime = NULL;
+	if (NULL != pszCurTime)
+	{
+		delete[] pszCurTime;
+		pszCurTime = NULL;
+	}
+
 	pTM = NULL;
 
 	return strTimeString;

@@ -25,13 +25,15 @@ private:
 	~CConfigInfo(void);
 
 public:
-	void loadDefaultConfigInfo();
 	std::string getHistoryDataDirectory();
 	std::string getSaveDataDirectory();
 	std::string getDbType();
 	std::string getStartTime();
 
 	void logInfo();
+private:
+	void _LoadDefaultConfigInfo();
+
 private:
 	std::string m_strConfigFileName;
 	std::string m_strHistoryDataDirectory;

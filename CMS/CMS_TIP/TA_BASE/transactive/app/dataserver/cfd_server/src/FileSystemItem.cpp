@@ -126,7 +126,7 @@ int CFileSystemItem::getAllLinesInFile( LstLineT& lstLine )
 
 	if (NULL != pszInBuff)
 	{
-		delete []pszInBuff;
+		delete[] pszInBuff;
 		pszInBuff = NULL;
 	}
 
