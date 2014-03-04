@@ -121,8 +121,12 @@ int CMarketDataPathManager::setInstrumentBarInfoRequest(const CInstrumentBarInfo
 		//hisData Directory exists
 		if (m_InstrumentBarInfoRequest.m_nDBType == enumSqliteDb)
 		{
-			LOG_INFO<<"check and create savedata Directory ="<<m_InstrumentBarInfoRequest.m_strSaveDataDirectory;
-			m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strSaveDataDirectory);
+			LOG_INFO<<"check and create savedataBAR Directory ="<<m_InstrumentBarInfoRequest.m_strSaveDataDirectoryBAR;
+			m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strSaveDataDirectoryBAR);
+
+			LOG_INFO<<"check and create savedataTIK Directory ="<<m_InstrumentBarInfoRequest.m_strSaveDataDirectoryTIK;
+			m_pFileSystemManager->createDirectory(m_InstrumentBarInfoRequest.m_strSaveDataDirectoryTIK);
+
 		}
 	}
 	else

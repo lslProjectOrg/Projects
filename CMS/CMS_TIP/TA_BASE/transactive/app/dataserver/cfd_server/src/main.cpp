@@ -46,7 +46,8 @@ void logInit()
 	std::string strLogPath = "ALL_CFDServer_LOG_PATH";
 	std::string strLogFileName = "CFDServer_Log_%Y-%m-%d_%H_%M_%S_%f_%4N.log";
 	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::trace;
-	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
+	//boost::log::trivial::severity_level nLogLevel = boost::log::trivial::info;
+	boost::log::trivial::severity_level nLogLevel = boost::log::trivial::debug;
 
 
 	TA_Base_App::CBoostLogger::getInstance().setLogPath(strLogPath);
@@ -73,7 +74,8 @@ void Test_CInstrumentBarInfoRequest()
 
 	CInstrumentBarInfoRequest requestBarInfo; 
 	requestBarInfo.m_strHistoryDataDirectory = CConfigInfo::getInstance().getHistoryDataDirectory();
-	requestBarInfo.m_strSaveDataDirectory = CConfigInfo::getInstance().getSaveDataDirectory();
+	requestBarInfo.m_strSaveDataDirectoryBAR = CConfigInfo::getInstance().getSaveDataDirectoryBAR();
+	requestBarInfo.m_strSaveDataDirectoryTIK = CConfigInfo::getInstance().getSaveDataDirectoryTIK();
 	requestBarInfo.m_strDbType =  CConfigInfo::getInstance().getDbType();
 	requestBarInfo.m_strStartTime = CConfigInfo::getInstance().getStartTime();
 	requestBarInfo.initData();

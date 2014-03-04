@@ -1,6 +1,7 @@
 #include "WorkTime.h"
 
-
+#include "BoostLogger.h"
+USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App)
 
@@ -46,7 +47,8 @@ BigInt64 CAWorkTime::getTimeMilliseconds(boost::posix_time::millisec_posix_time_
 
 std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 {
-	std::string	strTimeString;
+	std::string	strTimeStringTmp;
+	std::string	strTimeStringGet;
 	int pos = 0;
 	std::string strSubTmp;
 	std::string strYear;
@@ -55,55 +57,104 @@ std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 	std::string strHour;
 	std::string strMin;
 	std::string strSecond;
-	std::string strMicSecond;
 
 	if (NULL == pfbtime)
 	{
-		return strTimeString;
+		return strTimeStringGet;
 	}
+
+	//linshenglong take care   20140218T150717.514548 20140218T150717
+
+
+	//20140218T150717.514548 20140218T150717
+	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
 
 	//20140218T150717.514548
 	//YYYYMMDDTHHMMSS.SSSSSS
 	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
-	strTimeString = boost::posix_time::to_iso_string(*pfbtime);
+	strTimeStringTmp = boost::posix_time::to_iso_string(*pfbtime);
 
-	//YYYY
-	strYear = strTimeString.substr(0, 4);
-	//MMDDTHHMMSS.SSSSSS
-	strSubTmp = strTimeString.substr(4);
+	if (strTimeStringTmp.size() > 4)
+	{
+		//YYYY
+		strYear = strTimeStringTmp.substr(0, 4);
+		//MMDDTHHMMSS.SSSSSS
+		strSubTmp = strTimeStringTmp.substr(4);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strYear from strTimeString="<<strTimeStringTmp;
+		return strTimeStringGet;
+	}
+
+	if (strSubTmp.size() > 2)
+	{
+		//MM
+		strMonth = strSubTmp.substr(0, 2);
+		//DDTHHMMSS.SSSSSS
+		strSubTmp = strSubTmp.substr(2);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strMonth from strTimeString="<<strTimeStringTmp<<" "<<"strSubTmp="<<strSubTmp;
+		return strTimeStringGet;
+	}
 	
-	//MM
-	strMonth = strSubTmp.substr(0, 2);
-	//DDTHHMMSS.SSSSSS
-	strSubTmp = strSubTmp.substr(2);
-    
-	//DD
-	strDay = strSubTmp.substr(0, 2);
-	//HHMMSS.SSSSSS
-	strSubTmp = strSubTmp.substr(3);
+	if (strSubTmp.size() > 3)
+	{
+		//DD
+		strDay = strSubTmp.substr(0, 2);
+		//HHMMSS.SSSSSS
+		strSubTmp = strSubTmp.substr(3);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strDay from strTimeString="<<strTimeStringTmp<<" "<<"strSubTmp="<<strSubTmp;
+		return strTimeStringGet;
+	}
 
-	//HH
-	strHour = strSubTmp.substr(0, 2);
-	//MMSS.SSSSSS
-	strSubTmp = strSubTmp.substr(2);
-	
-	//MM
-	strMin = strSubTmp.substr(0, 2);
-	//SS.SSSSSS
-	strSubTmp = strSubTmp.substr(2);
+	if (strSubTmp.size() > 2)
+	{
+		//HH
+		strHour = strSubTmp.substr(0, 2);
+		//MMSS.SSSSSS
+		strSubTmp = strSubTmp.substr(2);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strHour from strTimeString="<<strTimeStringTmp<<" "<<"strSubTmp="<<strSubTmp;
+		return strTimeStringGet;
+	}
 
-	//SS
-	strSecond = strSubTmp.substr(0, 2);
-	//SSSSSS
-	strSubTmp = strSubTmp.substr(3);
+	if (strSubTmp.size() > 2)
+	{
+		//MM
+		strMin = strSubTmp.substr(0, 2);
+		//SS.SSSSSS
+		strSubTmp = strSubTmp.substr(2);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strMin from strTimeString="<<strTimeStringTmp<<" "<<"strSubTmp="<<strSubTmp;
+		return strTimeStringGet;
+	}
 
-	strMicSecond = strSubTmp;
+	if (strSubTmp.size() >= 2)
+	{
+		//SS
+		strSecond = strSubTmp.substr(0, 2);
+	}
+	else
+	{
+		LOG_ERROR<<"error! get strSecond from strTimeString="<<strTimeStringTmp<<" "<<"strSubTmp="<<strSubTmp;
+		return strTimeStringGet;
+	}
 
-	//YYYY-MM-DD HH:MM:SSSSSS
-	strTimeString = strYear + "-" + strMonth + "-" + strDay + " " 
-		+ strHour + ":" + strMin + ":" + strSecond + "." + strMicSecond;
+	//"%04d-%02d-%02d %02d:%02d:%02d"
+	strTimeStringGet = strYear + "-" + strMonth + "-" + strDay + " " 
+		+ strHour + ":" + strMin + ":" + strSecond;
 
-	return strTimeString;
+	return strTimeStringGet;
 }
 
 

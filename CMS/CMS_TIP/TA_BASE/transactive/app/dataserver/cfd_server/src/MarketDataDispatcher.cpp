@@ -6,17 +6,18 @@
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
-extern boost::mutex g_mutex_Database_Mysql;
-extern bool g_bool_NeedToCheckAndInditMysqlDb;
-extern QSqlDatabase*	g_SqlDataBase_Mysql;
 
 NS_BEGIN(TA_Base_App) 
+
+static const int DEF_VALUE_INT_StoreAllDataMaxSize = 2000000;
 
 //////////////////////////////////////////////////////////////////////////
 CMarketDataDispatcher::CMarketDataDispatcher(void)
 {	
 	BOOST_LOG_FUNCTION();
 	m_mapInstrumentIDBarInfoCalc = new MapInstrumentIDBarInfoCalcT();
+	m_nStoreAllDataMaxSize = DEF_VALUE_INT_StoreAllDataMaxSize;
+	m_nStoreAllDataMaxIndex = 0;
 	
 }
 
@@ -31,21 +32,6 @@ CMarketDataDispatcher::~CMarketDataDispatcher(void)
 		delete 	m_mapInstrumentIDBarInfoCalc;
 		m_mapInstrumentIDBarInfoCalc = NULL;
 	}
-
-	if (enumMysqlDb ==  m_InstrumentBarInfoRequest.m_nDBType)
-	{
-		boost::mutex::scoped_lock lock(g_mutex_Database_Mysql);
-		if (NULL != g_SqlDataBase_Mysql)
-		{
-			delete g_SqlDataBase_Mysql;
-			g_SqlDataBase_Mysql = NULL;
-
-			LOG_INFO<<"delete Database QMYSQL";
-		}
-		g_bool_NeedToCheckAndInditMysqlDb = true;
-
-	}
-
 }
 
 int CMarketDataDispatcher::_ClearDataInMap(MapInstrumentIDBarInfoCalcT*  pMapInstrumentIDBarInfoCalc)
@@ -79,6 +65,15 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 	MapInstrumentIDBarInfoCalcIterT  iterMap;
 	CInstrumentBarInfoCalculator* pBarInfoCalc = NULL;
 
+	m_nStoreAllDataMaxIndex++;
+	if (m_nStoreAllDataMaxIndex > m_nStoreAllDataMaxSize)
+	{
+		//store all bar or tik info in memory to DB
+		LOG_INFO<<m_nStoreAllDataMaxIndex<<">"<<m_nStoreAllDataMaxSize<<" store all bar or tik info in memory to DB";
+		_StoreMemoryDataToDB();
+		m_nStoreAllDataMaxIndex = 0;
+	}
+
 	nSecurityIDValue = marketData.getSecurityID();
 
 	iterMap = m_mapInstrumentIDBarInfoCalc->begin();
@@ -96,9 +91,34 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 		unsigned int nInstrumentID = nSecurityIDValue;		
 		pBarInfoCalc = new CInstrumentBarInfoCalculator(nInstrumentID, m_InstrumentBarInfoRequest);
 		m_mapInstrumentIDBarInfoCalc->insert(MapInstrumentIDBarInfoCalcValueTypeT(nInstrumentID, pBarInfoCalc));
-		nFunRes = pBarInfoCalc->onMarketDataUpdateForTick(marketData);
+	    nFunRes = pBarInfoCalc->onMarketDataUpdateForTick(marketData);
 		nFunRes = pBarInfoCalc->onMarketDataUpdateForBar(marketData);
 	}
+
+	return nFunRes;
+}
+
+
+int CMarketDataDispatcher::_StoreMemoryDataToDB()
+{
+	BOOST_LOG_FUNCTION();
+	int nFunRes = 0;
+
+	unsigned int nSecurityIDValue = 0;
+	MapInstrumentIDBarInfoCalcIterT  iterMap;
+	CInstrumentBarInfoCalculator* pBarInfoCalc = NULL;
+
+
+
+	iterMap = m_mapInstrumentIDBarInfoCalc->begin();
+	while (iterMap != m_mapInstrumentIDBarInfoCalc->end())
+	{
+		//find ok
+		pBarInfoCalc = (iterMap->second);
+		nFunRes = pBarInfoCalc->storeMemoryDataToDB();
+
+		iterMap++;
+	}//while	
 
 	return nFunRes;
 }

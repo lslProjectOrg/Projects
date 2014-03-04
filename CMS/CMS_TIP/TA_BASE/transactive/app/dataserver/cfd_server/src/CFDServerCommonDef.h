@@ -27,6 +27,9 @@ typedef signed long long		UBigInt64;
 #define  defMysqlDBName           "MYSQL"
 #define  defSQLiteDBName          "SQLITE"
 
+#define  defQTMysqlDBTypeName           "QMYSQL"
+#define  defQTSQLiteDBTypeName          "QSQLITE"
+
 
 NS_END(TA_Base_App)
 

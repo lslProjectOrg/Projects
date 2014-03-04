@@ -2,9 +2,9 @@
 #include "InstrumentBarInfoCalculator.h"
 #include "MarketData.h"
 #include "BarCalculator.h"
-#include "InstrumentBarInfoStorager.h"
 #include "CFDServerUtilityFun.h"
-#include "MyTick.h"
+#include "DBOperParam.h"
+#include "DataArrayBuffer.h"
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
@@ -21,7 +21,14 @@ CInstrumentBarInfoCalculator::CInstrumentBarInfoCalculator(unsigned int nInstrum
 	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
 	m_pMapTimeBarInfo = new MapIntervalBarInfoT();
 	m_pUtilityFun = new CCFDServerUtilityFun();
-	m_pStorager = new CInstrumentBarInfoStorager(m_InstrumentBarInfoRequest, m_nInstrumentID);
+
+	m_DBOperParam.setValue(m_InstrumentBarInfoRequest.m_nDBType, m_nInstrumentID);
+	//D://SaveData//SaveDataBAR
+	m_DBOperParam.setValueSqliteDbPathBAR(m_InstrumentBarInfoRequest.m_strSaveDataDirectoryBAR);
+	m_DBOperParam.setValueSqliteDbPathTIK(m_InstrumentBarInfoRequest.m_strSaveDataDirectoryTIK);
+	m_DBOperParam.logInfo();
+
+	m_pStorager = new CDataArrayBuffer(m_DBOperParam, m_InstrumentBarInfoRequest);
 	//BarCalculator second param use false
 	m_pBarCalculator = new BarCalculator(m_nInstrumentID, false);
 	_InitBarCalculator();
@@ -222,7 +229,12 @@ int CInstrumentBarInfoCalculator::onMarketDataUpdateForBar(const MarketData& mar
 int CInstrumentBarInfoCalculator::onMarketDataUpdateForTick(const MarketData& marketData)
 {
 	int nFunRes = 0;
-	CMyTick  newTick;
+	Tick  newTick;
+
+	if (TA_Base_App::enumMysqlDb == m_DBOperParam.m_nDataSrcDbType)
+	{
+		return nFunRes;
+	}
 
 	newTick.Time = marketData.getTime();
 
@@ -241,6 +253,16 @@ int CInstrumentBarInfoCalculator::onMarketDataUpdateForTick(const MarketData& ma
 
 	return nFunRes;
 }
+
+int CInstrumentBarInfoCalculator::storeMemoryDataToDB()
+{
+	int nFunRes = 0;
+		
+	nFunRes = m_pStorager->storeMemoryDataToDB();
+
+	return nFunRes;
+}
+
 NS_END(TA_Base_App) 
 
 

@@ -4,28 +4,36 @@
 #include <sstream>
 #include <list> 
 #include <time.h>
+#include "WorkTime.h"
 
 #include "BarCalculator.h"
-
+#include <boost/date_time/posix_time/posix_time.hpp>  
 
 #include "BoostLogger.h"
 USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App)
 
-static const int DEF_VALUE_INT_MAXBUFFERSIZE = 1024;
+//static const int DEF_VALUE_INT_MAXBUFFERSIZE = 1024;
 
 
 
 CCFDServerUtilityFun::CCFDServerUtilityFun( void )
 {
 	BOOST_LOG_FUNCTION();
+	m_pWorkTime = NULL;
+	m_pWorkTime = new CWorkTimeNoLock();
 
 }
 
 CCFDServerUtilityFun::~CCFDServerUtilityFun( void )
 {
 	BOOST_LOG_FUNCTION();
+	if (NULL != m_pWorkTime)
+	{
+		delete m_pWorkTime;
+		m_pWorkTime = NULL;
+	}
 
 }
 
@@ -68,6 +76,7 @@ time_t CCFDServerUtilityFun::strToDateTime(const std::string& strTimeValue)
 	return timeGetTimeValue; //seconds
 }
 
+#if 0
 
 //"%04d-%02d-%02d %02d:%02d:%02d"
 std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
@@ -103,6 +112,21 @@ std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
 
 	return strTimeString;
 }
+#endif
+
+
+
+//"%04d-%02d-%02d %02d:%02d:%02d"
+std::string CCFDServerUtilityFun::dataTimeToStr(time_t nTimeValue)
+{
+	BOOST_LOG_FUNCTION();
+	std::string	strTimeString;
+	boost::posix_time::ptime boostTimeValue;
+	boostTimeValue = boost::posix_time::from_time_t(nTimeValue);
+	strTimeString = m_pWorkTime->getTimeString(&boostTimeValue);
+	//"%04d-%02d-%02d %02d:%02d:%02d"
+	return strTimeString;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -114,13 +138,13 @@ void CCFDServerUtilityFun::logBarInfo(const std::string& strInfo, int interval, 
 	std::string strBarTime;
 
 	strBarTime = dataTimeToStr(pBarInfo->Time);
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Time="<<pBarInfo->Time;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"strBarTime="<<strBarTime;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Open="<<pBarInfo->Open;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Close="<<pBarInfo->Close;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->High="<<pBarInfo->High;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Low="<<pBarInfo->Low;
-	LOG_DEBUG<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Time="<<pBarInfo->Time;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"strBarTime="<<strBarTime;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Open="<<pBarInfo->Open;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Close="<<pBarInfo->Close;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->High="<<pBarInfo->High;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Low="<<pBarInfo->Low;
+	LOG_TRACE<<strInfo<<"interval="<<interval<<" "<<"pBarInfo->Volume="<<pBarInfo->Volume;
 
 }
 
@@ -171,16 +195,16 @@ void CCFDServerUtilityFun::logMarketDataInfo(const std::string& strInfo, const M
 	nDataBitsValue = marketData.getDataBits();
 	nChangeBitsValue = marketData.getChangeBits();
 	//
-	LOG_DEBUG<<"MarketData"<<"->"<<"nSecurityIDValue="<<nSecurityIDValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"nMarkerStatusValue="<<nMarkerStatusValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"nTimeValue="<<nTimeValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"strTimeValue="<<strTimeValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidPx="<<fBidPxValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskPx="<<fAskPxValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastPx="<<fPriceValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidVol="<<nBidVolValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskVol="<<nAskVolValue;
-	LOG_DEBUG<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastVol="<<nVolumeValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"nSecurityIDValue="<<nSecurityIDValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"nMarkerStatusValue="<<nMarkerStatusValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"nTimeValue="<<nTimeValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"strTimeValue="<<strTimeValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidPx="<<fBidPxValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskPx="<<fAskPxValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastPx="<<fPriceValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"BidVol="<<nBidVolValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"AskVol="<<nAskVolValue;
+	LOG_TRACE<<"MarketData"<<"->"<<"Tick"<<"->"<<"LastVol="<<nVolumeValue;
 
 }
 

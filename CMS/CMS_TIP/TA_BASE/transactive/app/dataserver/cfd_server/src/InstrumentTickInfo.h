@@ -4,7 +4,6 @@
 
 #include "CFDServerCommonData.h"
 #include "BarCalculator.h"
-#include "MyTick.h"
 
 NS_BEGIN(TA_Base_App)
 
@@ -12,7 +11,7 @@ NS_BEGIN(TA_Base_App)
 class CInstrumentTickInfo
 {
 public:
-	CInstrumentTickInfo(CMyTick& tickInfo);	
+	CInstrumentTickInfo(Tick& tickInfo);	
 	~CInstrumentTickInfo(void);
 
 public:
@@ -20,7 +19,7 @@ public:
 public:
 	void logInfo();
 public:
-	CMyTick m_TickInfo;
+	Tick m_TickInfo;
 };
 
 

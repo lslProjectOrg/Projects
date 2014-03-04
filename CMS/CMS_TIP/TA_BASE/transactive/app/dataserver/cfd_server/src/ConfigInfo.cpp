@@ -12,14 +12,17 @@ NS_BEGIN(TA_Base_App)
 
 static const std::string DEF_VALUE_strConfigFileName = "./cfg/cfdServerConfigfile.cfg";
 static const std::string DEF_VALUE_strHistoryDataDirectory = "C://TestData//HisData";
-static const std::string DEF_VALUE_strSaveDataDirectory = "C://TestData//savedata";
+static const std::string DEF_VALUE_strSaveDataDirectoryBAR = "C://TestData//SaveDataBAR";
+static const std::string DEF_VALUE_strSaveDataDirectoryTIK = "C://TestData//SaveDataTIK";
 static const std::string DEF_VALUE_DbType = "SQLITE";//MYSQL
 static const std::string DEF_VALUE_StartTime = "2013-01-01 10:00:00";//file time 2013-01-01 09:00:00
 
 //hisdata=C://TestData//HisData
 static const std::string DEF_VALUE_PARAM_HisDataDirectory = "hisdata";
-//savedata=C://TestData//savedata
-static const std::string DEF_VALUE_PARAM_SaveDataDirectory = "savedata";
+//savedatabar=C://TestData//SaveDataBar
+static const std::string DEF_VALUE_PARAM_SaveDataDirectoryBAR = "savedatabar";
+//savedatatik=C://TestData//SaveDataTIK
+static const std::string DEF_VALUE_PARAM_SaveDataDirectoryTIK = "savedatatik";
 //defMysqlDBName  "MYSQL"  defSQLiteDBName "SQLITE"
 static const std::string DEF_VALUE_PARAM_DbType = "dbtype";//dbtype=SQLITE
 //YYYY-MM-DD HH:MM:SS  2013-01-01 10:00:00
@@ -54,12 +57,14 @@ CConfigInfo::CConfigInfo(void)
 	BOOST_LOG_FUNCTION();
 	m_strConfigFileName.clear();
 	m_strHistoryDataDirectory.clear();
-	m_strSaveDataDirectory.clear();
+	m_strSaveDataDirectoryBAR.clear();
+	m_strSaveDataDirectoryTIK.clear();
 	m_strStartTime.clear();
 
 	m_strConfigFileName = DEF_VALUE_strConfigFileName;
 	m_strHistoryDataDirectory = DEF_VALUE_strHistoryDataDirectory;
-	m_strSaveDataDirectory = DEF_VALUE_strSaveDataDirectory;
+	m_strSaveDataDirectoryBAR = DEF_VALUE_strSaveDataDirectoryBAR;
+	m_strSaveDataDirectoryTIK = DEF_VALUE_strSaveDataDirectoryTIK;
 	m_strDbType = DEF_VALUE_DbType;
 	m_strStartTime = DEF_VALUE_StartTime;
 	_LoadDefaultConfigInfo();
@@ -85,10 +90,16 @@ void CConfigInfo::_LoadDefaultConfigInfo()
 		m_strHistoryDataDirectory = strParamValue;
 	}
 
-	strParamValue =pConfigInfoHelper->getStringParamValue(DEF_VALUE_PARAM_SaveDataDirectory);
+	strParamValue =pConfigInfoHelper->getStringParamValue(DEF_VALUE_PARAM_SaveDataDirectoryBAR);
 	if (!strParamValue.empty())
 	{
-		m_strSaveDataDirectory = strParamValue;
+		m_strSaveDataDirectoryBAR = strParamValue;
+	}	
+
+	strParamValue =pConfigInfoHelper->getStringParamValue(DEF_VALUE_PARAM_SaveDataDirectoryTIK);
+	if (!strParamValue.empty())
+	{
+		m_strSaveDataDirectoryTIK = strParamValue;
 	}	
 
 	strParamValue =pConfigInfoHelper->getStringParamValue(DEF_VALUE_PARAM_DbType);
@@ -119,9 +130,13 @@ std::string CConfigInfo::getHistoryDataDirectory()
 	return m_strHistoryDataDirectory;
 }
 
-std::string CConfigInfo::getSaveDataDirectory()
+std::string CConfigInfo::getSaveDataDirectoryBAR()
 {
-	return m_strSaveDataDirectory;
+	return m_strSaveDataDirectoryBAR;
+}
+std::string CConfigInfo::getSaveDataDirectoryTIK()
+{
+	return m_strSaveDataDirectoryTIK;
 }
 
 std::string CConfigInfo::getDbType()

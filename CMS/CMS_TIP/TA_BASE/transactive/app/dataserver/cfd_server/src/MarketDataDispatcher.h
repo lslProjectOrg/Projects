@@ -31,11 +31,18 @@ public:
 
 public:
 	int dispatcherMarketData(const MarketData& marketData);
-	int _ClearDataInMap(MapInstrumentIDBarInfoCalcT* pMapInstrumentIDBarInfoCalc);
 	void setInstrumentBarInfoRequest( const CInstrumentBarInfoRequest& instrumentBarInfoRequest );
+private:
+	int _StoreMemoryDataToDB();
+	int _ClearDataInMap(MapInstrumentIDBarInfoCalcT* pMapInstrumentIDBarInfoCalc);
+
 private:
 	MapInstrumentIDBarInfoCalcT*   m_mapInstrumentIDBarInfoCalc;
 	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
+
+private:
+	unsigned int       m_nStoreAllDataMaxSize;
+	unsigned int       m_nStoreAllDataMaxIndex;
 
 };
 

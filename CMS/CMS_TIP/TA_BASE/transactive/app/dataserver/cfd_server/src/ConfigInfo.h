@@ -26,18 +26,20 @@ private:
 
 public:
 	std::string getHistoryDataDirectory();
-	std::string getSaveDataDirectory();
+	std::string getSaveDataDirectoryBAR();
+	std::string getSaveDataDirectoryTIK();
+
 	std::string getDbType();
 	std::string getStartTime();
 
 	void logInfo();
 private:
 	void _LoadDefaultConfigInfo();
-
 private:
 	std::string m_strConfigFileName;
 	std::string m_strHistoryDataDirectory;
-	std::string m_strSaveDataDirectory;
+	std::string m_strSaveDataDirectoryBAR;
+	std::string m_strSaveDataDirectoryTIK;
 	std::string m_strDbType;
 	std::string m_strStartTime;
 

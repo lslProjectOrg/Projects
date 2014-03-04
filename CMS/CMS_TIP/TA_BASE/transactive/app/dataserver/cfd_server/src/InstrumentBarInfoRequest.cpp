@@ -13,7 +13,8 @@ CInstrumentBarInfoRequest::CInstrumentBarInfoRequest(void)
 	BOOST_LOG_FUNCTION();
 
 	m_strHistoryDataDirectory.clear();
-	m_strSaveDataDirectory.clear();
+	m_strSaveDataDirectoryBAR.clear();
+	m_strSaveDataDirectoryTIK.clear();
 	m_strCurrentAnalierFileName.clear();
 	m_strDbType.clear();
 	m_nDBType = enumSqliteDb;
@@ -36,12 +37,14 @@ CInstrumentBarInfoRequest& CInstrumentBarInfoRequest::operator=(const CInstrumen
 	BOOST_LOG_FUNCTION();
 	m_strCurrentAnalierFileName = instrumentBarInfoRequest.m_strCurrentAnalierFileName;
 	m_strHistoryDataDirectory = instrumentBarInfoRequest.m_strHistoryDataDirectory;
-	m_strSaveDataDirectory = instrumentBarInfoRequest.m_strSaveDataDirectory;
+	m_strSaveDataDirectoryBAR = instrumentBarInfoRequest.m_strSaveDataDirectoryBAR;
+	m_strSaveDataDirectoryTIK = instrumentBarInfoRequest.m_strSaveDataDirectoryTIK;
+
 	m_strDbType = instrumentBarInfoRequest.m_strDbType;
 	m_nDBType = instrumentBarInfoRequest.m_nDBType;
 	m_strStartTime = instrumentBarInfoRequest.m_strStartTime;
 	m_nStartTime = instrumentBarInfoRequest.m_nStartTime;
-
+	m_lstBarTime.clear();
 	_AddBarTimeNormal();
 	return *this;
 }
@@ -51,7 +54,9 @@ void CInstrumentBarInfoRequest::logInfo()
 	BOOST_LOG_FUNCTION();
 
 	LOG_INFO<<"m_strHistoryDataDirectory="<<m_strHistoryDataDirectory;
-	LOG_INFO<<"m_strSaveDataDirectory="<<m_strSaveDataDirectory;
+	LOG_INFO<<"m_strSaveDataDirectoryBAR="<<m_strSaveDataDirectoryBAR;
+	LOG_INFO<<"m_strSaveDataDirectoryTIK="<<m_strSaveDataDirectoryTIK;
+
 	LOG_INFO<<"m_strDbType="<<m_strDbType;
 	LOG_INFO<<"m_nDBType="<<m_nDBType;
 	LOG_INFO<<"m_sttStartTime="<<m_strStartTime;

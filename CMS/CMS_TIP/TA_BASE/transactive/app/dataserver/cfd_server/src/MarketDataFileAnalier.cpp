@@ -64,7 +64,7 @@ int CMarketDataFileAnalier::analierFile()
 	while (!priceFile.eof())
 	{
 		nLineIndex++;
-		if ((1 == nLineIndex) || (nLineIndex % 5000) == 0)
+		if ((1 == nLineIndex) || (nLineIndex % 500000) == 0)
 		{
 			LOG_INFO<<"TimeNow="<<pTime->getTimeNow()<<"   "<<nLineIndex;
 
@@ -74,9 +74,12 @@ int CMarketDataFileAnalier::analierFile()
 		priceFile >> marketDataTmp;
 		//process price ....
 
-		m_pUtilityFun->logMarketDataInfo(strLogInfo, marketDataTmp);
+		{
+			m_pUtilityFun->logMarketDataInfo(strLogInfo, marketDataTmp);
+
+			m_pMarketDataDispatcher->dispatcherMarketData(marketDataTmp);
+		}
 	
-		m_pMarketDataDispatcher->dispatcherMarketData(marketDataTmp);
 	}
 
 	priceFile.close();

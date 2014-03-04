@@ -9,6 +9,7 @@
 
 NS_BEGIN(TA_Base_App)
 
+class CAWorkTime;
 
 class CCFDServerUtilityFun
 {
@@ -25,7 +26,7 @@ public:
 	void logMarketDataInfo(const std::string& strInfo, const MarketData &marketData);
 	void logBarInfo(const std::string& strInfo, int interval, Bar* pBarInfo);
 
-
+	CAWorkTime*  m_pWorkTime;
 
 
 };

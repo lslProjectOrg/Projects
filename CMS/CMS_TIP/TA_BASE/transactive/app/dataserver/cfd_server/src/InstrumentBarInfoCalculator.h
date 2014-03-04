@@ -12,11 +12,12 @@ Calculator Instument's Bar Info
 #include "MarketData.h"
 #include "BarCalculator.h"
 #include "InstrumentBarInfoRequest.h"
+#include "DBOperParam.h"
 
 NS_BEGIN(TA_Base_App) 
 
 class CCFDServerUtilityFun;
-class CInstrumentBarInfoStorager;
+class CDataArrayBuffer;
 
 class CInstrumentBarInfoCalculator 
 {
@@ -32,6 +33,7 @@ public:
 	int onMarketDataUpdateForBar(const MarketData& marketData);
 	int onMarketDataUpdateForTick(const MarketData& marketData);
 
+	int storeMemoryDataToDB();
 private:
 	void HandleNewBar(int interval, const Bar &bar);
 	void HandleUpdateBar(int interval, const Bar &bar);
@@ -43,8 +45,9 @@ private:
 	MapIntervalBarInfoT*   m_pMapTimeBarInfo;
 	CCFDServerUtilityFun*  m_pUtilityFun;
 	unsigned int m_nInstrumentID;
-	CInstrumentBarInfoStorager* m_pStorager;
+	CDataArrayBuffer* m_pStorager;
 	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
+	CDBOperParam  m_DBOperParam;
 
 };
 

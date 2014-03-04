@@ -25,11 +25,14 @@ private:
 	void _AddBarTimeNormal();
 
 public:
-	//c://TestData//HistoryMarketDataTotal   20131220.csv 
+	//c://Hisdata   20131220
 	std::string m_strHistoryDataDirectory;
 
-	//C://TestData//InstrumetBarInfoTotal   SQLiteDB_3320.db
-	std::string m_strSaveDataDirectory;
+	//C://SaveData//SaveDataBar   3320.BAR
+	std::string m_strSaveDataDirectoryBAR;
+
+	//C://SaveData//SaveDataTIK   3320.TIK
+	std::string m_strSaveDataDirectoryTIK;
 
 	std::string m_strDbType;
 	std::string m_strStartTime;
@@ -37,7 +40,7 @@ public:
 	time_t m_nStartTime;
 	TA_Base_App::DbServerType m_nDBType;
 public:
-	//c://TestData//HistoryMarketDataTotal//20131220.csv 
+	//c://Hisdata//20131220
 	std::string m_strCurrentAnalierFileName;	
 	
 private:
