@@ -28,22 +28,15 @@ CMarketDataFileManager::~CMarketDataFileManager(void)
 
 }
 
-int CMarketDataFileManager::setAnalieType(enAnalierType nAnalierType)
-{
-	BOOST_LOG_FUNCTION();
-	int nFunRes = 0;
 
-	m_nAnalierType = nAnalierType;
-
-	return nFunRes;
-}
 
 
 void CMarketDataFileManager::setInstrumentBarInfoRequest( const CInstrumentBarInfoRequest& instrumentBarInfoRequest )
 {
 	BOOST_LOG_FUNCTION();
 	m_InstrumentBarInfoRequest = instrumentBarInfoRequest;
-	setAnalieType(AnalierType_Dispatch_MarkketData);
+
+	m_nAnalierType = AnalierType_Dispatch_MarkketData;
 
 }
 

@@ -9,15 +9,12 @@ USING_BOOST_LOG;
 
 NS_BEGIN(TA_Base_App) 
 
-static const int DEF_VALUE_INT_StoreAllDataMaxSize = 2000000;
 
 //////////////////////////////////////////////////////////////////////////
 CMarketDataDispatcher::CMarketDataDispatcher(void)
 {	
 	BOOST_LOG_FUNCTION();
 	m_mapInstrumentIDBarInfoCalc = new MapInstrumentIDBarInfoCalcT();
-	m_nStoreAllDataMaxSize = DEF_VALUE_INT_StoreAllDataMaxSize;
-	m_nStoreAllDataMaxIndex = 0;
 	
 }
 
@@ -64,15 +61,6 @@ int CMarketDataDispatcher::dispatcherMarketData(const MarketData& marketData)
 	unsigned int nSecurityIDValue = 0;
 	MapInstrumentIDBarInfoCalcIterT  iterMap;
 	CInstrumentBarInfoCalculator* pBarInfoCalc = NULL;
-
-	m_nStoreAllDataMaxIndex++;
-	if (m_nStoreAllDataMaxIndex > m_nStoreAllDataMaxSize)
-	{
-		//store all bar or tik info in memory to DB
-		LOG_INFO<<m_nStoreAllDataMaxIndex<<">"<<m_nStoreAllDataMaxSize<<" store all bar or tik info in memory to DB";
-		_StoreMemoryDataToDB();
-		m_nStoreAllDataMaxIndex = 0;
-	}
 
 	nSecurityIDValue = marketData.getSecurityID();
 

@@ -33,7 +33,6 @@ public:
 public:
 	void setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	int analierFile();
-	int setAnalieType(enAnalierType nAnalierType);
 private:
 	CInstrumentBarInfoRequest		m_InstrumentBarInfoRequest;
 	CMarketDataFileAnalier*			m_pMarketDataFileAnalier;

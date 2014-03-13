@@ -18,7 +18,7 @@ using namespace TA_Base_App;
 
 NS_BEGIN(TA_Base_App)
 
-static const int DEF_VALUE_INT_InsertBatchSize = 2500;
+static const int DEF_VALUE_INT_InsertBatchSize = 10000;
 
 
 CDataArrayBuffer::CDataArrayBuffer( const CDBOperParam& dbOperParam, const CInstrumentBarInfoRequest& barInfoRequest )

@@ -63,14 +63,8 @@ std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 		return strTimeStringGet;
 	}
 
-	//linshenglong take care   20140218T150717.514548 20140218T150717
-
-
-	//20140218T150717.514548 20140218T150717
-	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
-
-	//20140218T150717.514548
-	//YYYYMMDDTHHMMSS.SSSSSS
+	//linshenglong take care   20140218T150717.514548 or 20140218T150717
+	//YYYYMMDDTHHMMSS.SSSSSS or YYYYMMDDTHHMMSS
 	//std::string strTime = boost::posix_time::to_iso_string(boost::posix_time::second_clock::local_time());
 	strTimeStringTmp = boost::posix_time::to_iso_string(*pfbtime);
 
@@ -151,8 +145,7 @@ std::string CAWorkTime::getTimeString(boost::posix_time::ptime* pfbtime)
 	}
 
 	//"%04d-%02d-%02d %02d:%02d:%02d"
-	strTimeStringGet = strYear + "-" + strMonth + "-" + strDay + " " 
-		+ strHour + ":" + strMin + ":" + strSecond;
+	strTimeStringGet = strYear + "-" + strMonth + "-" + strDay + " " + strHour + ":" + strMin + ":" + strSecond;
 
 	return strTimeStringGet;
 }

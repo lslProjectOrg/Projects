@@ -212,7 +212,7 @@ void CSqliteDbOper::_UnInitDataBase()
 		m_pQSqlDataBaseBAR->close();
 		delete m_pQSqlDataBaseBAR;
 		m_pQSqlDataBaseBAR = NULL;
-		//QSqlDatabase::removeDatabase(m_pDBOperParam->m_strSQLiteDBFileName.c_str());
+		QSqlDatabase::removeDatabase(m_pDBOperParam->m_strSQLiteDBFileNameBAR.c_str());
 	}
 
 	if (NULL != m_pQSqlDataBaseTIK)

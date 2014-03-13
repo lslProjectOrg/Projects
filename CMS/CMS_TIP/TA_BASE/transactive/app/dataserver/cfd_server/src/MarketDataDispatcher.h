@@ -40,10 +40,6 @@ private:
 	MapInstrumentIDBarInfoCalcT*   m_mapInstrumentIDBarInfoCalc;
 	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
 
-private:
-	unsigned int       m_nStoreAllDataMaxSize;
-	unsigned int       m_nStoreAllDataMaxIndex;
-
 };
 
 NS_END(TA_Base_App) 

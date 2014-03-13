@@ -12,12 +12,12 @@ manager MarketData history Data All Files in one Path. sort by time
 
 #include "InstrumentBarInfoRequest.h"
 #include "MarketDataFileManager.h"
+#include "FileSystemManager.h"
 
 NS_BEGIN(TA_Base_App) 
 
 class CMarketDataFileManager;
 
-class CFileSystemManager;
 
 class CMarketDataPathManager
 {
@@ -29,13 +29,17 @@ public:
 
 	int analieAllFiles();
 private:
-	int _SetAnalieType(CMarketDataFileManager::enAnalierType nAnalierType);
-	int _AnalieAllFilesTypeMarketData();
+	int _AnalieAllFilesTypeMarketData(CFileSystemManager::MapTimeFileSystemItemT& mapTimeFileSystemItemTmp);
+	int _ProcessRequest();
 private:
-	CMarketDataFileManager*  m_pMarketDataFileManager;
 	CFileSystemManager*    m_pFileSystemManager;
 	CInstrumentBarInfoRequest m_InstrumentBarInfoRequest;
 	CMarketDataFileManager::enAnalierType  m_nAnalierType;
+
+private:
+	unsigned int       m_nLoadFilesToMemoryMaxSize;
+	unsigned int       m_nLoadFilesToMemoryMaxIndex;
+
 };
 
 NS_END(TA_Base_App) 

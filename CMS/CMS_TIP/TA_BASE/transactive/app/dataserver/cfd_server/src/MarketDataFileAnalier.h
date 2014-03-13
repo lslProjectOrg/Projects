@@ -28,12 +28,13 @@ public:
 public:
 	void setInstrumentBarInfoRequest(const CInstrumentBarInfoRequest& instrumentBarInfoRequest);
 	int analierFile();
-
+private:
+	int _InitDispatcher();
+	int _UnInitDispatcher();
 private:
 	CInstrumentBarInfoRequest		m_InstrumentBarInfoRequest;
 	CMarketDataDispatcher*			m_pMarketDataDispatcher;
 	CCFDServerUtilityFun*           m_pUtilityFun;
-
 };
 
 NS_END(TA_Base_App) 

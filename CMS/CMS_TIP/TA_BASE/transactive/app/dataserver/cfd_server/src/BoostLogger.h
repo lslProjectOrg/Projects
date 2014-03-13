@@ -96,9 +96,6 @@ private:
 	CBoostLogger(void);	
 	~CBoostLogger(void);
 
-private:
-	int _BoostLogInit_old();
-
 public:
 	void setLogPath(const std::string& strLogPath);
 	void setLogFileName(const std::string& strLogFileName);
