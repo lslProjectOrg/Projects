@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib TA_Utilities_d.lib"
+				AdditionalDependencies="aced.lib qtmaind.lib QtCored4.lib QtGuid4.lib QtSqld4.lib"
 				OutputFile="../../../../../bin/win32_nd/TestQtCppConsole.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

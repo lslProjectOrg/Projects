@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\MarketData\include;C:\Qt\4.8.5\include"
+				AdditionalIncludeDirectories=".\;.\src;..\;..\..\;..\..\..\;..\..\..\..\;..\..\..\..\..\build\win32_n\transactive;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\;..\..\..\..\PUBLIC\boost\boost_1_54_0;..\..\..\..\PUBLIC\MarketData\include;..\..\..\..\PUBLIC\Visual_Leak_Detector\include;C:\Qt\4.8.5\include"
 				PreprocessorDefinitions="_DEBUG;__WIN32__;__x86__;_NT_;_WIN32_WINNT=0x500;_CRT_SECURE_NO_DEPRECATE;__OSVERSION__=4;WIN32;_CONSOLE;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -78,7 +78,7 @@
 				OutputFile="../../../../../bin/win32_nd/HistoryDataServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\MarketData\lib;C:\Qt\4.8.5\lib"
+				AdditionalLibraryDirectories="..\..\..\..\..\sdk\win32_nd;..\..\..\..\..\build\win32_nd;..\..\..\..\PUBLIC\ACE\6_2_0\ACE_wrappers\lib;..\..\..\..\PUBLIC\boost\boost_1_54_0\stage\lib;..\..\..\..\PUBLIC\MarketData\lib;..\..\..\..\PUBLIC\Visual_Leak_Detector\lib\x86;C:\Qt\4.8.5\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../../../../../bin/win32_nd/HistoryDataServer.pdb"
 				SubSystem="1"
@@ -279,19 +279,19 @@
 			Name="CommonProject"
 			>
 			<File
-				RelativePath=".\src\HistoryDataServerCommonData.h"
+				RelativePath=".\src\ProjectCommonData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\HistoryDataServerCommonDef.h"
+				RelativePath=".\src\ProjectCommonDef.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\HistoryDataServerUtilityFun.cpp"
+				RelativePath=".\src\ProjectUtilityFun.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\HistoryDataServerUtilityFun.h"
+				RelativePath=".\src\ProjectUtilityFun.h"
 				>
 			</File>
 		</Filter>

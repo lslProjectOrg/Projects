@@ -11,6 +11,15 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlDatabase>
 
+//#include <Qt/qapplication.h>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QSlider>
+#include <QtGui/QSpinBox>
+#include <QtGui/QSplitter>
+#include <QtGui/QFileSystemModel>
+#include <QtGui/QTreeView>
+#include <QtGui/QListView>
+
 
 
 #include <iostream>
@@ -20,11 +29,11 @@
 #include <time.h>
 
 
-#include <boost/foreach.hpp>
-#include <boost/test/unit_test.hpp>
-
-#include "core/utilities/src/BoostLogger.h"
-USING_BOOST_LOG;
+// #include <boost/foreach.hpp>
+// #include <boost/test/unit_test.hpp>
+// 
+// #include "core/utilities/src/BoostLogger.h"
+// USING_BOOST_LOG;
 
 
 bool createConnection()
@@ -44,12 +53,25 @@ bool createConnection()
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
-	if (!createConnection())
-	{
-		return 0;
-	}
-	return 0;
+	QApplication app(argc, argv);
+
+	QSplitter* splitter = new QSplitter;//two widget
+	QFileSystemModel* model = new QFileSystemModel;
+	QTreeView* tree = new QTreeView(splitter);//left tree view
+	QListView* list = new QListView(splitter);//right list view
+
+	splitter->setWindowTitle("Two vies onto the same file system model");
+
+	model->setRootPath(QDir::currentPath());
+	tree->setModel(model);//set model for view
+	tree->setRootIndex(model->index(QDir::currentPath()));
+	list->setModel(model);
+	list->setRootIndex(model->index(QDir::currentPath()));
+
+	list->setSelectionModel(tree->selectionModel());
+	splitter->show();
+
+	return app.exec();
 }
 
 

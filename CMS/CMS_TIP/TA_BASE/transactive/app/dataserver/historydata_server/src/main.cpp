@@ -2,12 +2,11 @@
 #include <signal.h>
 #include <iostream>
 
-#include <QtSql/QSqlDatabase>
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 
-#include "HistoryDataServerCommonData.h"
+#include "ProjectCommonData.h"
 #include "WorkTime.h"
 #include "ConfigInfo.h"
 
@@ -87,6 +86,9 @@ void Test_Request()
 	CConfigInfo::removeInstance();
 
 }
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 
